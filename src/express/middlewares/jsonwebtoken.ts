@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+/* eslint-disable @typescript-eslint/no-namespace */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request, Response, NextFunction } from 'express';
 
 declare global {
   namespace Express {
@@ -14,15 +16,11 @@ const jsonwebtoken = (getUser?: (accessToken: string) => Promise<any>) => {
       req.user = undefined;
 
       const headers = req.headers;
-      const authorization =
-        headers["authorization"] || headers["Authorization"];
-      if (
-        authorization?.includes("Bearer") ||
-        authorization?.includes("bearer")
-      ) {
-        if (typeof authorization === "string") {
-          const bearers = authorization.split(" ");
-          if (bearers.length === 2 && typeof bearers[1] === "string") {
+      const authorization = headers['authorization'] || headers['Authorization'];
+      if (authorization?.includes('Bearer') || authorization?.includes('bearer')) {
+        if (typeof authorization === 'string') {
+          const bearers = authorization.split(' ');
+          if (bearers.length === 2 && typeof bearers[1] === 'string') {
             const accessToken = bearers[1];
             let user = undefined;
             if (getUser) {
@@ -36,10 +34,10 @@ const jsonwebtoken = (getUser?: (accessToken: string) => Promise<any>) => {
             }
             next();
           } else {
-            next({ status: 400, message: "Authorization Fail" });
+            next({ status: 400, message: 'Authorization Fail' });
           }
         } else {
-          next({ status: 400, message: "Authorization Fail" });
+          next({ status: 400, message: 'Authorization Fail' });
         }
       } else {
         next();

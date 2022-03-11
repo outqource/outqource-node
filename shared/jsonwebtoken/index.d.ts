@@ -9,7 +9,7 @@ export declare class Jsonwebtoken {
         signOptions?: SignOptions;
         verifyOptions?: VerifyOptions;
     });
-    signJwt(value: JwtPayload, options?: SignOptions): unknown;
+    signJwt<T = any>(value: JwtPayload, options?: SignOptions): T | any;
     verifyJwt<T = any>(token: string, options?: VerifyOptions): T | any;
 }
 export {};
