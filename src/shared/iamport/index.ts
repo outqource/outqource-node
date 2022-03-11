@@ -202,6 +202,52 @@ class Iamport {
     const response = await api.post("/payments/cancel", data, { headers });
     return response.data.response;
   }
+
+  // TODO
+  // 휴대폰 본인인증 HTML
+  async getCeritifcationHTML(): Promise<string> {
+    return "";
+  }
+
+  // 휴대폰 본인인증 정보 얻기
+  async getCertificationData({
+    access_token,
+    imp_uid,
+  }: IamportTypes.getCertificationData): Promise<any | null> {
+    const headers = { Authorization: access_token };
+
+    try {
+      const response = await api.get(`/certifications/${imp_uid}`, { headers });
+      const data = response.data.response;
+
+      return data;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  // 휴대폰 본인인증 토큰 발급과 함께 얻기
+  async getCeritificationDataWithAccessToken({
+    imp_key,
+    imp_secret,
+    imp_uid,
+  }: IamportTypes.getCeritificationDataWithAccessToken) {
+    try {
+      const access_token = await this.getToken({ imp_key, imp_secret });
+      if (!access_token) {
+        throw "Invalid AccessToken";
+      }
+
+      const data = await this.getCertificationData({ access_token, imp_uid });
+      if (!data) {
+        throw "Invalid Payment Data";
+      }
+
+      return { ...data, access_token };
+    } catch (error) {
+      return error;
+    }
+  }
 }
 
 export { Iamport };

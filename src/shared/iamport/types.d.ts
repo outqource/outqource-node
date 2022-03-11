@@ -32,4 +32,15 @@ export namespace Iamport {
     reason?: string;
     cancelAmount: string | number;
   }
+
+  export interface getCertificationData {
+    access_token: string;
+    imp_uid: string;
+  }
+
+  export interface getCeritificationDataWithAccessToken {
+    imp_key?: string;
+    imp_secret?: string;
+    imp_uid: string;
+  }
 }
