@@ -1,6 +1,6 @@
 {
   "name": "outqource-node",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "build/index.js",
   "repository": "https://github.com/outqource/outqource-node",
   "author": "AlpoxDev <contact@alpox.dev>",
