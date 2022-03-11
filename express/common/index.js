@@ -15,4 +15,4 @@ __exportStar(require("./createValidator"), exports);
 __exportStar(require("./createErrorController"), exports);
 __exportStar(require("./createGlobalController"), exports);
 __exportStar(require("./createResponse"), exports);
-__exportStar(require("./init"), exports);
+__exportStar(require("./initApp"), exports);

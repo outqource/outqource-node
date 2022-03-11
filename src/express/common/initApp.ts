@@ -21,36 +21,41 @@ const defaultOpenAPIOptions: OpenAPIOptions = {
 
 export class InitApp {
   public app: Application;
-  private openAPIOptions: OpenAPIOptions;
   private controllers: any;
-  private openAPIPath: any;
+  private openAPI?: {
+    path: string;
+    options: OpenAPIOptions;
+    endPoint: string;
+  };
 
-  constructor(openAPIOptions?: OpenAPIOptions) {
+  constructor(props: { controllers: any; openAPI?: { path: string; options?: OpenAPIOptions; endPoint?: string } }) {
     this.app = Express();
-    this.openAPIOptions = openAPIOptions ?? defaultOpenAPIOptions;
+    this.controllers = props?.controllers;
+    if (props.openAPI?.path) {
+      this.openAPI = {
+        path: props.openAPI.path,
+        options: props.openAPI?.options || defaultOpenAPIOptions,
+        endPoint: props.openAPI?.endPoint || '/api-docs',
+      };
+    }
   }
 
-  public async init(props: { controllers: any; openAPIPath: string }) {
-    const { controllers, openAPIPath } = props;
-    this.controllers = controllers;
-    this.openAPIPath = openAPIPath;
-
-    const openAPI = await createOpenAPI(this.openAPIOptions, controllers);
-    await fs.writeFileSync(openAPIPath, openAPI);
+  public async init() {
+    if (this.openAPI) {
+      const openAPI = await createOpenAPI(this.openAPI.options, this.controllers);
+      await fs.writeFileSync(this.openAPI.path, openAPI);
+    }
   }
 
   public middlewares(
-    {
-      corsOptions,
-      jwtUserCallback,
-      swaggerEndpoint,
-    }: {
+    props?: {
       corsOptions?: cors.CorsOptions;
       jwtUserCallback?: (accessToken: string) => Promise<any>;
-      swaggerEndpoint?: string;
     },
     middlewares?: any[] | { before?: any[]; after?: any[] }
   ) {
+    const corsOptions = props?.corsOptions;
+    const jwtUserCallback = props?.jwtUserCallback;
     // default
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
@@ -65,8 +70,8 @@ export class InitApp {
 
     this.app.use(jsonwebtoken(jwtUserCallback));
     this.app.use(pagination());
-    if (this.openAPIPath) {
-      this.app.use(swaggerEndpoint || '/api-docs', ...swagger(this.openAPIPath));
+    if (this.openAPI) {
+      this.app.use(this.openAPI.endPoint, ...swagger(this.openAPI.path));
     }
 
     if (Array.isArray(middlewares)) {

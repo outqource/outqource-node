@@ -14,12 +14,11 @@ const jsonwebtoken = (getUser) => {
         try {
             req.user = undefined;
             const headers = req.headers;
-            const authorization = headers["authorization"] || headers["Authorization"];
-            if ((authorization === null || authorization === void 0 ? void 0 : authorization.includes("Bearer")) ||
-                (authorization === null || authorization === void 0 ? void 0 : authorization.includes("bearer"))) {
-                if (typeof authorization === "string") {
-                    const bearers = authorization.split(" ");
-                    if (bearers.length === 2 && typeof bearers[1] === "string") {
+            const authorization = headers['authorization'] || headers['Authorization'];
+            if ((authorization === null || authorization === void 0 ? void 0 : authorization.includes('Bearer')) || (authorization === null || authorization === void 0 ? void 0 : authorization.includes('bearer'))) {
+                if (typeof authorization === 'string') {
+                    const bearers = authorization.split(' ');
+                    if (bearers.length === 2 && typeof bearers[1] === 'string') {
                         const accessToken = bearers[1];
                         let user = undefined;
                         if (getUser) {
@@ -34,11 +33,11 @@ const jsonwebtoken = (getUser) => {
                         next();
                     }
                     else {
-                        next({ status: 400, message: "Authorization Fail" });
+                        next({ status: 400, message: 'Authorization Fail' });
                     }
                 }
                 else {
-                    next({ status: 400, message: "Authorization Fail" });
+                    next({ status: 400, message: 'Authorization Fail' });
                 }
             }
             else {
