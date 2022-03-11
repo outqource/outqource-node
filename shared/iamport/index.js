@@ -170,5 +170,45 @@ class Iamport {
             return response.data.response;
         });
     }
+    // TODO
+    // 휴대폰 본인인증 HTML
+    getCeritifcationHTML() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return "";
+        });
+    }
+    // 휴대폰 본인인증 정보 얻기
+    getCertificationData({ access_token, imp_uid, }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const headers = { Authorization: access_token };
+            try {
+                const response = yield api.get(`/certifications/${imp_uid}`, { headers });
+                const data = response.data.response;
+                return data;
+            }
+            catch (error) {
+                return null;
+            }
+        });
+    }
+    // 휴대폰 본인인증 토큰 발급과 함께 얻기
+    getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_uid, }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const access_token = yield this.getToken({ imp_key, imp_secret });
+                if (!access_token) {
+                    throw "Invalid AccessToken";
+                }
+                const data = yield this.getCertificationData({ access_token, imp_uid });
+                if (!data) {
+                    throw "Invalid Payment Data";
+                }
+                return Object.assign(Object.assign({}, data), { access_token });
+            }
+            catch (error) {
+                return error;
+            }
+        });
+    }
 }
 exports.Iamport = Iamport;

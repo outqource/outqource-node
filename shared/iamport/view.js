@@ -11,7 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRequestPaymentHTML = void 0;
+exports.getCertificationHTML = exports.getRequestPaymentHTML = void 0;
 const getRequestPaymentHTML = (_a) => {
     var { title, merchant_id, buttonText, buttonWrapperStyle, buttonStyle } = _a, props = __rest(_a, ["title", "merchant_id", "buttonText", "buttonWrapperStyle", "buttonStyle"]);
     if (typeof buttonWrapperStyle === "object") {
@@ -84,3 +84,60 @@ const getRequestPaymentHTML = (_a) => {
 `;
 };
 exports.getRequestPaymentHTML = getRequestPaymentHTML;
+const getCertificationHTML = (_a) => {
+    var { title, imp_uid, merchant_uid, buttonText, buttonWrapperStyle, buttonStyle } = _a, props = __rest(_a, ["title", "imp_uid", "merchant_uid", "buttonText", "buttonWrapperStyle", "buttonStyle"]);
+    if (typeof buttonWrapperStyle === "object") {
+        buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
+            return prev + `${cur[0]}:${cur[1]}; `;
+        }, "");
+    }
+    if (typeof buttonStyle === "object") {
+        buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
+            return prev + `${cur[0]}:${cur[1]}; `;
+        }, "");
+    }
+    return `
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>${title}</title>
+    
+  </head>
+  <body onload="onload();">
+		<main id="buttonWrapper" style="${buttonWrapperStyle || ""}">
+			<button onclick="requestPay()" style="${buttonStyle || ""}">${buttonText || "결제하기"}</button>
+		</main>
+    
+
+		<!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <!-- iamport.payment.js -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
+    <script>
+			const IMP = window.IMP;
+			IMP.init("${imp_uid}"); // Example: imp00000000
+
+      function requestPay() {
+        IMP.certification(
+          ${JSON.stringify(props)},
+          function (response) {
+            // callback
+            if (response.success) {
+              requestCallback({ status: 'success', data: response });
+            } else {
+							requestCallback({ status: 'failure', data: response });
+            }
+          }
+        );
+      }
+
+			function onload(){
+				requestPay();
+			}
+    </script>
+  </body>
+</html>
+`;
+};
+exports.getCertificationHTML = getCertificationHTML;

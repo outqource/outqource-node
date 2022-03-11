@@ -12,5 +12,8 @@ declare class Iamport {
     getPaymentDataWithAccessToken({ imp_key, imp_secret, imp_uid, }: IamportTypes.getPaymentDataWithAccessToken): Promise<any | string>;
     completePayment({ imp_key, imp_secret, imp_uid, productAmount, }: IamportTypes.completePayment): Promise<IamportTypes.TcompletePayment>;
     cancelPayment({ imp_key, imp_secret, imp_uid, reason, cancelAmount, }: IamportTypes.cancelPayment): Promise<any | null>;
+    getCeritifcationHTML(): Promise<string>;
+    getCertificationData({ access_token, imp_uid, }: IamportTypes.getCertificationData): Promise<any | null>;
+    getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_uid, }: IamportTypes.getCeritificationDataWithAccessToken): Promise<any>;
 }
 export { Iamport };
