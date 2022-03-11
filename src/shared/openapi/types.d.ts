@@ -26,6 +26,16 @@ export type ControllerAPIResponsStatusCode =
   | 404
   | 500;
 
+export type ControllerAPIResponse =
+  | ControllerAPIResponsStatusCode
+  | {
+      status: ControllerAPIResponsStatusCode;
+      message: string;
+      example?: string;
+    };
+
+export type ControllerAPIResponses = Array<ControllerAPIResponse>;
+
 export type ControllerAPI = {
   tags?: string[];
   path: string;
@@ -38,10 +48,7 @@ export type ControllerAPI = {
   auth?: "jwt" | "cookie" | "session";
   summary?: string;
   formData?: { key: string; type: "single" | "multiple" };
-  responses?: Array<
-    | ControllerAPIResponsStatusCode
-    | { status: ControllerAPIResponsStatusCode; message: string }
-  >;
+  responses?: ControllerAPIResponses;
 };
 
 // Validator

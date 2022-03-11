@@ -2,6 +2,7 @@ import type {
   OpenAPIOptions,
   ControllerAPI,
   ControllerAPIResponsStatusCode,
+  ControllerAPIResponse,
   OpenAPI3,
 } from "./types";
 
@@ -163,31 +164,25 @@ const getOpenAPIPathResponses = (api: ControllerAPI) => {
   };
 
   if (Array.isArray(api.responses)) {
-    api.responses.forEach(
-      (
-        item:
-          | ControllerAPIResponsStatusCode
-          | { status: ControllerAPIResponsStatusCode; message: string }
-      ) => {
-        if (typeof item === "number") {
-          const statusCode = item as ControllerAPIResponsStatusCode;
-          responses[statusCode] = {
-            description: OPEN_API_RESPONSES[statusCode] as string,
-            content: {
-              "application/json": {},
-            },
-          };
-        } else {
-          const { status, message } = item;
-          responses[status] = {
-            description: message,
-            content: {
-              "application/json": {},
-            },
-          };
-        }
+    api.responses.forEach((item: ControllerAPIResponse) => {
+      if (typeof item === "number") {
+        const statusCode = item as ControllerAPIResponsStatusCode;
+        responses[statusCode] = {
+          description: OPEN_API_RESPONSES[statusCode] as string,
+          content: {
+            "application/json": {},
+          },
+        };
+      } else {
+        const { status, message, example = {} } = item;
+        responses[status] = {
+          description: message,
+          content: {
+            "application/json": example,
+          },
+        };
       }
-    );
+    });
   } else {
     responses[200] = {
       description: OPEN_API_RESPONSES[200],

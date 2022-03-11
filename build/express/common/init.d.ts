@@ -2,7 +2,7 @@ import { Application } from "express";
 import { OpenAPIOptions } from "../../shared";
 import { cors } from "../middlewares";
 import { IErrorProps, IGlobalProps } from ".";
-export default class App {
+export declare class InitApp {
     app: Application;
     private openAPIOptions;
     constructor(openAPIOptions?: OpenAPIOptions);

@@ -148,11 +148,11 @@ const getOpenAPIPathResponses = (api) => {
                 };
             }
             else {
-                const { status, message } = item;
+                const { status, message, example = {} } = item;
                 responses[status] = {
                     description: message,
                     content: {
-                        "application/json": {},
+                        "application/json": example,
                     },
                 };
             }

@@ -1,8 +1,8 @@
 {
-  "name": "outqource-express",
-  "version": "1.1.15",
-  "main": "dist/index.js",
-  "repository": "https://github.com/outqource/outqource-express",
+  "name": "outqource-node",
+  "version": "0.0.1",
+  "main": "build/index.js",
+  "repository": "https://github.com/outqource/outqource-node",
   "author": "AlpoxDev <contact@alpox.dev>",
   "license": "MIT",
   "scripts": {

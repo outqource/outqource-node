@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.InitApp = void 0;
 const express_1 = __importDefault(require("express"));
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("../../shared");
@@ -22,7 +23,7 @@ const defaultOpenAPIOptions = {
     version: "1.0.0",
     urls: ["localhost:8000"],
 };
-class App {
+class InitApp {
     constructor(openAPIOptions) {
         this.app = (0, express_1.default)();
         this.openAPIOptions = openAPIOptions !== null && openAPIOptions !== void 0 ? openAPIOptions : defaultOpenAPIOptions;
@@ -56,4 +57,4 @@ class App {
         this.app.use((0, _1.createGlobalController)(options === null || options === void 0 ? void 0 : options.globalOptions));
     }
 }
-exports.default = App;
+exports.InitApp = InitApp;

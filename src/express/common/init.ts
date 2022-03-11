@@ -26,7 +26,7 @@ const defaultOpenAPIOptions: OpenAPIOptions = {
   urls: ["localhost:8000"],
 };
 
-export default class App {
+export class InitApp {
   public app: Application;
   private openAPIOptions: OpenAPIOptions;
 
