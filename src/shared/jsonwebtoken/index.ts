@@ -17,7 +17,7 @@ export class Jsonwebtoken {
     this.verifyOptions = props?.verifyOptions;
   }
 
-  signJwt(value: JwtPayload, options?: SignOptions) {
+  signJwt<T = any>(value: JwtPayload, options?: SignOptions): T | any {
     try {
       if (
         typeof value !== "string" &&
