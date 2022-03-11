@@ -1,0 +1,1 @@
+export { FirebaseMessaging } from './messaging';
