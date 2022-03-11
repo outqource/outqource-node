@@ -174,12 +174,20 @@ const getOpenAPIPathResponses = (api: ControllerAPI) => {
           },
         };
       } else {
-        const { status, message, example = {} } = item;
+        const {
+          status,
+          message = OPEN_API_RESPONSES[item.status],
+          exampleContentType = "application/json",
+          example = {},
+        } = item;
+        const content: any = { [exampleContentType]: {} };
+        if (example) {
+          content[exampleContentType].example = example;
+        }
+
         responses[status] = {
           description: message,
-          content: {
-            "application/json": example,
-          },
+          content,
         };
       }
     });

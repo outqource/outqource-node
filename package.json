@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "clear": "node scripts/clear-build.js",
-    "build": "yarn clear & tsc -b && node scripts/copy-build.js"
+    "build": "yarn clear & tsc -b && node scripts/copy-build.js",
+    "start": "nodemon ./src/example/index.ts --ext ts"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",

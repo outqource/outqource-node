@@ -1,7 +1,7 @@
-import { Application } from 'express';
-import { OpenAPIOptions } from '../../shared';
-import { cors } from '../middlewares';
-import { IErrorProps, IGlobalProps } from '.';
+import { Application } from "express";
+import { OpenAPIOptions } from "../../shared";
+import { cors } from "../middlewares";
+import { IErrorProps, IGlobalProps } from ".";
 export declare class InitApp {
     app: Application;
     private controllers;

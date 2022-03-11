@@ -19,9 +19,9 @@ const shared_1 = require("../../shared");
 const middlewares_1 = require("../middlewares");
 const _1 = require(".");
 const defaultOpenAPIOptions = {
-    title: 'outqource-node/express',
-    version: '1.0.0',
-    urls: ['localhost:8000'],
+    title: "outqource-node/express",
+    version: "1.0.0",
+    urls: ["http://localhost:8000"],
 };
 class InitApp {
     constructor(props) {
@@ -32,7 +32,7 @@ class InitApp {
             this.openAPI = {
                 path: props.openAPI.path,
                 options: ((_b = props.openAPI) === null || _b === void 0 ? void 0 : _b.options) || defaultOpenAPIOptions,
-                endPoint: ((_c = props.openAPI) === null || _c === void 0 ? void 0 : _c.endPoint) || '/api-docs',
+                endPoint: ((_c = props.openAPI) === null || _c === void 0 ? void 0 : _c.endPoint) || "/api-docs",
             };
         }
     }
@@ -51,7 +51,7 @@ class InitApp {
         // default
         this.app.use((0, middlewares_1.json)());
         this.app.use((0, middlewares_1.urlencoded)({ extended: true }));
-        this.app.use(express_1.default.static('public'));
+        this.app.use(express_1.default.static("public"));
         this.app.use((0, middlewares_1.cors)(corsOptions));
         if (!Array.isArray(middlewares) && (middlewares === null || middlewares === void 0 ? void 0 : middlewares.before)) {
             (_a = middlewares.before) === null || _a === void 0 ? void 0 : _a.forEach((middleware) => {

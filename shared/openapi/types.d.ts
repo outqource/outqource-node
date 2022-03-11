@@ -10,8 +10,9 @@ export declare type ControllerAPIMethodLowerCase = "get" | "post" | "delete" | "
 export declare type ControllerAPIResponsStatusCode = 200 | 201 | 204 | 400 | 401 | 404 | 500;
 export declare type ControllerAPIResponse = ControllerAPIResponsStatusCode | {
     status: ControllerAPIResponsStatusCode;
-    message: string;
-    example?: string;
+    message?: string;
+    exampleContentType?: string;
+    example?: object;
 };
 export declare type ControllerAPIResponses = Array<ControllerAPIResponse>;
 export declare type ControllerAPI = {

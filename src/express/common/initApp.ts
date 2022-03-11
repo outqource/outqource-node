@@ -1,8 +1,15 @@
-import Express, { Application } from 'express';
-import fs from 'fs';
+import Express, { Application } from "express";
+import fs from "fs";
 
-import { createOpenAPI, OpenAPIOptions } from '../../shared';
-import { json, urlencoded, cors, jsonwebtoken, pagination, swagger } from '../middlewares';
+import { createOpenAPI, OpenAPIOptions } from "../../shared";
+import {
+  json,
+  urlencoded,
+  cors,
+  jsonwebtoken,
+  pagination,
+  swagger,
+} from "../middlewares";
 
 import {
   createRouter,
@@ -11,12 +18,12 @@ import {
   createGlobalController,
   IErrorProps,
   IGlobalProps,
-} from '.';
+} from ".";
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
-  title: 'outqource-node/express',
-  version: '1.0.0',
-  urls: ['localhost:8000'],
+  title: "outqource-node/express",
+  version: "1.0.0",
+  urls: ["http://localhost:8000"],
 };
 
 export class InitApp {
@@ -28,21 +35,27 @@ export class InitApp {
     endPoint: string;
   };
 
-  constructor(props: { controllers: any; openAPI?: { path: string; options?: OpenAPIOptions; endPoint?: string } }) {
+  constructor(props: {
+    controllers: any;
+    openAPI?: { path: string; options?: OpenAPIOptions; endPoint?: string };
+  }) {
     this.app = Express();
     this.controllers = props?.controllers;
     if (props.openAPI?.path) {
       this.openAPI = {
         path: props.openAPI.path,
         options: props.openAPI?.options || defaultOpenAPIOptions,
-        endPoint: props.openAPI?.endPoint || '/api-docs',
+        endPoint: props.openAPI?.endPoint || "/api-docs",
       };
     }
   }
 
   public async init() {
     if (this.openAPI) {
-      const openAPI = await createOpenAPI(this.openAPI.options, this.controllers);
+      const openAPI = await createOpenAPI(
+        this.openAPI.options,
+        this.controllers
+      );
       await fs.writeFileSync(this.openAPI.path, openAPI);
     }
   }
@@ -59,7 +72,7 @@ export class InitApp {
     // default
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
-    this.app.use(Express.static('public'));
+    this.app.use(Express.static("public"));
     this.app.use(cors(corsOptions));
 
     if (!Array.isArray(middlewares) && middlewares?.before) {
@@ -86,7 +99,10 @@ export class InitApp {
     }
   }
 
-  public routers(options?: { errorOptions?: IErrorProps; globalOptions?: IGlobalProps }) {
+  public routers(options?: {
+    errorOptions?: IErrorProps;
+    globalOptions?: IGlobalProps;
+  }) {
     const validators = createValidators(this.controllers);
     createRouter(this.app, this.controllers, validators);
     this.app.use(createErrorController(options?.errorOptions));

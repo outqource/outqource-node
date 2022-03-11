@@ -30,8 +30,9 @@ export type ControllerAPIResponse =
   | ControllerAPIResponsStatusCode
   | {
       status: ControllerAPIResponsStatusCode;
-      message: string;
-      example?: string;
+      message?: string;
+      exampleContentType?: string;
+      example?: object;
     };
 
 export type ControllerAPIResponses = Array<ControllerAPIResponse>;
