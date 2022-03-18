@@ -43,14 +43,14 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
 
       Object.entries(params).forEach(
         ([paramKey, paramValue]: [string, string]) => {
-          if (value.includes("$param") && paramKey === originKey) {
+          if (value === "$param" && paramKey === originKey) {
             (flatten as any)[key] = parseAutoValue(paramValue);
           }
         }
       );
 
       Object.entries(query).forEach(([queryKey, queryValue]) => {
-        if (value.includes("$query") && queryKey === originKey) {
+        if (value === "$query" && queryKey === originKey) {
           (flatten as any)[key] =
             typeof queryValue === "string"
               ? parseAutoValue(queryValue)
@@ -59,7 +59,7 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
       });
 
       Object.entries(body).forEach(([bodyKey, bodyValue]) => {
-        if (value.includes("$body") && bodyKey === originKey) {
+        if (value === "$body" && bodyKey === originKey) {
           (flatten as any)[key] =
             typeof bodyValue === "string"
               ? parseAutoValue(bodyValue)
@@ -70,11 +70,7 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
   );
 
   Object.entries(flatten as object).forEach(([key, value]) => {
-    if (
-      value.includes("$param") ||
-      value.includes("$query") ||
-      value.includes("$body")
-    ) {
+    if (value === "$param" || value === "$query" || value === "$body") {
       delete (flatten as any)[key];
     }
   });
@@ -180,11 +176,14 @@ const createPrismaGetController = (
       const rows = await db[table][action](findOptions);
       response.rows = rows;
 
-      if (action === "findUnique" || (action === "findFirst" && !rows)) {
-        throw { status: 404, message: `NotFound ${table} data!` };
+      if (action === "findUnique" || action === "findFirst") {
+        if (!rows) {
+          throw { status: 404, message: `NotFound ${table} data!` };
+        }
+        res.status(200).json({ row: rows });
+      } else {
+        res.status(200).json(response);
       }
-
-      res.status(200).json(response);
     } catch (error) {
       next(error);
     }

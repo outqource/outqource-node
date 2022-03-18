@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPrismaController = void 0;
+const utils_1 = require("../../shared/utils");
 const flat_1 = __importDefault(require("flat"));
 const getTraverseOption = (req, jsonObj) => {
     const { params, query, body } = req;
@@ -22,17 +23,23 @@ const getTraverseOption = (req, jsonObj) => {
         const originKey = originKeys[originKeys.length - 1];
         Object.entries(params).forEach(([paramKey, paramValue]) => {
             if (value === "$param" && paramKey === originKey) {
-                flatten[key] = paramValue;
+                flatten[key] = (0, utils_1.parseAutoValue)(paramValue);
             }
         });
         Object.entries(query).forEach(([queryKey, queryValue]) => {
             if (value === "$query" && queryKey === originKey) {
-                flatten[key] = queryValue;
+                flatten[key] =
+                    typeof queryValue === "string"
+                        ? (0, utils_1.parseAutoValue)(queryValue)
+                        : queryValue;
             }
         });
         Object.entries(body).forEach(([bodyKey, bodyValue]) => {
             if (value === "$body" && bodyKey === originKey) {
-                flatten[key] = bodyValue;
+                flatten[key] =
+                    typeof bodyValue === "string"
+                        ? (0, utils_1.parseAutoValue)(bodyValue)
+                        : bodyValue;
             }
         });
     });
@@ -43,7 +50,7 @@ const getTraverseOption = (req, jsonObj) => {
     });
     return flat_1.default.unflatten(flatten);
 };
-const createPrismaGetController = (database, _, options) => {
+const createPrismaGetController = (database, controllerAPI, options) => {
     const { table, actions, pagination, softDelete } = options;
     let action;
     let isCount = false;
@@ -269,6 +276,8 @@ const createPrismaController = (database, controllerAPI, options) => {
             return createPrismaPutController(database, controllerAPI, options);
         case "PATCH":
             return createPrismaPatchController(database, controllerAPI, options);
+        default:
+            throw new Error("지원하지 않은 Method 입니다");
     }
 };
 exports.createPrismaController = createPrismaController;
