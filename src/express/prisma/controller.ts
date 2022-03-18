@@ -2,6 +2,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { PrismaClient } from "@prisma/client";
 import type { ControllerAPI } from "../../shared/openapi";
+import { parseAutoValue } from "../../shared/utils";
 import _ from "lodash";
 import Flat from "flat";
 
@@ -21,7 +22,7 @@ export type PrismaAction =
   | "aggregate"
   | "count";
 
-export type TcreatePrismaControllerOptions = {
+export type CreatePrismaControllerOptions = {
   table: string;
   actions: PrismaAction[] | PrismaAction;
   pagination?: boolean;
@@ -35,31 +36,45 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
 
   const flatten = Flat.flatten(jsonObj);
 
+  Object.entries(flatten as object).forEach(
+    ([key, value]: [string, string]) => {
+      const originKeys = key.split(".");
+      const originKey = originKeys[originKeys.length - 1];
+
+      Object.entries(params).forEach(
+        ([paramKey, paramValue]: [string, string]) => {
+          if (value.includes("$param") && paramKey === originKey) {
+            (flatten as any)[key] = parseAutoValue(paramValue);
+          }
+        }
+      );
+
+      Object.entries(query).forEach(([queryKey, queryValue]) => {
+        if (value.includes("$query") && queryKey === originKey) {
+          (flatten as any)[key] =
+            typeof queryValue === "string"
+              ? parseAutoValue(queryValue)
+              : queryValue;
+        }
+      });
+
+      Object.entries(body).forEach(([bodyKey, bodyValue]) => {
+        if (value.includes("$body") && bodyKey === originKey) {
+          (flatten as any)[key] =
+            typeof bodyValue === "string"
+              ? parseAutoValue(bodyValue)
+              : bodyValue;
+        }
+      });
+    }
+  );
+
   Object.entries(flatten as object).forEach(([key, value]) => {
-    const originKeys = key.split(".");
-    const originKey = originKeys[originKeys.length - 1];
-
-    Object.entries(params).forEach(([paramKey, paramValue]) => {
-      if (value === "$param" && paramKey === originKey) {
-        (flatten as any)[key] = paramValue;
-      }
-    });
-
-    Object.entries(query).forEach(([queryKey, queryValue]) => {
-      if (value === "$query" && queryKey === originKey) {
-        (flatten as any)[key] = queryValue;
-      }
-    });
-
-    Object.entries(body).forEach(([bodyKey, bodyValue]) => {
-      if (value === "$body" && bodyKey === originKey) {
-        (flatten as any)[key] = bodyValue;
-      }
-    });
-  });
-
-  Object.entries(flatten as object).forEach(([key, value]) => {
-    if (value === "$param" || value === "$query" || value === "$body") {
+    if (
+      value.includes("$param") ||
+      value.includes("$query") ||
+      value.includes("$body")
+    ) {
       delete (flatten as any)[key];
     }
   });
@@ -69,8 +84,8 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
 
 const createPrismaGetController = (
   database: PrismaClient,
-  _: ControllerAPI,
-  options: TcreatePrismaControllerOptions
+  controllerAPI: ControllerAPI,
+  options: CreatePrismaControllerOptions
 ) => {
   const { table, actions, pagination, softDelete } = options;
   let action: PrismaAction;
@@ -179,7 +194,7 @@ const createPrismaGetController = (
 const createPrismaPostController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: TcreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
@@ -211,7 +226,7 @@ const createPrismaPostController = (
 const createPrismaDeleteController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: TcreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
@@ -252,7 +267,7 @@ const createPrismaDeleteController = (
 const createPrismaPutController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: TcreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
@@ -293,7 +308,7 @@ const createPrismaPutController = (
 const createPrismaPatchController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: TcreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
@@ -340,7 +355,7 @@ const createPrismaPatchController = (
 export const createPrismaController = (
   database: PrismaClient,
   controllerAPI: ControllerAPI,
-  options: TcreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions
 ) => {
   const db = database as any;
   if (!db[options.table]) {
@@ -358,5 +373,7 @@ export const createPrismaController = (
       return createPrismaPutController(database, controllerAPI, options);
     case "PATCH":
       return createPrismaPatchController(database, controllerAPI, options);
+    default:
+      throw new Error("지원하지 않은 Method 입니다");
   }
 };
