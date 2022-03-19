@@ -125,10 +125,15 @@ const createPrismaGetController = (database, controllerAPI, options) => {
             }
             const rows = yield db[table][action](findOptions);
             response.rows = rows;
-            if (action === "findUnique" || (action === "findFirst" && !rows)) {
-                throw { status: 404, message: `NotFound ${table} data!` };
+            if (action === "findUnique" || action === "findFirst") {
+                if (!rows) {
+                    throw { status: 404, message: `NotFound ${table} data!` };
+                }
+                res.status(200).json({ row: rows });
             }
-            res.status(200).json(response);
+            else {
+                res.status(200).json(response);
+            }
         }
         catch (error) {
             next(error);
