@@ -61,11 +61,12 @@ export type ValidationItemType =
   | "boolean"
   | "array"
   | "object"
-  | "file";
+  | "file"
+  | "none";
 
 export type ValidatorItem = {
   key: string;
-  type: ValidationItemType | ValidationItemType[];
+  type: ValidationItemType;
   nullable?: boolean;
   default?: any;
   example?: any;

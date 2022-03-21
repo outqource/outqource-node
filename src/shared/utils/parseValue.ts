@@ -1,3 +1,5 @@
+export type ParseDataType = "string" | "boolean" | "number" | "json";
+
 const checkJsonString = (value: string): boolean => {
   try {
     const result = JSON.parse(value);
@@ -32,12 +34,13 @@ export const parseAutoValue = (value: string) => {
 
 export const parseValue = (
   value: string,
-  type: "string" | "boolean" | "number" | "json" | "auto" = "auto"
+  type: ParseDataType | string | "auto" = "auto"
 ) => {
   switch (type) {
     case "string":
       return value;
     case "boolean":
+      console.log(`parseValue`, value, type);
       return value === "TRUE" || value === "true";
     case "number":
       return Number(value);
@@ -46,6 +49,6 @@ export const parseValue = (
     case "auto":
       return parseAutoValue(value);
     default:
-      return value;
+      return parseAutoValue(value);
   }
 };

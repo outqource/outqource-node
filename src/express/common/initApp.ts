@@ -18,6 +18,7 @@ import {
   createGlobalController,
   IErrorProps,
   IGlobalProps,
+  ExpressController,
 } from ".";
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
@@ -60,42 +61,57 @@ export class InitApp {
     }
   }
 
+  public applyMiddlewares(middlewares?: ExpressController[]) {
+    if (
+      !middlewares ||
+      !Array.isArray(middlewares) ||
+      middlewares.length === 0
+    ) {
+      return;
+    }
+
+    middlewares.forEach((middleware) => {
+      this.app.use(middleware);
+    });
+  }
+
   public middlewares(
+    middlewares?:
+      | ExpressController[]
+      | { before?: ExpressController[]; after?: ExpressController[] },
     props?: {
       corsOptions?: cors.CorsOptions;
       jwtUserCallback?: (accessToken: string) => Promise<any>;
-    },
-    middlewares?: any[] | { before?: any[]; after?: any[] }
+    }
   ) {
     const corsOptions = props?.corsOptions;
     const jwtUserCallback = props?.jwtUserCallback;
+
     // default
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(Express.static("public"));
     this.app.use(cors(corsOptions));
+    this.app.use(pagination());
 
     if (!Array.isArray(middlewares) && middlewares?.before) {
-      middlewares.before?.forEach((middleware) => {
-        this.app.use(middleware);
-      });
+      this.applyMiddlewares(middlewares.before);
     }
 
-    this.app.use(jsonwebtoken(jwtUserCallback));
-    this.app.use(pagination());
+    if (jwtUserCallback) {
+      this.app.use(jsonwebtoken(jwtUserCallback));
+    }
+
     if (this.openAPI) {
       this.app.use(this.openAPI.endPoint, ...swagger(this.openAPI.path));
     }
 
     if (Array.isArray(middlewares)) {
-      middlewares.forEach((middleware) => {
-        this.app.use(middleware);
-      });
+      this.applyMiddlewares(middlewares);
     }
+
     if (!Array.isArray(middlewares) && middlewares?.after) {
-      middlewares.after?.forEach((middleware) => {
-        this.app.use(middleware);
-      });
+      this.applyMiddlewares(middlewares.after);
     }
   }
 

@@ -2,7 +2,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { PrismaClient } from "@prisma/client";
 import type { ControllerAPI } from "../../shared/openapi";
-import { parseAutoValue } from "../../shared/utils";
+import { parseAutoValue, parseValue } from "../../shared/utils";
 import _ from "lodash";
 import Flat from "flat";
 
@@ -22,19 +22,43 @@ export type PrismaAction =
   | "aggregate"
   | "count";
 
-export type CreatePrismaControllerOptions = {
+export type CreatePrismaControllerOptions<T = any> = {
   table: string;
   actions: PrismaAction[] | PrismaAction;
   pagination?: boolean;
   response?: boolean;
   softDelete?: string | string[];
-  options?: any;
+  options?: T;
 };
 
 const getTraverseOption = (req: Request, jsonObj: any) => {
   const { params, query, body } = req;
+  const request = {
+    ...params,
+    ...query,
+    ...body,
+  };
 
-  const flatten = Flat.flatten(jsonObj);
+  const flatten = Flat.flatten(jsonObj) as any;
+  Object.entries(flatten as object).forEach(
+    ([key, value]: [string, string]) => {
+      Object.entries(request).forEach(
+        ([requestKey, requestValue]: [string, any]) => {
+          if (typeof value === "string" && value?.includes("$value")) {
+            const splitted = value.split("/");
+            const valueKey = splitted.length > 1 ? splitted[1] : null;
+            const parseDataType = splitted.length > 2 ? splitted[2] : null;
+
+            if (requestKey === valueKey) {
+              flatten[key] = parseDataType
+                ? parseValue(requestValue, parseDataType)
+                : parseAutoValue(requestValue);
+            }
+          }
+        }
+      );
+    }
+  );
 
   Object.entries(flatten as object).forEach(
     ([key, value]: [string, string]) => {
@@ -44,14 +68,14 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
       Object.entries(params).forEach(
         ([paramKey, paramValue]: [string, string]) => {
           if (value === "$param" && paramKey === originKey) {
-            (flatten as any)[key] = parseAutoValue(paramValue);
+            flatten[key] = parseAutoValue(paramValue);
           }
         }
       );
 
       Object.entries(query).forEach(([queryKey, queryValue]) => {
         if (value === "$query" && queryKey === originKey) {
-          (flatten as any)[key] =
+          flatten[key] =
             typeof queryValue === "string"
               ? parseAutoValue(queryValue)
               : queryValue;
@@ -70,12 +94,18 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
   );
 
   Object.entries(flatten as object).forEach(([key, value]) => {
-    if (value === "$param" || value === "$query" || value === "$body") {
+    if (
+      value === "$param" ||
+      value === "$query" ||
+      value === "$body" ||
+      (typeof value === "string" && value.includes("$value"))
+    ) {
       delete (flatten as any)[key];
     }
   });
 
-  return Flat.unflatten(flatten) as any;
+  const result = Flat.unflatten(flatten) as any;
+  return result;
 };
 
 const createPrismaGetController = (
@@ -351,10 +381,10 @@ const createPrismaPatchController = (
   };
 };
 
-export const createPrismaController = (
+export const createPrismaController = <T = any>(
   database: PrismaClient,
   controllerAPI: ControllerAPI,
-  options: CreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions<T>
 ) => {
   const db = database as any;
   if (!db[options.table]) {

@@ -73,7 +73,7 @@ const getOpenAPIPathParameters = (api: ControllerAPI) => {
         required: !item.nullable && !item.default,
         description: item.example || item.default || item.key,
         schema: {
-          type: Array.isArray(item.type) ? item.type[0] : item.type,
+          type: item.type === "array" ? "array" : item.type,
         },
       });
     });
