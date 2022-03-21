@@ -57,7 +57,7 @@ const createUploader = (allowFileTypes, limits) => {
                 return callback(null, true);
             }
         },
-        limits,
+        limits: Object.assign({ fileSize: 50000000 }, (limits || {})),
     });
 };
 exports.allUploader = createUploader("ALL");
