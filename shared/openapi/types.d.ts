@@ -33,10 +33,10 @@ export declare type ControllerAPI = {
     responses?: ControllerAPIResponses;
 };
 export declare type ValidatorKey = "param" | "query" | "header" | "body";
-export declare type ValidationItemType = "string" | "number" | "boolean" | "array" | "object" | "file";
+export declare type ValidationItemType = "string" | "number" | "boolean" | "array" | "object" | "file" | "none";
 export declare type ValidatorItem = {
     key: string;
-    type: ValidationItemType | ValidationItemType[];
+    type: ValidationItemType;
     nullable?: boolean;
     default?: any;
     example?: any;

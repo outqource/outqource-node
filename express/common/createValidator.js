@@ -29,7 +29,7 @@ const validator = (req, _, next) => {
             message: errors
                 .array()
                 .map((error) => `${error.param}: ${error.msg}`)
-                .join(", "),
+                .join(', '),
         });
     }
     else {
@@ -40,19 +40,19 @@ exports.validator = validator;
 const validatorWrapper = (...props) => [...props, exports.validator];
 exports.validatorWrapper = validatorWrapper;
 const createValidation = (method, type) => {
-    if (type === "string") {
+    if (type === 'string') {
         method = method.isString();
     }
-    else if (type === "number") {
+    else if (type === 'number') {
         method = method.isNumeric();
     }
-    else if (type === "boolean") {
+    else if (type === 'boolean') {
         method = method.isBoolean();
     }
-    else if (type === "array") {
-        method = method.isArray();
+    else if (type === 'array' || type === 'none') {
+        method = method.custom((_) => true);
     }
-    else if (type === "object") {
+    else if (type === 'object') {
         method = method.isObject();
     }
     return method;
@@ -61,9 +61,9 @@ exports.createValidation = createValidation;
 const createValidator = (key, api) => {
     let method = ValidatorMethod[key](api.key);
     if (api.default) {
-        method = method.default(api.default);
+        method = method.optional({ nullable: true }).default(api.default);
     }
-    if (api.nullable) {
+    else if (api.nullable) {
         method = method.optional({ nullable: true });
     }
     if (!Array.isArray(api.type)) {
@@ -80,15 +80,15 @@ exports.createValidator = createValidator;
 const createValidators = (controllers) => {
     const validators = {};
     Object.entries(controllers).forEach(([key, value]) => {
-        if (key.indexOf("API") > -1) {
-            const validatorName = key.replace("API", "");
+        if (key.indexOf('API') > -1) {
+            const validatorName = key.replace('API', '');
             const validator = [];
             Object.entries(value).forEach((valueItem) => {
                 const [controllerKey, apis] = valueItem;
-                if (controllerKey === "param" ||
-                    controllerKey === "query" ||
-                    controllerKey === "header" ||
-                    controllerKey === "body") {
+                if (controllerKey === 'param' ||
+                    controllerKey === 'query' ||
+                    controllerKey === 'header' ||
+                    controllerKey === 'body') {
                     apis.forEach((api) => {
                         validator.push((0, exports.createValidator)(controllerKey, api));
                     });

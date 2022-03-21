@@ -1,7 +1,7 @@
 import { Application } from "express";
 import { OpenAPIOptions } from "../../shared";
 import { cors } from "../middlewares";
-import { IErrorProps, IGlobalProps } from ".";
+import { IErrorProps, IGlobalProps, ExpressController } from ".";
 export declare class InitApp {
     app: Application;
     private controllers;
@@ -15,12 +15,13 @@ export declare class InitApp {
         };
     });
     init(): Promise<void>;
-    middlewares(props?: {
+    applyMiddlewares(middlewares?: ExpressController[]): void;
+    middlewares(middlewares?: ExpressController[] | {
+        before?: ExpressController[];
+        after?: ExpressController[];
+    }, props?: {
         corsOptions?: cors.CorsOptions;
         jwtUserCallback?: (accessToken: string) => Promise<any>;
-    }, middlewares?: any[] | {
-        before?: any[];
-        after?: any[];
     }): void;
     routers(options?: {
         errorOptions?: IErrorProps;

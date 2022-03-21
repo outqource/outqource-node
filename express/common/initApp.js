@@ -44,8 +44,17 @@ class InitApp {
             }
         });
     }
-    middlewares(props, middlewares) {
-        var _a, _b;
+    applyMiddlewares(middlewares) {
+        if (!middlewares ||
+            !Array.isArray(middlewares) ||
+            middlewares.length === 0) {
+            return;
+        }
+        middlewares.forEach((middleware) => {
+            this.app.use(middleware);
+        });
+    }
+    middlewares(middlewares, props) {
         const corsOptions = props === null || props === void 0 ? void 0 : props.corsOptions;
         const jwtUserCallback = props === null || props === void 0 ? void 0 : props.jwtUserCallback;
         // default
@@ -53,25 +62,21 @@ class InitApp {
         this.app.use((0, middlewares_1.urlencoded)({ extended: true }));
         this.app.use(express_1.default.static("public"));
         this.app.use((0, middlewares_1.cors)(corsOptions));
-        if (!Array.isArray(middlewares) && (middlewares === null || middlewares === void 0 ? void 0 : middlewares.before)) {
-            (_a = middlewares.before) === null || _a === void 0 ? void 0 : _a.forEach((middleware) => {
-                this.app.use(middleware);
-            });
-        }
-        this.app.use((0, middlewares_1.jsonwebtoken)(jwtUserCallback));
         this.app.use((0, middlewares_1.pagination)());
+        if (!Array.isArray(middlewares) && (middlewares === null || middlewares === void 0 ? void 0 : middlewares.before)) {
+            this.applyMiddlewares(middlewares.before);
+        }
+        if (jwtUserCallback) {
+            this.app.use((0, middlewares_1.jsonwebtoken)(jwtUserCallback));
+        }
         if (this.openAPI) {
             this.app.use(this.openAPI.endPoint, ...(0, middlewares_1.swagger)(this.openAPI.path));
         }
         if (Array.isArray(middlewares)) {
-            middlewares.forEach((middleware) => {
-                this.app.use(middleware);
-            });
+            this.applyMiddlewares(middlewares);
         }
         if (!Array.isArray(middlewares) && (middlewares === null || middlewares === void 0 ? void 0 : middlewares.after)) {
-            (_b = middlewares.after) === null || _b === void 0 ? void 0 : _b.forEach((middleware) => {
-                this.app.use(middleware);
-            });
+            this.applyMiddlewares(middlewares.after);
         }
     }
     routers(options) {

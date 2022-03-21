@@ -17,7 +17,22 @@ const utils_1 = require("../../shared/utils");
 const flat_1 = __importDefault(require("flat"));
 const getTraverseOption = (req, jsonObj) => {
     const { params, query, body } = req;
+    const request = Object.assign(Object.assign(Object.assign({}, params), query), body);
     const flatten = flat_1.default.flatten(jsonObj);
+    Object.entries(flatten).forEach(([key, value]) => {
+        Object.entries(request).forEach(([requestKey, requestValue]) => {
+            if (typeof value === "string" && (value === null || value === void 0 ? void 0 : value.includes("$value"))) {
+                const splitted = value.split("/");
+                const valueKey = splitted.length > 1 ? splitted[1] : null;
+                const parseDataType = splitted.length > 2 ? splitted[2] : null;
+                if (requestKey === valueKey) {
+                    flatten[key] = parseDataType
+                        ? (0, utils_1.parseValue)(requestValue, parseDataType)
+                        : (0, utils_1.parseAutoValue)(requestValue);
+                }
+            }
+        });
+    });
     Object.entries(flatten).forEach(([key, value]) => {
         const originKeys = key.split(".");
         const originKey = originKeys[originKeys.length - 1];
@@ -44,11 +59,15 @@ const getTraverseOption = (req, jsonObj) => {
         });
     });
     Object.entries(flatten).forEach(([key, value]) => {
-        if (value === "$param" || value === "$query" || value === "$body") {
+        if (value === "$param" ||
+            value === "$query" ||
+            value === "$body" ||
+            (typeof value === "string" && value.includes("$value"))) {
             delete flatten[key];
         }
     });
-    return flat_1.default.unflatten(flatten);
+    const result = flat_1.default.unflatten(flatten);
+    return result;
 };
 const createPrismaGetController = (database, controllerAPI, options) => {
     const { table, actions, pagination, softDelete } = options;

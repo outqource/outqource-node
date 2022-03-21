@@ -39,6 +39,7 @@ const parseValue = (value, type = "auto") => {
         case "string":
             return value;
         case "boolean":
+            console.log(`parseValue`, value, type);
             return value === "TRUE" || value === "true";
         case "number":
             return Number(value);
@@ -47,7 +48,7 @@ const parseValue = (value, type = "auto") => {
         case "auto":
             return (0, exports.parseAutoValue)(value);
         default:
-            return value;
+            return (0, exports.parseAutoValue)(value);
     }
 };
 exports.parseValue = parseValue;

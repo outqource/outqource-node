@@ -15,7 +15,7 @@ const init = new InitApp({
 });
 
 init.init().then(() => {
-  init.middlewares({ jwtUserCallback });
+  init.middlewares([], { jwtUserCallback });
   init.routers();
   init.app.listen(8000);
 });
