@@ -72,7 +72,10 @@ const createUploader = (
         return callback(null, true);
       }
     },
-    limits,
+    limits: {
+      fileSize: 50000000,
+      ...(limits || {}),
+    },
   });
 };
 
