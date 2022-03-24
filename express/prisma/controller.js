@@ -70,7 +70,7 @@ const getTraverseOption = (req, jsonObj) => {
     return result;
 };
 const createPrismaGetController = (database, controllerAPI, options) => {
-    const { table, actions, pagination, softDelete } = options;
+    const { table, actions, pagination: isPagination, softDelete } = options;
     let action;
     let isCount = false;
     // check GET
@@ -97,6 +97,9 @@ const createPrismaGetController = (database, controllerAPI, options) => {
             actions !== "count") {
             throw "Error Occured! createPrismaController props.actions is not GET Controller!";
         }
+        if (actions === "findMany") {
+            isCount = true;
+        }
         action = actions;
     }
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -111,7 +114,7 @@ const createPrismaGetController = (database, controllerAPI, options) => {
         };
         // FindMany pagination
         if (action === "findMany" &&
-            (typeof pagination === "undefined" || pagination)) {
+            (typeof isPagination === "undefined" || isPagination)) {
             const page = (((_b = req.query) === null || _b === void 0 ? void 0 : _b.page) || "1");
             const limit = (((_c = req.query) === null || _c === void 0 ? void 0 : _c.limit) || "20");
             const take = Number(limit) || 20;

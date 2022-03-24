@@ -113,7 +113,7 @@ const createPrismaGetController = (
   controllerAPI: ControllerAPI,
   options: CreatePrismaControllerOptions
 ) => {
-  const { table, actions, pagination, softDelete } = options;
+  const { table, actions, pagination: isPagination, softDelete } = options;
   let action: PrismaAction;
   let isCount = false;
 
@@ -128,6 +128,7 @@ const createPrismaGetController = (
       ) {
         throw "Error Occured! createPrismaController props.actions is not GET Controller!";
       }
+
       if (item !== "count") {
         action = item;
       } else {
@@ -142,6 +143,10 @@ const createPrismaGetController = (
       actions !== "count"
     ) {
       throw "Error Occured! createPrismaController props.actions is not GET Controller!";
+    }
+
+    if (actions === "findMany") {
+      isCount = true;
     }
 
     action = actions;
@@ -165,7 +170,7 @@ const createPrismaGetController = (
     // FindMany pagination
     if (
       action === "findMany" &&
-      (typeof pagination === "undefined" || pagination)
+      (typeof isPagination === "undefined" || isPagination)
     ) {
       const page = (req.query?.page || "1") as string;
       const limit = (req.query?.limit || "20") as string;
