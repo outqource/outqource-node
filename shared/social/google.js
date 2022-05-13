@@ -14,42 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Google = void 0;
 const axios_1 = __importDefault(require("axios"));
-const constant_1 = __importDefault(require("./constant"));
-const { GOOGLE } = constant_1.default;
 class Google {
-    constructor(client_id, client_secret, redirect_url) {
-        this.client_id = client_id;
-        this.client_secret = client_secret;
-        this.redirect_url = redirect_url;
-    }
-    getToken(code) {
+    static getUser(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = {
-                client_id: this.client_id,
-                client_secret: this.client_secret,
-                redirect_uri: this.redirect_url,
-                grant_type: "authorization_code",
-                code,
-            };
             try {
-                const response = yield axios_1.default.post(GOOGLE.TOKEN_URL, data);
-                const { access_token } = response.data;
-                return access_token;
-            }
-            catch (error) {
-                return null;
-            }
-        });
-    }
-    getUser(token) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const headers = {
-                Authorization: `Bearer ${token}`,
-            };
-            try {
-                const response = yield axios_1.default.get(GOOGLE.USER_URL, {
-                    headers,
-                });
+                const response = yield axios_1.default.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`);
                 const { id, email, name: nickname, picture: profileImage, } = response.data;
                 return {
                     id,
@@ -59,31 +28,11 @@ class Google {
                 };
             }
             catch (error) {
-                return null;
+                const { response } = error;
+                if (response.data.error === "invalid_token")
+                    throw { status: 403, message: "GOOGLE_TOKEN_EXPIRED" };
+                return undefined;
             }
-        });
-    }
-    getUserWithToken(code) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const token = yield this.getToken(code);
-            if (!token) {
-                return {
-                    status: 500,
-                    message: "구글 토큰 발급 오류!",
-                };
-            }
-            const user = yield this.getUser(token);
-            if (!user) {
-                return {
-                    status: 500,
-                    message: "구글 사용자 가져오기 오류!",
-                };
-            }
-            return {
-                status: 200,
-                message: "성공",
-                data: { token, user },
-            };
         });
     }
 }

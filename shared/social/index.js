@@ -1,14 +1,14 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./kakao"), exports);
-__exportStar(require("./google"), exports);
+exports.Google = exports.Kakao = exports.SocialLogin = void 0;
+const kakao_1 = require("./kakao");
+Object.defineProperty(exports, "Kakao", { enumerable: true, get: function () { return kakao_1.Kakao; } });
+const google_1 = require("./google");
+Object.defineProperty(exports, "Google", { enumerable: true, get: function () { return google_1.Google; } });
+class SocialLogin {
+    constructor() {
+        this.Kakao = kakao_1.Kakao;
+        this.Google = google_1.Google;
+    }
+}
+exports.SocialLogin = SocialLogin;
