@@ -1,14 +1,15 @@
 {
   "name": "outqource-node",
-  "version": "0.1.3",
+  "version": "0.9.0",
   "main": "build/index.js",
   "repository": "https://github.com/outqource/outqource-node",
   "author": "AlpoxDev <contact@alpox.dev>",
   "license": "MIT",
   "scripts": {
     "clear": "node scripts/clear-build.js",
-    "build": "yarn clear & tsc -b && node scripts/copy-build.js",
-    "start": "nodemon ./src/example/index.ts --ext ts"
+    "build": "yarn clear && tsc -b && node scripts/copy-build.js",
+    "start": "nodemon ./src/example/index.ts --ext ts",
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",

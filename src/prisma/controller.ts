@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Request, Response, NextFunction } from "express";
 import type { PrismaClient } from "@prisma/client";
-import type { ControllerAPI } from "../../openapi";
-import { parseAutoValue, parseValue } from "../../shared/utils";
-import _ from "lodash";
+import type { ControllerAPI } from "../openapi";
+import { parseAutoValue, parseValue } from "../shared/utils";
 import Flat from "flat";
 
 export type PrismaAction =

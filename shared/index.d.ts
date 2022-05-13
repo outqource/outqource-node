@@ -1,4 +1,4 @@
-export * from "./openapi";
+export * from "../openapi";
 export * from "./aligo";
 export * from "./axios";
 export * from "./encrypt";

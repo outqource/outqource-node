@@ -1,5 +1,5 @@
-const buildFolders = ['express', 'shared'];
+const buildFolders = ["express", "prisma", "openapi", "shared"];
 
 module.exports = {
-	buildFolders
-}
+  buildFolders,
+};

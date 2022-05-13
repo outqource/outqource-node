@@ -12,6 +12,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createOpenAPI = void 0;
 __exportStar(require("./types"), exports);
+__exportStar(require("./constant"), exports);
 var openapi_1 = require("./openapi");
 Object.defineProperty(exports, "createOpenAPI", { enumerable: true, get: function () { return openapi_1.createOpenAPI; } });
-__exportStar(require("./constant"), exports);
