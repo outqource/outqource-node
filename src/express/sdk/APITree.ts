@@ -1,4 +1,5 @@
 import * as fs from "fs/promises";
+import {constants} from 'fs';
 import path from "path";
 import {ControllerAPI, ValidationItemType, ValidatorItem} from "../../openapi";
 
@@ -37,6 +38,26 @@ export default class APITree {
 
         return tree;
     }
+
+    static async #isExistPath(dest: string): Promise<boolean> {
+        try {
+            await fs.access(dest, constants.F_OK)
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    public async writeFiles(dest: string) {
+        if (!(await APITree.#isExistPath(dest))) {
+            await fs.mkdir(dest);
+        }
+
+        await Promise.all([
+            ...this.items.map(item => item.writeFile(path.join(dest, this.parent))),
+            ...this.children.map(child => child.writeFiles(path.join(dest, this.parent))),
+        ]);
+    }
 }
 
 export class APITreeItem {
@@ -60,6 +81,12 @@ export class APITreeItem {
         if (api.body) this.body = api.body.map(item => new Parameter(item));
     }
 
+    public getImportSource(): string {
+        return `
+import axios from 'axios';
+`;
+    }
+
     public getTypescriptInterface(): string {
         return `
 export interface ${this.interfaceName} {
@@ -77,19 +104,18 @@ export interface ${this.interfaceName} {
     }
     `}
 }
+
 `;
     }
 
     public getExecutor(): string {
         return `
-import axios from 'axios';
-
 export const ${this.name} = async (request: ${this.interfaceName}) => {
     const { params, query, body } = request;
     let url = '${this.path}';
 
     ${
-    this.param.length > 0 && `
+            this.param.length > 0 && `
     if (params && Object.keys(params).length > 0) {
         url = url.replace(/:(\\w+)/g, (match, key) => {
             const value = params[key];
@@ -102,14 +128,39 @@ export const ${this.name} = async (request: ${this.interfaceName}) => {
     `}
 
     ${
-    this.query.length > 0 && `
+            this.query.length > 0 && `
     if (query && Object.keys(query).length > 0) {
         url += '?' + Object.keys(query).map(key => key + '=' + query[key]).join('&');
     }
     `}
     
-    // TODO
-}`;
+    ${this.body.some(item => item.type === 'File') ? `
+    const request = new FormData();
+${this.body.map(item => `
+    if (body && body.${item.name}) {
+        request.append('${item.name}', body.${item.name});
+    }
+`).join("\n")}
+    ` : `
+    const request = body;
+    `}
+
+    const response = await axios.${this.method}(url, request);
+
+    return response.data;
+}
+`;
+    }
+
+    public async writeFile(dest: string) {
+        const filePath = path.join(dest, `${this.name}.ts`);
+        const source = `
+        ${this.getImportSource()}
+        ${this.getTypescriptInterface()}
+        ${this.getExecutor()}
+        `;
+
+        await fs.writeFile(filePath, source);
     }
 
     private get interfaceName() {
@@ -133,6 +184,7 @@ export class Parameter {
             case "array":
                 return "unknown[]";
             case "file":
+                return 'File';
             case "none":
                 return "unknown";
             case "object":
@@ -143,6 +195,6 @@ export class Parameter {
     }
 
     public getTypescriptInterface(): string {
-        return `${this.name}${this.required ? '?' : ''}: ${this.type}`;
+        return `${this.name}${this.required ? '?' : ''}: ${this.type === 'File' ? 'unknown' : this.type}`;
     }
 }

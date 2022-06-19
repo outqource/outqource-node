@@ -11,12 +11,12 @@ export default class Generator {
     }
 
     public static async generate(root: string, dest: string) {
-        const generator = new Generator(path.join(process.cwd(), root), dest);
+        const generator = new Generator(path.join(process.cwd(), root), path.join(process.cwd(),dest));
         await generator.#generate();
     }
 
     async #generate() {
-        const tree = await APITree.create(this.#root, this.#dest);
-        console.log(tree);
+        const tree = await APITree.create('', this.#root);
+        await tree.writeFiles(this.#dest);
     }
 }
