@@ -9,7 +9,9 @@
     "clear": "node scripts/clear-build.js",
     "build": "yarn clear && tsc -b && node scripts/copy-build.js",
     "start": "nodemon ./src/example/index.ts --ext ts",
-    "prepublish": "yarn build"
+    "prepare": "husky install",
+    "prepublish": "yarn build",
+    "lint:staged": "lint-staged"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
@@ -56,8 +58,20 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "fs-extra": "^10.0.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.2",
     "nodemon": "^2.0.15",
     "prettier": "^2.7.1",
     "typescript": "^4.5.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --parser flow --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --parser babel-ts --write"
+    ]
   }
 }

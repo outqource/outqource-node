@@ -7,3 +7,5 @@ export const OPEN_API_RESPONSES = {
   404: "Not Found",
   500: "Server Internal Error",
 };
+
+console.log(`OPEN_API_RESPONSES: ${JSON.stringify(OPEN_API_RESPONSES)}`);
