@@ -1,6 +1,19 @@
 import Generator from "./Generator";
 
-export default function generate(root: string, dest: string) {
-  const generator = new Generator(root, dest);
-  return generator.generate();
+if (require.main === module) {
+    const root = process.argv[2];
+    const dest = process.argv[3];
+    if (!root || !dest) {
+        console.error("Usage: npx outqource-node <root> <dest>");
+        process.exit(1);
+    }
+
+    generate(root, dest).then(() => {
+        console.log("Done");
+    });
+}
+
+export default async function generate(root: string, dest: string) {
+    const generator = new Generator(root, dest);
+    await generator.generate();
 }
