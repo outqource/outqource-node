@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import Ajv, {JSONSchemaType, Options, ValidateFunction} from "ajv";
+import Ajv, { JSONSchemaType, Options, ValidateFunction } from "ajv";
 
 export type CreateAJVMiddlewareProps<P, Q, B> = {
   params?: JSONSchemaType<P>;
@@ -21,8 +21,7 @@ const createAjvMiddleware = <P, Q, B>(
   const ajv: Ajv = (() => {
     const options: Options = {};
 
-    if (props.params)
-        options.coerceTypes = true;
+    if (props.params) options.coerceTypes = true;
 
     return new Ajv(options);
   })();
@@ -47,7 +46,7 @@ const createAjvMiddleware = <P, Q, B>(
       if (!validation) {
         return next({
           status: 400,
-          message: ajv.errorsText(),
+          message: `Request url parameters validation failed: ${ajv.errorsText()}`,
         });
       }
     }
@@ -57,7 +56,7 @@ const createAjvMiddleware = <P, Q, B>(
       if (!validation) {
         return next({
           status: 400,
-          message: `Request url parameters validation failed: ${ajv.errorsText()}`,
+          message: `Request query parameters validation failed: ${ajv.errorsText()}`,
         });
       }
     }
