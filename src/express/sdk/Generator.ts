@@ -9,8 +9,9 @@ export default class Generator {
         this.#dest = dest;
     }
 
-    public async generate() {
-        await this.#generate();
+    public static async generate(root: string, dest: string) {
+        const generator = new Generator(root, dest);
+        await generator.#generate();
     }
 
     async #generate() {
