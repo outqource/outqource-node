@@ -17,7 +17,22 @@ export declare type ControllerAPIResponse =
       example?: object;
     };
 export declare type ControllerAPIResponses = Array<ControllerAPIResponse>;
-export declare type ControllerAPI = {
+export declare type ValidatorKey = 'param' | 'query' | 'header' | 'body';
+export declare type ValidationItemType = 'string' | 'number' | 'boolean' | 'array' | 'object' | 'file' | 'none';
+export declare type ValidatorItem = {
+  key: string;
+  type: ValidationItemType;
+  nullable?: boolean;
+  additionalProperties?: boolean;
+  default?: any;
+  example?: any;
+};
+export declare type AjvValidator = {
+  params?: ValidatorItem[];
+  query?: ValidatorItem[];
+  body?: ValidatorItem[];
+};
+export declare type ControllerAPI<P = any, Q = any, B = any> = {
   tags?: string[];
   path: string;
   method: ControllerAPIMethod;
@@ -26,6 +41,7 @@ export declare type ControllerAPI = {
   query?: ValidatorItem[];
   header?: ValidatorItem[];
   body?: ValidatorItem[];
+  ajv?: AjvValidator;
   auth?: 'jwt' | 'cookie' | 'session';
   summary?: string;
   formData?: {
@@ -33,15 +49,6 @@ export declare type ControllerAPI = {
     type: 'single' | 'multiple';
   };
   responses?: ControllerAPIResponses;
-};
-export declare type ValidatorKey = 'param' | 'query' | 'header' | 'body';
-export declare type ValidationItemType = 'string' | 'number' | 'boolean' | 'array' | 'object' | 'file' | 'none';
-export declare type ValidatorItem = {
-  key: string;
-  type: ValidationItemType;
-  nullable?: boolean;
-  default?: any;
-  example?: any;
 };
 export interface OpenAPI3 {
   openapi: string;

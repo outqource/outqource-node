@@ -3,3 +3,4 @@ src
 
 .git
 yarn.lock
+test-sdk

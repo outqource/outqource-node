@@ -1,17 +1,13 @@
 import type { ControllerAPI, ExpressController } from '../../../express';
-import { allUploader } from '../../../express';
 
 export const createPostAPI: ControllerAPI = {
   path: '/posts',
   method: 'POST',
-  middlewares: [allUploader.array('file')],
-  ajv: {
-    body: [
-      { key: 'title', type: 'string', nullable: true },
-      { key: 'content', type: 'string', nullable: true },
-      { key: 'file', type: 'file', nullable: true },
-    ],
-  },
+  middlewares: [],
+  body: [
+    { key: 'title', type: 'string', nullable: true },
+    { key: 'content', type: 'string', nullable: true },
+  ],
 };
 
 export const createPost: ExpressController = async (req, res, next) => {

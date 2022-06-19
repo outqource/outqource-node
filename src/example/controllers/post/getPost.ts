@@ -1,12 +1,10 @@
 import axios from 'axios';
 import type { ControllerAPI, ExpressController } from '../../../express';
 
-export const getPostAPI: ControllerAPI<{ id: number }, null, null> = {
+export const getPostAPI: ControllerAPI = {
   path: '/posts/:id',
   method: 'GET',
-  ajv: {
-    params: [{ key: 'id', type: 'number', nullable: true }],
-  },
+  param: [{ key: 'id', type: 'number' }],
 };
 
 export const getPost: ExpressController = async (req, res, next) => {
