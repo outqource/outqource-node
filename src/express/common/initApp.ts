@@ -13,7 +13,7 @@ import {
   IGlobalProps,
   ExpressController,
 } from '.';
-import { createAjvValidator } from '../validator';
+import sdkGenerator from '../sdk';
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
   title: 'outqource-node/express',
@@ -21,18 +21,33 @@ const defaultOpenAPIOptions: OpenAPIOptions = {
   urls: ['http://localhost:8000'],
 };
 
+type InitAppOpenAPI = {
+  path: string;
+  options?: OpenAPIOptions;
+  endPoint?: string;
+};
+
+type InitAppSDK = {
+  root?: string;
+  dest?: string;
+};
+
+export interface InitAppProps {
+  controllers: Record<string, any>;
+  openAPI?: InitAppOpenAPI;
+  sdk?: InitAppSDK;
+}
+
 export class InitApp {
   public app: Application;
   private controllers: any;
-  private openAPI?: {
-    path: string;
-    options: OpenAPIOptions;
-    endPoint: string;
-  };
+  private openAPI?: InitAppOpenAPI;
+  private sdk?: InitAppSDK;
 
-  constructor(props: { controllers: any; openAPI?: { path: string; options?: OpenAPIOptions; endPoint?: string } }) {
+  constructor(props: InitAppProps) {
     this.app = Express();
     this.controllers = props?.controllers;
+
     if (props.openAPI?.path) {
       this.openAPI = {
         path: props.openAPI.path,
@@ -40,12 +55,23 @@ export class InitApp {
         endPoint: props.openAPI?.endPoint || '/api-docs',
       };
     }
+
+    if (props.sdk) {
+      this.sdk = {
+        root: props.sdk.root ?? './controllers',
+        dest: props.sdk.dest ?? './config/sdk',
+      };
+    }
   }
 
   public async init() {
     if (this.openAPI) {
-      const openAPI = await createOpenAPI(this.openAPI.options, this.controllers);
+      const openAPI = await createOpenAPI(this.openAPI.options as OpenAPIOptions, this.controllers);
       await fs.writeFileSync(this.openAPI.path, openAPI);
+    }
+
+    if (this.sdk) {
+      await sdkGenerator(this.sdk.root as string, this.sdk.dest as string);
     }
   }
 
@@ -85,7 +111,7 @@ export class InitApp {
     }
 
     if (this.openAPI) {
-      this.app.use(this.openAPI.endPoint, ...swagger(this.openAPI.path));
+      this.app.use(this.openAPI.endPoint as string, ...swagger(this.openAPI.path));
     }
 
     if (Array.isArray(middlewares)) {
@@ -99,12 +125,10 @@ export class InitApp {
 
   public routers(options?: { errorOptions?: IErrorProps; globalOptions?: IGlobalProps }) {
     const expressValidator = createValidators(this.controllers);
-    const ajvValidator = createAjvValidator(this.controllers);
-    const validators = { ...expressValidator, ...ajvValidator };
+    // const ajvValidator = createAjvValidator(this.controllers);
+    // const validators = { ...expressValidator, ...ajvValidator };
 
-    console.log(`ajvValidator`, ajvValidator);
-
-    createRouter(this.app, this.controllers, validators);
+    createRouter(this.app, this.controllers, expressValidator);
     this.app.use(createErrorController(options?.errorOptions));
     this.app.use(createGlobalController(options?.globalOptions));
   }

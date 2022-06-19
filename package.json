@@ -1,6 +1,6 @@
 {
   "name": "outqource-node",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "main": "build/index.js",
   "bin": "build/express/sdk/index.js",
   "repository": "https://github.com/outqource/outqource-node",
@@ -9,7 +9,7 @@
   "scripts": {
     "clear": "node scripts/clear-build.js",
     "build": "yarn clear && tsc -b && node scripts/copy-build.js",
-    "start": "nodemon ./src/example/index.ts --ext ts",
+    "start": "nodemon --config nodemon.json",
     "prepublishOnly": "yarn build",
     "prepare": "husky install",
     "lint:staged": "lint-staged",

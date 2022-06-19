@@ -1,0 +1,6 @@
+{
+  "verbose": true,
+  "ignore": ["sdk/*", ".git", "node_modules/**/node_modules"],
+  "exec": "ts-node ./src/example/index.ts",
+  "ext": "ts"
+}
