@@ -13,9 +13,7 @@ export type AjvValidators<P, Q, B> = {
   body?: ValidateFunction<B>;
 };
 
-const createAjvMiddleware = <P, Q, B>(
-  props?: CreateAJVMiddlewareProps<P, Q, B>,
-) => {
+const createAjvMiddleware = <P, Q, B>(props?: CreateAJVMiddlewareProps<P, Q, B>) => {
   if (!props) props = {};
 
   const ajv: Ajv = (() => {

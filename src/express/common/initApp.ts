@@ -2,14 +2,7 @@ import Express, { Application } from 'express';
 import fs from 'fs';
 
 import { createOpenAPI, OpenAPIOptions } from '../../shared';
-import {
-  json,
-  urlencoded,
-  cors,
-  jsonwebtoken,
-  pagination,
-  swagger,
-} from '../middlewares';
+import { json, urlencoded, cors, jsonwebtoken, pagination, swagger } from '../middlewares';
 
 import {
   createRouter,
@@ -36,10 +29,7 @@ export class InitApp {
     endPoint: string;
   };
 
-  constructor(props: {
-    controllers: any;
-    openAPI?: { path: string; options?: OpenAPIOptions; endPoint?: string };
-  }) {
+  constructor(props: { controllers: any; openAPI?: { path: string; options?: OpenAPIOptions; endPoint?: string } }) {
     this.app = Express();
     this.controllers = props?.controllers;
     if (props.openAPI?.path) {
@@ -53,20 +43,13 @@ export class InitApp {
 
   public async init() {
     if (this.openAPI) {
-      const openAPI = await createOpenAPI(
-        this.openAPI.options,
-        this.controllers,
-      );
+      const openAPI = await createOpenAPI(this.openAPI.options, this.controllers);
       await fs.writeFileSync(this.openAPI.path, openAPI);
     }
   }
 
   public applyMiddlewares(middlewares?: ExpressController[]) {
-    if (
-      !middlewares ||
-      !Array.isArray(middlewares) ||
-      middlewares.length === 0
-    ) {
+    if (!middlewares || !Array.isArray(middlewares) || middlewares.length === 0) {
       return;
     }
 
@@ -76,9 +59,7 @@ export class InitApp {
   }
 
   public middlewares(
-    middlewares?:
-      | ExpressController[]
-      | { before?: ExpressController[]; after?: ExpressController[] },
+    middlewares?: ExpressController[] | { before?: ExpressController[]; after?: ExpressController[] },
     props?: {
       corsOptions?: cors.CorsOptions;
       jwtUserCallback?: (accessToken: string) => Promise<any>;
@@ -115,10 +96,7 @@ export class InitApp {
     }
   }
 
-  public routers(options?: {
-    errorOptions?: IErrorProps;
-    globalOptions?: IGlobalProps;
-  }) {
+  public routers(options?: { errorOptions?: IErrorProps; globalOptions?: IGlobalProps }) {
     const validators = createValidators(this.controllers);
     createRouter(this.app, this.controllers, validators);
     this.app.use(createErrorController(options?.errorOptions));

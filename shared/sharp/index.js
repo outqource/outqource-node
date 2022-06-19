@@ -9,10 +9,8 @@ exports.Sharp = void 0;
 const sharp_1 = __importDefault(require('sharp'));
 class Sharp {
   constructor(props) {
-    this.maxWidth =
-      props === null || props === void 0 ? void 0 : props.maxWidth;
-    this.maxHeight =
-      props === null || props === void 0 ? void 0 : props.maxHeight;
+    this.maxWidth = props === null || props === void 0 ? void 0 : props.maxWidth;
+    this.maxHeight = props === null || props === void 0 ? void 0 : props.maxHeight;
   }
   async resizeImage(buffer) {
     const metadata = await (0, sharp_1.default)(buffer).metadata();
@@ -32,10 +30,7 @@ class Sharp {
         options.height = height;
       }
     }
-    const newBuffer = await (0, sharp_1.default)(buffer)
-      .resize(options)
-      .withMetadata()
-      .toBuffer();
+    const newBuffer = await (0, sharp_1.default)(buffer).resize(options).withMetadata().toBuffer();
     return newBuffer;
   }
 }

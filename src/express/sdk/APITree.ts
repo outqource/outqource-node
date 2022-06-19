@@ -12,10 +12,7 @@ export default class APITree {
     this.parent = parent;
   }
 
-  public static async create(
-    parent: string,
-    filePath: string,
-  ): Promise<APITree> {
+  public static async create(parent: string, filePath: string): Promise<APITree> {
     const tree = new APITree(parent);
 
     const files = await fs.readdir(filePath);
@@ -24,9 +21,7 @@ export default class APITree {
       const indexPath = path.join(filePath, file);
       const stat = await fs.stat(indexPath);
       if (stat.isDirectory()) {
-        tree.children.push(
-          await APITree.create(`${parent}/${file}`, indexPath),
-        );
+        tree.children.push(await APITree.create(`${parent}/${file}`, indexPath));
       } else {
         const content = require(indexPath);
 
@@ -60,9 +55,7 @@ export default class APITree {
 
     await Promise.all([
       ...this.items.map(item => item.writeFile(path.join(dest, this.parent))),
-      ...this.children.map(child =>
-        child.writeFiles(path.join(dest, this.parent)),
-      ),
+      ...this.children.map(child => child.writeFiles(path.join(dest, this.parent))),
     ]);
   }
 }
@@ -223,8 +216,6 @@ export class Parameter {
   }
 
   public getTypescriptInterface(): string {
-    return `${this.name}${this.required ? '?' : ''}: ${
-      this.type === 'File' ? 'unknown' : this.type
-    }`;
+    return `${this.name}${this.required ? '?' : ''}: ${this.type === 'File' ? 'unknown' : this.type}`;
   }
 }

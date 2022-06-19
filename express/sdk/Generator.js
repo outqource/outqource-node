@@ -31,8 +31,7 @@ var __importStar =
     var result = {};
     if (mod != null)
       for (var k in mod)
-        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k))
-          __createBinding(result, mod, k);
+        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
   };
@@ -40,45 +39,18 @@ var __classPrivateFieldSet =
   (this && this.__classPrivateFieldSet) ||
   function (receiver, state, value, kind, f) {
     if (kind === 'm') throw new TypeError('Private method is not writable');
-    if (kind === 'a' && !f)
-      throw new TypeError('Private accessor was defined without a setter');
-    if (
-      typeof state === 'function'
-        ? receiver !== state || !f
-        : !state.has(receiver)
-    )
-      throw new TypeError(
-        'Cannot write private member to an object whose class did not declare it',
-      );
-    return (
-      kind === 'a'
-        ? f.call(receiver, value)
-        : f
-        ? (f.value = value)
-        : state.set(receiver, value),
-      value
-    );
+    if (kind === 'a' && !f) throw new TypeError('Private accessor was defined without a setter');
+    if (typeof state === 'function' ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError('Cannot write private member to an object whose class did not declare it');
+    return kind === 'a' ? f.call(receiver, value) : f ? (f.value = value) : state.set(receiver, value), value;
   };
 var __classPrivateFieldGet =
   (this && this.__classPrivateFieldGet) ||
   function (receiver, state, kind, f) {
-    if (kind === 'a' && !f)
-      throw new TypeError('Private accessor was defined without a getter');
-    if (
-      typeof state === 'function'
-        ? receiver !== state || !f
-        : !state.has(receiver)
-    )
-      throw new TypeError(
-        'Cannot read private member from an object whose class did not declare it',
-      );
-    return kind === 'm'
-      ? f
-      : kind === 'a'
-      ? f.call(receiver)
-      : f
-      ? f.value
-      : state.get(receiver);
+    if (kind === 'a' && !f) throw new TypeError('Private accessor was defined without a getter');
+    if (typeof state === 'function' ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError('Cannot read private member from an object whose class did not declare it');
+    return kind === 'm' ? f : kind === 'a' ? f.call(receiver) : f ? f.value : state.get(receiver);
   };
 var __importDefault =
   (this && this.__importDefault) ||
@@ -98,16 +70,8 @@ class Generator {
     __classPrivateFieldSet(this, _Generator_dest, dest, 'f');
   }
   static async generate(root, dest) {
-    const generator = new Generator(
-      path.join(process.cwd(), root),
-      path.join(process.cwd(), dest),
-    );
-    await __classPrivateFieldGet(
-      generator,
-      _Generator_instances,
-      'm',
-      _Generator_generate,
-    ).call(generator);
+    const generator = new Generator(path.join(process.cwd(), root), path.join(process.cwd(), dest));
+    await __classPrivateFieldGet(generator, _Generator_instances, 'm', _Generator_generate).call(generator);
   }
 }
 exports.default = Generator;
@@ -115,9 +79,6 @@ exports.default = Generator;
   (_Generator_dest = new WeakMap()),
   (_Generator_instances = new WeakSet()),
   (_Generator_generate = async function _Generator_generate() {
-    const tree = await APITree_1.default.create(
-      '',
-      __classPrivateFieldGet(this, _Generator_root, 'f'),
-    );
+    const tree = await APITree_1.default.create('', __classPrivateFieldGet(this, _Generator_root, 'f'));
     await tree.writeFiles(__classPrivateFieldGet(this, _Generator_dest, 'f'));
   });

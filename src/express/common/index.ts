@@ -1,10 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 
-export type ExpressController = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => Promise<void>;
+export type ExpressController = (req: Request, res: Response, next: NextFunction) => Promise<void>;
 
 export * from './createRouter';
 export * from './createValidator';

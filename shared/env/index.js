@@ -10,8 +10,7 @@ const dotenv_1 = __importDefault(require('dotenv'));
 class ParseEnv {
   constructor(config, props) {
     const env = config === null || config === void 0 ? void 0 : config.env;
-    const options =
-      config === null || config === void 0 ? void 0 : config.options;
+    const options = config === null || config === void 0 ? void 0 : config.options;
     if (env && !options) {
       this.env = env;
     } else if (!env && options) {
@@ -65,11 +64,7 @@ class ParseEnv {
     }
     const value = this.env[key];
     const isNumberValue = Number(value);
-    const isBooleanValue =
-      value === 'TRUE' ||
-      value === 'FALSE' ||
-      value === 'true' ||
-      value === 'false';
+    const isBooleanValue = value === 'TRUE' || value === 'FALSE' || value === 'true' || value === 'false';
     const isJsonValue = ParseEnv.checkJsonString(value);
     if (isNumberValue) {
       return isNumberValue;

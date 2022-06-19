@@ -5,32 +5,16 @@ var __importDefault =
     return mod && mod.__esModule ? mod : { default: mod };
   };
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.imageAndVideoUploader =
-  exports.videoUploader =
-  exports.imageUploader =
-  exports.allUploader =
-    void 0;
+exports.imageAndVideoUploader = exports.videoUploader = exports.imageUploader = exports.allUploader = void 0;
 const path_1 = __importDefault(require('path'));
 const multer_1 = __importDefault(require('multer'));
 const isArray_1 = __importDefault(require('lodash/isArray'));
 const getFileType = file => {
   const ext = path_1.default.extname(file.originalname);
   const mimetype = file.mimetype;
-  if (
-    mimetype.includes('image/') ||
-    ext === '.jpg' ||
-    ext === '.png' ||
-    ext === '.gif' ||
-    ext === '.jpeg'
-  ) {
+  if (mimetype.includes('image/') || ext === '.jpg' || ext === '.png' || ext === '.gif' || ext === '.jpeg') {
     return 'IMAGE';
-  } else if (
-    ext === '.mp4' ||
-    ext === '.avi' ||
-    ext === '.wmv' ||
-    ext === '.mov' ||
-    mimetype.includes('video/')
-  ) {
+  } else if (ext === '.mp4' || ext === '.avi' || ext === '.wmv' || ext === '.mov' || mimetype.includes('video/')) {
     return 'VIDEO';
   }
   return 'NONE';

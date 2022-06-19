@@ -5,20 +5,9 @@ declare class Iamport {
   private imp_secret?;
   private merchant_id?;
   private pg?;
-  constructor({
-    imp_key,
-    imp_secret,
-    merchant_id,
-    pg,
-  }: IamportTypes.constructor);
-  getToken({
-    imp_key,
-    imp_secret,
-  }: IamportTypes.getToken): Promise<string | null>;
-  getPaymentData({
-    access_token,
-    imp_uid,
-  }: IamportTypes.getPaymentData): Promise<any | null>;
+  constructor({ imp_key, imp_secret, merchant_id, pg }: IamportTypes.constructor);
+  getToken({ imp_key, imp_secret }: IamportTypes.getToken): Promise<string | null>;
+  getPaymentData({ access_token, imp_uid }: IamportTypes.getPaymentData): Promise<any | null>;
   getPaymentHTML(props: getRequestPaymentHTMLProps): string | null;
   getPaymentDataWithAccessToken({
     imp_key,
@@ -39,10 +28,7 @@ declare class Iamport {
     cancelAmount,
   }: IamportTypes.cancelPayment): Promise<any | null>;
   getCeritifcationHTML(): Promise<string>;
-  getCertificationData({
-    access_token,
-    imp_uid,
-  }: IamportTypes.getCertificationData): Promise<any | null>;
+  getCertificationData({ access_token, imp_uid }: IamportTypes.getCertificationData): Promise<any | null>;
   getCeritificationDataWithAccessToken({
     imp_key,
     imp_secret,

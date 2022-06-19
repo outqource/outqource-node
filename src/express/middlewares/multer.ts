@@ -4,37 +4,20 @@ import isArray from 'lodash/isArray';
 
 export type FileType = 'IMAGE' | 'VIDEO' | 'ALL';
 
-const getFileType = (
-  file: Express.Multer.File,
-): Exclude<FileType, 'ALL'> | 'NONE' => {
+const getFileType = (file: Express.Multer.File): Exclude<FileType, 'ALL'> | 'NONE' => {
   const ext = path.extname(file.originalname);
   const mimetype = file.mimetype;
 
-  if (
-    mimetype.includes('image/') ||
-    ext === '.jpg' ||
-    ext === '.png' ||
-    ext === '.gif' ||
-    ext === '.jpeg'
-  ) {
+  if (mimetype.includes('image/') || ext === '.jpg' || ext === '.png' || ext === '.gif' || ext === '.jpeg') {
     return 'IMAGE';
-  } else if (
-    ext === '.mp4' ||
-    ext === '.avi' ||
-    ext === '.wmv' ||
-    ext === '.mov' ||
-    mimetype.includes('video/')
-  ) {
+  } else if (ext === '.mp4' || ext === '.avi' || ext === '.wmv' || ext === '.mov' || mimetype.includes('video/')) {
     return 'VIDEO';
   }
 
   return 'NONE';
 };
 
-const checkFileType = (
-  file: Express.Multer.File,
-  allowFileTypes: FileType | FileType[],
-): boolean => {
+const checkFileType = (file: Express.Multer.File, allowFileTypes: FileType | FileType[]): boolean => {
   const fileType = getFileType(file);
   if (isArray(allowFileTypes)) {
     let isAllowed = false;

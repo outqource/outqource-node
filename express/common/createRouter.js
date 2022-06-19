@@ -9,10 +9,7 @@ const createRouter = (app, controllers, validators) => {
       const controller = controllers[name];
       const path = api.path;
       const method = api.method.toLowerCase();
-      const middlewares = [
-        ...(api.middlewares || []),
-        ...(validators[name] || []),
-      ];
+      const middlewares = [...(api.middlewares || []), ...(validators[name] || [])];
       if (method && path && controller) {
         app[method](path, ...middlewares, controller);
       }

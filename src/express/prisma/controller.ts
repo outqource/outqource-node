@@ -40,58 +40,42 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
   };
 
   const flatten = Flat.flatten(jsonObj) as any;
-  Object.entries(flatten as object).forEach(
-    ([key, value]: [string, string]) => {
-      Object.entries(request).forEach(
-        ([requestKey, requestValue]: [string, any]) => {
-          if (typeof value === 'string' && value?.includes('$value')) {
-            const splitted = value.split('/');
-            const valueKey = splitted.length > 1 ? splitted[1] : null;
-            const parseDataType = splitted.length > 2 ? splitted[2] : null;
+  Object.entries(flatten as object).forEach(([key, value]: [string, string]) => {
+    Object.entries(request).forEach(([requestKey, requestValue]: [string, any]) => {
+      if (typeof value === 'string' && value?.includes('$value')) {
+        const splitted = value.split('/');
+        const valueKey = splitted.length > 1 ? splitted[1] : null;
+        const parseDataType = splitted.length > 2 ? splitted[2] : null;
 
-            if (requestKey === valueKey) {
-              flatten[key] = parseDataType
-                ? parseValue(requestValue, parseDataType)
-                : parseAutoValue(requestValue);
-            }
-          }
-        },
-      );
-    },
-  );
-
-  Object.entries(flatten as object).forEach(
-    ([key, value]: [string, string]) => {
-      const originKeys = key.split('.');
-      const originKey = originKeys[originKeys.length - 1];
-
-      Object.entries(params).forEach(
-        ([paramKey, paramValue]: [string, string]) => {
-          if (value === '$param' && paramKey === originKey) {
-            flatten[key] = parseAutoValue(paramValue);
-          }
-        },
-      );
-
-      Object.entries(query).forEach(([queryKey, queryValue]) => {
-        if (value === '$query' && queryKey === originKey) {
-          flatten[key] =
-            typeof queryValue === 'string'
-              ? parseAutoValue(queryValue)
-              : queryValue;
+        if (requestKey === valueKey) {
+          flatten[key] = parseDataType ? parseValue(requestValue, parseDataType) : parseAutoValue(requestValue);
         }
-      });
+      }
+    });
+  });
 
-      Object.entries(body).forEach(([bodyKey, bodyValue]) => {
-        if (value === '$body' && bodyKey === originKey) {
-          (flatten as any)[key] =
-            typeof bodyValue === 'string'
-              ? parseAutoValue(bodyValue)
-              : bodyValue;
-        }
-      });
-    },
-  );
+  Object.entries(flatten as object).forEach(([key, value]: [string, string]) => {
+    const originKeys = key.split('.');
+    const originKey = originKeys[originKeys.length - 1];
+
+    Object.entries(params).forEach(([paramKey, paramValue]: [string, string]) => {
+      if (value === '$param' && paramKey === originKey) {
+        flatten[key] = parseAutoValue(paramValue);
+      }
+    });
+
+    Object.entries(query).forEach(([queryKey, queryValue]) => {
+      if (value === '$query' && queryKey === originKey) {
+        flatten[key] = typeof queryValue === 'string' ? parseAutoValue(queryValue) : queryValue;
+      }
+    });
+
+    Object.entries(body).forEach(([bodyKey, bodyValue]) => {
+      if (value === '$body' && bodyKey === originKey) {
+        (flatten as any)[key] = typeof bodyValue === 'string' ? parseAutoValue(bodyValue) : bodyValue;
+      }
+    });
+  });
 
   Object.entries(flatten as object).forEach(([key, value]) => {
     if (
@@ -120,12 +104,7 @@ const createPrismaGetController = (
   // check GET
   if (Array.isArray(actions)) {
     actions.forEach(item => {
-      if (
-        item !== 'findMany' &&
-        item !== 'findUnique' &&
-        item !== 'findFirst' &&
-        item !== 'count'
-      ) {
+      if (item !== 'findMany' && item !== 'findUnique' && item !== 'findFirst' && item !== 'count') {
         throw 'Error Occured! createPrismaController props.actions is not GET Controller!';
       }
 
@@ -136,12 +115,7 @@ const createPrismaGetController = (
       }
     });
   } else {
-    if (
-      actions !== 'findMany' &&
-      actions !== 'findUnique' &&
-      actions !== 'findFirst' &&
-      actions !== 'count'
-    ) {
+    if (actions !== 'findMany' && actions !== 'findUnique' && actions !== 'findFirst' && actions !== 'count') {
       throw 'Error Occured! createPrismaController props.actions is not GET Controller!';
     }
 
@@ -168,10 +142,7 @@ const createPrismaGetController = (
     };
 
     // FindMany pagination
-    if (
-      action === 'findMany' &&
-      (typeof isPagination === 'undefined' || isPagination)
-    ) {
+    if (action === 'findMany' && (typeof isPagination === 'undefined' || isPagination)) {
       const page = (req.query?.page || '1') as string;
       const limit = (req.query?.limit || '20') as string;
 

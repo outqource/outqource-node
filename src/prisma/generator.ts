@@ -6,10 +6,7 @@ interface IprismaControllerGenerator {
   writePath: string;
 }
 
-export const prismaControllerGenerator = async ({
-  jsonPath,
-  writePath,
-}: IprismaControllerGenerator) => {
+export const prismaControllerGenerator = async ({ jsonPath, writePath }: IprismaControllerGenerator) => {
   const file = await fs.readFileSync(jsonPath);
   const crudJson = JSON.parse(file.toString());
 
@@ -58,9 +55,7 @@ import database from 'database';
         if (body) controllerAPIData.body = body;
         if (responses) controllerAPIData.responses = responses;
 
-        const controllerAPI = `export const ${name}API: ControllerAPI = ${JSON.stringify(
-          controllerAPIData,
-        )};`;
+        const controllerAPI = `export const ${name}API: ControllerAPI = ${JSON.stringify(controllerAPIData)};`;
         result = result + controllerAPI + '\n\n';
 
         // CRUD Controller

@@ -106,10 +106,7 @@ const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
       api.body.forEach(item => {
         otherProperties[item.key] = {
           type: item.type,
-          example:
-            item.example ||
-            item.default ||
-            (Array.isArray(item.type) ? item.type[0] : item.type),
+          example: item.example || item.default || (Array.isArray(item.type) ? item.type[0] : item.type),
         };
       });
     }
@@ -131,10 +128,7 @@ const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
     const example: Record<string, any> = {};
     if (Array.isArray(api.body)) {
       api.body.forEach(item => {
-        example[item.key] =
-          item.example ||
-          item.default ||
-          (Array.isArray(item.type) ? item.type[0] : item.type);
+        example[item.key] = item.example || item.default || (Array.isArray(item.type) ? item.type[0] : item.type);
       });
     }
 
@@ -203,13 +197,7 @@ const getOpenAPIPathResponses = (api: ControllerAPI) => {
   return responses;
 };
 
-const getOpenAPI = ({
-  title,
-  version,
-  urls,
-  tags,
-  paths,
-}: IgetOpenAPI): OpenAPI3 => ({
+const getOpenAPI = ({ title, version, urls, tags, paths }: IgetOpenAPI): OpenAPI3 => ({
   openapi: '3.0.0',
   info: {
     title,
@@ -244,9 +232,7 @@ const getOpenAPITags = (controllers: any): Array<{ name: string }> => {
   return tags
     .filter((item, index) => tags.indexOf(item) === index)
     .map((tag: string) => ({ name: tag }))
-    .sort((tag1, tag2) =>
-      tag1.name.toUpperCase().localeCompare(tag2.name.toUpperCase()),
-    );
+    .sort((tag1, tag2) => tag1.name.toUpperCase().localeCompare(tag2.name.toUpperCase()));
 };
 
 const getOpenAPIPaths = (controllers: Record<string, any>) => {
@@ -280,10 +266,7 @@ const getOpenAPIPaths = (controllers: Record<string, any>) => {
   return paths;
 };
 
-export const createOpenAPI = async (
-  { title, version, urls }: OpenAPIOptions,
-  controllers: any,
-): Promise<string> => {
+export const createOpenAPI = async ({ title, version, urls }: OpenAPIOptions, controllers: any): Promise<string> => {
   const tags = getOpenAPITags(controllers);
   const paths = getOpenAPIPaths(controllers);
   const result = getOpenAPI({ title, version, urls, tags, paths });

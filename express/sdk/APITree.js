@@ -31,31 +31,17 @@ var __importStar =
     var result = {};
     if (mod != null)
       for (var k in mod)
-        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k))
-          __createBinding(result, mod, k);
+        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
   };
 var __classPrivateFieldGet =
   (this && this.__classPrivateFieldGet) ||
   function (receiver, state, kind, f) {
-    if (kind === 'a' && !f)
-      throw new TypeError('Private accessor was defined without a getter');
-    if (
-      typeof state === 'function'
-        ? receiver !== state || !f
-        : !state.has(receiver)
-    )
-      throw new TypeError(
-        'Cannot read private member from an object whose class did not declare it',
-      );
-    return kind === 'm'
-      ? f
-      : kind === 'a'
-      ? f.call(receiver)
-      : f
-      ? f.value
-      : state.get(receiver);
+    if (kind === 'a' && !f) throw new TypeError('Private accessor was defined without a getter');
+    if (typeof state === 'function' ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError('Cannot read private member from an object whose class did not declare it');
+    return kind === 'm' ? f : kind === 'a' ? f.call(receiver) : f ? f.value : state.get(receiver);
   };
 var __importDefault =
   (this && this.__importDefault) ||
@@ -81,9 +67,7 @@ class APITree {
       const indexPath = path_1.default.join(filePath, file);
       const stat = await fs.stat(indexPath);
       if (stat.isDirectory()) {
-        tree.children.push(
-          await APITree.create(`${parent}/${file}`, indexPath),
-        );
+        tree.children.push(await APITree.create(`${parent}/${file}`, indexPath));
       } else {
         const content = require(indexPath);
         const apiKey = Object.keys(content).find(key => key.endsWith('API'));
@@ -97,23 +81,12 @@ class APITree {
     return tree;
   }
   async writeFiles(dest) {
-    if (
-      !(await __classPrivateFieldGet(
-        APITree,
-        _a,
-        'm',
-        _APITree_isExistPath,
-      ).call(APITree, dest))
-    ) {
+    if (!(await __classPrivateFieldGet(APITree, _a, 'm', _APITree_isExistPath).call(APITree, dest))) {
       await fs.mkdir(dest);
     }
     await Promise.all([
-      ...this.items.map(item =>
-        item.writeFile(path_1.default.join(dest, this.parent)),
-      ),
-      ...this.children.map(child =>
-        child.writeFiles(path_1.default.join(dest, this.parent)),
-      ),
+      ...this.items.map(item => item.writeFile(path_1.default.join(dest, this.parent))),
+      ...this.children.map(child => child.writeFiles(path_1.default.join(dest, this.parent))),
     ]);
   }
 }
@@ -248,18 +221,11 @@ exports.APITreeItem = APITreeItem;
 class Parameter {
   constructor(item) {
     this.name = item.key;
-    this.type = __classPrivateFieldGet(
-      Parameter,
-      _b,
-      'm',
-      _Parameter_getType,
-    ).call(Parameter, item.type);
+    this.type = __classPrivateFieldGet(Parameter, _b, 'm', _Parameter_getType).call(Parameter, item.type);
     this.required = !item.nullable && !item.default;
   }
   getTypescriptInterface() {
-    return `${this.name}${this.required ? '?' : ''}: ${
-      this.type === 'File' ? 'unknown' : this.type
-    }`;
+    return `${this.name}${this.required ? '?' : ''}: ${this.type === 'File' ? 'unknown' : this.type}`;
   }
 }
 exports.Parameter = Parameter;

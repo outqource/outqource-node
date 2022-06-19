@@ -16,12 +16,8 @@ const jsonwebtoken = (getUser?: (accessToken: string) => Promise<any>) => {
       req.user = undefined;
 
       const headers = req.headers;
-      const authorization =
-        headers['authorization'] || headers['Authorization'];
-      if (
-        authorization?.includes('Bearer') ||
-        authorization?.includes('bearer')
-      ) {
+      const authorization = headers['authorization'] || headers['Authorization'];
+      if (authorization?.includes('Bearer') || authorization?.includes('bearer')) {
         if (typeof authorization === 'string') {
           const bearers = authorization.split(' ');
           if (bearers.length === 2 && typeof bearers[1] === 'string') {

@@ -10,21 +10,9 @@ export type OpenAPIOptions = {
 // API
 export type ControllerAPIMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
 
-export type ControllerAPIMethodLowerCase =
-  | 'get'
-  | 'post'
-  | 'delete'
-  | 'patch'
-  | 'put';
+export type ControllerAPIMethodLowerCase = 'get' | 'post' | 'delete' | 'patch' | 'put';
 
-export type ControllerAPIResponsStatusCode =
-  | 200
-  | 201
-  | 204
-  | 400
-  | 401
-  | 404
-  | 500;
+export type ControllerAPIResponsStatusCode = 200 | 201 | 204 | 400 | 401 | 404 | 500;
 
 export type ControllerAPIResponse =
   | ControllerAPIResponsStatusCode
@@ -55,14 +43,7 @@ export type ControllerAPI = {
 // Validator
 export type ValidatorKey = 'param' | 'query' | 'header' | 'body';
 
-export type ValidationItemType =
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'array'
-  | 'object'
-  | 'file'
-  | 'none';
+export type ValidationItemType = 'string' | 'number' | 'boolean' | 'array' | 'object' | 'file' | 'none';
 
 export type ValidatorItem = {
   key: string;
@@ -138,13 +119,7 @@ export interface OperationObject {
 
 export interface ParameterObject {
   name?: string; // required
-  in?:
-    | 'query'
-    | 'header'
-    | 'path'
-    | /* V3 */ 'cookie'
-    | /* V2 */ 'formData'
-    | /* V2 */ 'body'; // required
+  in?: 'query' | 'header' | 'path' | /* V3 */ 'cookie' | /* V2 */ 'formData' | /* V2 */ 'body'; // required
   description?: string;
   required?: boolean;
   deprecated?: boolean;

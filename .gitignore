@@ -3,7 +3,6 @@ build
 .DS_Store
 
 .env
-src/example
 scripts
 package.json
 yarn.lock

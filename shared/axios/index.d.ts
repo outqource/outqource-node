@@ -1,9 +1,4 @@
-import {
-  Method,
-  AxiosInstance,
-  AxiosRequestHeaders,
-  AxiosResponse,
-} from 'axios';
+import { Method, AxiosInstance, AxiosRequestHeaders, AxiosResponse } from 'axios';
 export interface onRequestProps {
   instance?: AxiosInstance;
   url: string;

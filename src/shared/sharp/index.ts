@@ -31,10 +31,7 @@ export class Sharp {
       }
     }
 
-    const newBuffer = await sharp(buffer)
-      .resize(options)
-      .withMetadata()
-      .toBuffer();
+    const newBuffer = await sharp(buffer).resize(options).withMetadata().toBuffer();
 
     return newBuffer;
   }

@@ -29,9 +29,7 @@ class Encrypt {
     if (!this.aesKey) {
       return null;
     }
-    return crypto_js_1.default.AES.decrypt(value, this.aesKey).toString(
-      crypto_js_1.default.enc.Utf8,
-    );
+    return crypto_js_1.default.AES.decrypt(value, this.aesKey).toString(crypto_js_1.default.enc.Utf8);
   }
 }
 exports.Encrypt = Encrypt;

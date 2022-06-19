@@ -13,12 +13,7 @@ class Iamport {
   private merchant_id?: string;
   private pg?: string;
 
-  constructor({
-    imp_key,
-    imp_secret,
-    merchant_id,
-    pg,
-  }: IamportTypes.constructor) {
+  constructor({ imp_key, imp_secret, merchant_id, pg }: IamportTypes.constructor) {
     this.imp_key = imp_key;
     this.imp_secret = imp_secret;
     this.merchant_id = merchant_id;
@@ -26,10 +21,7 @@ class Iamport {
   }
 
   // 액세스 토큰 얻기
-  async getToken({
-    imp_key,
-    imp_secret,
-  }: IamportTypes.getToken): Promise<string | null> {
+  async getToken({ imp_key, imp_secret }: IamportTypes.getToken): Promise<string | null> {
     if (!imp_key && !imp_secret && !this.imp_key && !this.imp_secret) {
       throw 'Invalid Key';
     }
@@ -50,10 +42,7 @@ class Iamport {
   }
 
   // 결제 정보 얻기
-  async getPaymentData({
-    access_token,
-    imp_uid,
-  }: IamportTypes.getPaymentData): Promise<any | null> {
+  async getPaymentData({ access_token, imp_uid }: IamportTypes.getPaymentData): Promise<any | null> {
     const headers = { Authorization: access_token };
 
     try {
@@ -210,10 +199,7 @@ class Iamport {
   }
 
   // 휴대폰 본인인증 정보 얻기
-  async getCertificationData({
-    access_token,
-    imp_uid,
-  }: IamportTypes.getCertificationData): Promise<any | null> {
+  async getCertificationData({ access_token, imp_uid }: IamportTypes.getCertificationData): Promise<any | null> {
     const headers = { Authorization: access_token };
 
     try {
