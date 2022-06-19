@@ -1,4 +1,5 @@
 import APITree from "./APITree";
+import * as path from "path";
 
 export default class Generator {
     readonly #root: string;
@@ -10,7 +11,7 @@ export default class Generator {
     }
 
     public static async generate(root: string, dest: string) {
-        const generator = new Generator(root, dest);
+        const generator = new Generator(path.join(process.cwd(), root), dest);
         await generator.#generate();
     }
 
