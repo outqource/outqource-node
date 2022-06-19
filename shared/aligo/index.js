@@ -23,9 +23,7 @@ class Aligo {
     params.append('msg', message);
     params.append('msg_type', 'SMS');
     try {
-      await axios_1.default.post('https://apis.aligo.in/send/', params, {
-        headers,
-      });
+      await axios_1.default.post('https://apis.aligo.in/send/', params, { headers });
       return true;
     } catch (error) {
       return false;

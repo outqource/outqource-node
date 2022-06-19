@@ -5,26 +5,9 @@ export declare type OpenAPIOptions = {
   version: string;
   urls: string[];
 };
-export declare type ControllerAPIMethod =
-  | 'GET'
-  | 'POST'
-  | 'DELETE'
-  | 'PATCH'
-  | 'PUT';
-export declare type ControllerAPIMethodLowerCase =
-  | 'get'
-  | 'post'
-  | 'delete'
-  | 'patch'
-  | 'put';
-export declare type ControllerAPIResponsStatusCode =
-  | 200
-  | 201
-  | 204
-  | 400
-  | 401
-  | 404
-  | 500;
+export declare type ControllerAPIMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
+export declare type ControllerAPIMethodLowerCase = 'get' | 'post' | 'delete' | 'patch' | 'put';
+export declare type ControllerAPIResponsStatusCode = 200 | 201 | 204 | 400 | 401 | 404 | 500;
 export declare type ControllerAPIResponse =
   | ControllerAPIResponsStatusCode
   | {
@@ -52,14 +35,7 @@ export declare type ControllerAPI = {
   responses?: ControllerAPIResponses;
 };
 export declare type ValidatorKey = 'param' | 'query' | 'header' | 'body';
-export declare type ValidationItemType =
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'array'
-  | 'object'
-  | 'file'
-  | 'none';
+export declare type ValidationItemType = 'string' | 'number' | 'boolean' | 'array' | 'object' | 'file' | 'none';
 export declare type ValidatorItem = {
   key: string;
   type: ValidationItemType;
@@ -129,13 +105,7 @@ export interface OperationObject {
 }
 export interface ParameterObject {
   name?: string;
-  in?:
-    | 'query'
-    | 'header'
-    | 'path'
-    | /* V3 */ 'cookie'
-    | /* V2 */ 'formData'
-    | /* V2 */ 'body';
+  in?: 'query' | 'header' | 'path' | /* V3 */ 'cookie' | /* V2 */ 'formData' | /* V2 */ 'body';
   description?: string;
   required?: boolean;
   deprecated?: boolean;
@@ -182,9 +152,7 @@ export interface SchemaObject {
   anyOf?: (ReferenceObject | SchemaObject)[];
   format?: string;
 }
-export declare type SchemaFormatter = (
-  schemaObj: SchemaObject,
-) => string | undefined;
+export declare type SchemaFormatter = (schemaObj: SchemaObject) => string | undefined;
 export interface SwaggerToTSOptions {
   /** Allow arbitrary properties on schemas (default: false) */
   additionalProperties?: boolean;

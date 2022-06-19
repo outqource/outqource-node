@@ -14,11 +14,7 @@ const checkJsonString = (value: string): boolean => {
 
 export const parseAutoValue = (value: string) => {
   const isNumberValue = Number(value);
-  const isBooleanValue =
-    value === 'TRUE' ||
-    value === 'FALSE' ||
-    value === 'true' ||
-    value === 'false';
+  const isBooleanValue = value === 'TRUE' || value === 'FALSE' || value === 'true' || value === 'false';
   const isJsonValue = checkJsonString(value);
 
   if (isNumberValue) {
@@ -32,10 +28,7 @@ export const parseAutoValue = (value: string) => {
   }
 };
 
-export const parseValue = (
-  value: string,
-  type: ParseDataType | string | 'auto' = 'auto',
-) => {
+export const parseValue = (value: string, type: ParseDataType | string | 'auto' = 'auto') => {
   switch (type) {
     case 'string':
       return value;

@@ -14,11 +14,7 @@ const checkJsonString = value => {
 };
 const parseAutoValue = value => {
   const isNumberValue = Number(value);
-  const isBooleanValue =
-    value === 'TRUE' ||
-    value === 'FALSE' ||
-    value === 'true' ||
-    value === 'false';
+  const isBooleanValue = value === 'TRUE' || value === 'FALSE' || value === 'true' || value === 'false';
   const isJsonValue = checkJsonString(value);
   if (isNumberValue) {
     return isNumberValue;

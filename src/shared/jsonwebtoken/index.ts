@@ -8,10 +8,7 @@ export class Jsonwebtoken {
   private signOptions?: SignOptions;
   private verifyOptions?: VerifyOptions;
 
-  constructor(
-    jwtKey: string,
-    props?: { signOptions?: SignOptions; verifyOptions?: VerifyOptions },
-  ) {
+  constructor(jwtKey: string, props?: { signOptions?: SignOptions; verifyOptions?: VerifyOptions }) {
     this.jwtKey = jwtKey;
     this.signOptions = props?.signOptions;
     this.verifyOptions = props?.verifyOptions;
@@ -19,19 +16,11 @@ export class Jsonwebtoken {
 
   signJwt<T = any>(value: JwtPayload, options?: SignOptions): T | any {
     try {
-      if (
-        typeof value !== 'string' &&
-        typeof value !== 'object' &&
-        !Buffer.isBuffer(value)
-      ) {
+      if (typeof value !== 'string' && typeof value !== 'object' && !Buffer.isBuffer(value)) {
         throw { status: 400, message: 'BadRequest Payload' };
       }
 
-      return jwt.sign(
-        value as JwtPayload,
-        this.jwtKey,
-        options || this.signOptions,
-      );
+      return jwt.sign(value as JwtPayload, this.jwtKey, options || this.signOptions);
     } catch (error) {
       return error;
     }

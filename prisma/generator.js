@@ -51,9 +51,7 @@ import database from 'database';
         if (formData) controllerAPIData.formData = formData;
         if (body) controllerAPIData.body = body;
         if (responses) controllerAPIData.responses = responses;
-        const controllerAPI = `export const ${name}API: ControllerAPI = ${JSON.stringify(
-          controllerAPIData,
-        )};`;
+        const controllerAPI = `export const ${name}API: ControllerAPI = ${JSON.stringify(controllerAPIData)};`;
         result = result + controllerAPI + '\n\n';
         // CRUD Controller
         const crudData = {

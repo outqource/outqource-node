@@ -1,9 +1,4 @@
-import axios, {
-  Method,
-  AxiosInstance,
-  AxiosRequestHeaders,
-  AxiosResponse,
-} from 'axios';
+import axios, { Method, AxiosInstance, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import queryString from 'query-string';
 
 export interface onRequestProps {

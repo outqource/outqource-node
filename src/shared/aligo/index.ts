@@ -12,10 +12,7 @@ class Aligo {
     this.sender = sender;
   }
 
-  async sendMessage({
-    phoneNumber,
-    message,
-  }: Types.sendMessage): Promise<boolean> {
+  async sendMessage({ phoneNumber, message }: Types.sendMessage): Promise<boolean> {
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const params = new URLSearchParams();
     params.append('user_id', this.userId);

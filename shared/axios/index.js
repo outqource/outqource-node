@@ -8,14 +8,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 exports.onRequest = void 0;
 const axios_1 = __importDefault(require('axios'));
 const query_string_1 = __importDefault(require('query-string'));
-const onRequest = async ({
-  instance = axios_1.default,
-  url,
-  method,
-  query,
-  data,
-  headers,
-}) => {
+const onRequest = async ({ instance = axios_1.default, url, method, query, data, headers }) => {
   try {
     if (query) {
       url = `${url}?${query_string_1.default.stringify(query)}`;

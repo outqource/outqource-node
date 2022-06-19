@@ -13,9 +13,7 @@ export type AjvValidators<P, Q, B> = {
   body?: ValidateFunction<B>;
 };
 
-const createAjvMiddleware = <P, Q, B>(
-  props?: CreateAJVMiddlewareProps<P, Q, B>,
-) => {
+const createAjvMiddleware = <P, Q, B>(props?: CreateAJVMiddlewareProps<P, Q, B>) => {
   if (!props) props = {};
 
   const ajv: Ajv = (() => {
@@ -41,32 +39,40 @@ const createAjvMiddleware = <P, Q, B>(
   }
 
   return (req: Request, res: Response, next: NextFunction) => {
+    let errorMessage = '';
+
     if (req.params && validators.params) {
-      const validation = ajv.validate(validators.params, req.params);
+      const validation = validators.params(req.params);
+      errorMessage = validators.params.errors?.map(error => error.message).join(', ') ?? '';
+
       if (!validation) {
         return next({
           status: 400,
-          message: `Request url parameters validation failed: ${ajv.errorsText()}`,
+          message: `Request url parameters validation failed: ${errorMessage}`,
         });
       }
     }
 
     if (req.query && validators.query) {
-      const validation = ajv.validate(validators.query, req.query);
+      const validation = validators.query(req.query);
+      errorMessage = validators.query.errors?.map(error => error.message).join(', ') ?? '';
+
       if (!validation) {
         return next({
           status: 400,
-          message: `Request query parameters validation failed: ${ajv.errorsText()}`,
+          message: `Request query parameters validation failed: ${errorMessage}`,
         });
       }
     }
 
     if (req.body && validators.body) {
-      const validation = ajv.validate(validators.body, req.body);
+      const validation = validators.body(req.body);
+      errorMessage = validators.body.errors?.map(error => error.message).join(', ') ?? '';
+
       if (!validation) {
         return next({
           status: 400,
-          message: `Request body validation failed: ${ajv.errorsText()}`,
+          message: `Request body validation failed: ${errorMessage}`,
         });
       }
     }

@@ -28,8 +28,5 @@ export declare class InitApp {
       jwtUserCallback?: (accessToken: string) => Promise<any>;
     },
   ): void;
-  routers(options?: {
-    errorOptions?: IErrorProps;
-    globalOptions?: IGlobalProps;
-  }): void;
+  routers(options?: { errorOptions?: IErrorProps; globalOptions?: IGlobalProps }): void;
 }

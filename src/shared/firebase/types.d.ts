@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import type {
-  Notification,
-  TokenMessage,
-} from 'firebase-admin/lib/messaging/messaging-api';
+import type { Notification, TokenMessage } from 'firebase-admin/lib/messaging/messaging-api';
 
 export namespace FirebaseMessaging {
   export interface sendMessage {

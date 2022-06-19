@@ -10,15 +10,8 @@ const axios_1 = __importDefault(require('axios'));
 class Google {
   static async getUser(token) {
     try {
-      const response = await axios_1.default.get(
-        `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`,
-      );
-      const {
-        id,
-        email,
-        name: nickname,
-        picture: profileImage,
-      } = response.data;
+      const response = await axios_1.default.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`);
+      const { id, email, name: nickname, picture: profileImage } = response.data;
       return {
         id,
         email,
@@ -27,8 +20,7 @@ class Google {
       };
     } catch (error) {
       const { response } = error;
-      if (response.data.error === 'invalid_token')
-        throw { status: 403, message: 'GOOGLE_TOKEN_EXPIRED' };
+      if (response.data.error === 'invalid_token') throw { status: 403, message: 'GOOGLE_TOKEN_EXPIRED' };
       return undefined;
     }
   }

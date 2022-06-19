@@ -4,12 +4,7 @@ import swagger from './swagger';
 import test from './test';
 import cors from 'cors';
 import pagination from './pagination';
-import createUploader, {
-  allUploader,
-  imageUploader,
-  videoUploader,
-  imageAndVideoUploader,
-} from './multer';
+import createUploader, { allUploader, imageUploader, videoUploader, imageAndVideoUploader } from './multer';
 export {
   json,
   urlencoded,

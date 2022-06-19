@@ -1,21 +1,11 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.getCertificationHTML = exports.getRequestPaymentHTML = void 0;
-const getRequestPaymentHTML = ({
-  title,
-  merchant_id,
-  buttonText,
-  buttonWrapperStyle,
-  buttonStyle,
-  ...props
-}) => {
+const getRequestPaymentHTML = ({ title, merchant_id, buttonText, buttonWrapperStyle, buttonStyle, ...props }) => {
   if (typeof buttonWrapperStyle === 'object') {
-    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce(
-      (prev, cur) => {
-        return prev + `${cur[0]}:${cur[1]}; `;
-      },
-      '',
-    );
+    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
   }
   if (typeof buttonStyle === 'object') {
     buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
@@ -31,9 +21,7 @@ const getRequestPaymentHTML = ({
   </head>
   <body onload="onload();">
 		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${
-    buttonText || '결제하기'
-  }</button>
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
 		</main>
     
 
@@ -94,12 +82,9 @@ const getCertificationHTML = ({
   ...props
 }) => {
   if (typeof buttonWrapperStyle === 'object') {
-    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce(
-      (prev, cur) => {
-        return prev + `${cur[0]}:${cur[1]}; `;
-      },
-      '',
-    );
+    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
   }
   if (typeof buttonStyle === 'object') {
     buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
@@ -115,9 +100,7 @@ const getCertificationHTML = ({
   </head>
   <body onload="onload();">
 		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${
-    buttonText || '결제하기'
-  }</button>
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
 		</main>
     
 

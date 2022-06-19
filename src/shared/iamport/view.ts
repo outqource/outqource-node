@@ -40,12 +40,9 @@ export const getRequestPaymentHTML = ({
   ...props
 }: getRequestPaymentHTMLProps): string => {
   if (typeof buttonWrapperStyle === 'object') {
-    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce(
-      (prev, cur) => {
-        return prev + `${cur[0]}:${cur[1]}; `;
-      },
-      '',
-    );
+    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
   }
 
   if (typeof buttonStyle === 'object') {
@@ -63,9 +60,7 @@ export const getRequestPaymentHTML = ({
   </head>
   <body onload="onload();">
 		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${
-    buttonText || '결제하기'
-  }</button>
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
 		</main>
     
 
@@ -126,12 +121,9 @@ export const getCertificationHTML = ({
   ...props
 }: getRequestCertifcationHTML): string => {
   if (typeof buttonWrapperStyle === 'object') {
-    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce(
-      (prev, cur) => {
-        return prev + `${cur[0]}:${cur[1]}; `;
-      },
-      '',
-    );
+    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
   }
 
   if (typeof buttonStyle === 'object') {
@@ -149,9 +141,7 @@ export const getCertificationHTML = ({
   </head>
   <body onload="onload();">
 		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${
-    buttonText || '결제하기'
-  }</button>
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
 		</main>
     
 

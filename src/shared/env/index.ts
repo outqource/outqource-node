@@ -98,11 +98,7 @@ export class ParseEnv {
 
     const value = this.env[key];
     const isNumberValue = Number(value);
-    const isBooleanValue =
-      value === 'TRUE' ||
-      value === 'FALSE' ||
-      value === 'true' ||
-      value === 'false';
+    const isBooleanValue = value === 'TRUE' || value === 'FALSE' || value === 'true' || value === 'false';
     const isJsonValue = ParseEnv.checkJsonString(value);
 
     if (isNumberValue) {

@@ -12,7 +12,8 @@
     "start": "nodemon ./src/example/index.ts --ext ts",
     "prepublishOnly": "yarn build",
     "prepare": "husky install",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "test-sdk": "node --trace-warnings --unhandled-rejections=strict build/express/sdk/index.js ./src/example/controllers ./test-sdk"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",

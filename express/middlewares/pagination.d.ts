@@ -7,9 +7,5 @@ declare global {
     }
   }
 }
-declare const pagination: () => (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => void;
+declare const pagination: () => (req: Request, res: Response, next: NextFunction) => void;
 export default pagination;

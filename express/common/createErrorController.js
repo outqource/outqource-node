@@ -4,8 +4,7 @@ exports.createErrorController = void 0;
 const createErrorController = props => {
   return (err, req, res, next) => {
     let header = props === null || props === void 0 ? void 0 : props.header;
-    const isConsole =
-      props === null || props === void 0 ? void 0 : props.isConsole;
+    const isConsole = props === null || props === void 0 ? void 0 : props.isConsole;
     const error = {
       status: err.status || 500,
       message: err.message || 'Server Internal Error',

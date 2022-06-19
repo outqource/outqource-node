@@ -11,21 +11,9 @@ export type OpenAPIOptions = {
 // API
 export type ControllerAPIMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
 
-export type ControllerAPIMethodLowerCase =
-  | 'get'
-  | 'post'
-  | 'delete'
-  | 'patch'
-  | 'put';
+export type ControllerAPIMethodLowerCase = 'get' | 'post' | 'delete' | 'patch' | 'put';
 
-export type ControllerAPIResponsStatusCode =
-  | 200
-  | 201
-  | 204
-  | 400
-  | 401
-  | 404
-  | 500;
+export type ControllerAPIResponsStatusCode = 200 | 201 | 204 | 400 | 401 | 404 | 500;
 
 export type ControllerAPIResponse =
   | ControllerAPIResponsStatusCode
@@ -41,28 +29,22 @@ export type ControllerAPIResponses = Array<ControllerAPIResponse>;
 // Validator
 export type ValidatorKey = 'param' | 'query' | 'header' | 'body';
 
-export type ValidationItemType =
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'array'
-  | 'object'
-  | 'file'
-  | 'none';
+export type ValidationItemType = 'string' | 'number' | 'boolean' | 'array' | 'object' | 'file' | 'none';
 
 export type ValidatorItem = {
   key: string;
   type: ValidationItemType;
   nullable?: boolean;
+  additionalProperties?: boolean;
   default?: any;
-  example?: any;
+  example?: any; // openapi
 };
 
-export type AjvValidator<P = any, Q = any, B = any> = CreateAJVMiddlewareProps<
-  P,
-  Q,
-  B
->;
+export type AjvValidator = {
+  params?: ValidatorItem[];
+  query?: ValidatorItem[];
+  body?: ValidatorItem[];
+};
 
 export type ControllerAPI<P = any, Q = any, B = any> = {
   tags?: string[];
@@ -73,7 +55,7 @@ export type ControllerAPI<P = any, Q = any, B = any> = {
   query?: ValidatorItem[];
   header?: ValidatorItem[];
   body?: ValidatorItem[];
-  ajv?: AjvValidator<P, Q, B>;
+  ajv?: AjvValidator;
   auth?: 'jwt' | 'cookie' | 'session';
   summary?: string;
   formData?: { key: string; type: 'single' | 'multiple' };
@@ -146,13 +128,7 @@ export interface OperationObject {
 
 export interface ParameterObject {
   name?: string; // required
-  in?:
-    | 'query'
-    | 'header'
-    | 'path'
-    | /* V3 */ 'cookie'
-    | /* V2 */ 'formData'
-    | /* V2 */ 'body'; // required
+  in?: 'query' | 'header' | 'path' | /* V3 */ 'cookie' | /* V2 */ 'formData' | /* V2 */ 'body'; // required
   description?: string;
   required?: boolean;
   deprecated?: boolean;

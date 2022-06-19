@@ -40,10 +40,7 @@ const getOpenAPIPaths = (controllers: Record<string, any>) => {
   return paths;
 };
 
-const createOpenAPI = async (
-  { title, version, urls }: OpenAPIOptions,
-  controllers: any,
-): Promise<string> => {
+const createOpenAPI = async ({ title, version, urls }: OpenAPIOptions, controllers: any): Promise<string> => {
   const tags = getOpenAPITags(controllers);
   const paths = getOpenAPIPaths(controllers);
   const result = getOpenAPI({ title, version, urls, tags, paths });

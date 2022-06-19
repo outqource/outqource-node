@@ -18,10 +18,7 @@ const getTraverseOption = (req, jsonObj) => {
   const flatten = flat_1.default.flatten(jsonObj);
   Object.entries(flatten).forEach(([key, value]) => {
     Object.entries(request).forEach(([requestKey, requestValue]) => {
-      if (
-        typeof value === 'string' &&
-        (value === null || value === void 0 ? void 0 : value.includes('$value'))
-      ) {
+      if (typeof value === 'string' && (value === null || value === void 0 ? void 0 : value.includes('$value'))) {
         const splitted = value.split('/');
         const valueKey = splitted.length > 1 ? splitted[1] : null;
         const parseDataType = splitted.length > 2 ? splitted[2] : null;
@@ -43,18 +40,12 @@ const getTraverseOption = (req, jsonObj) => {
     });
     Object.entries(query).forEach(([queryKey, queryValue]) => {
       if (value === '$query' && queryKey === originKey) {
-        flatten[key] =
-          typeof queryValue === 'string'
-            ? (0, utils_1.parseAutoValue)(queryValue)
-            : queryValue;
+        flatten[key] = typeof queryValue === 'string' ? (0, utils_1.parseAutoValue)(queryValue) : queryValue;
       }
     });
     Object.entries(body).forEach(([bodyKey, bodyValue]) => {
       if (value === '$body' && bodyKey === originKey) {
-        flatten[key] =
-          typeof bodyValue === 'string'
-            ? (0, utils_1.parseAutoValue)(bodyValue)
-            : bodyValue;
+        flatten[key] = typeof bodyValue === 'string' ? (0, utils_1.parseAutoValue)(bodyValue) : bodyValue;
       }
     });
   });
@@ -78,12 +69,7 @@ const createPrismaGetController = (database, controllerAPI, options) => {
   // check GET
   if (Array.isArray(actions)) {
     actions.forEach(item => {
-      if (
-        item !== 'findMany' &&
-        item !== 'findUnique' &&
-        item !== 'findFirst' &&
-        item !== 'count'
-      ) {
+      if (item !== 'findMany' && item !== 'findUnique' && item !== 'findFirst' && item !== 'count') {
         throw 'Error Occured! createPrismaController props.actions is not GET Controller!';
       }
       if (item !== 'count') {
@@ -93,12 +79,7 @@ const createPrismaGetController = (database, controllerAPI, options) => {
       }
     });
   } else {
-    if (
-      actions !== 'findMany' &&
-      actions !== 'findUnique' &&
-      actions !== 'findFirst' &&
-      actions !== 'count'
-    ) {
+    if (actions !== 'findMany' && actions !== 'findUnique' && actions !== 'findFirst' && actions !== 'count') {
       throw 'Error Occured! createPrismaController props.actions is not GET Controller!';
     }
     if (actions === 'findMany') {
@@ -114,29 +95,16 @@ const createPrismaGetController = (database, controllerAPI, options) => {
     const pagination = {};
     const findOptions = {
       ...(options.options || {}),
-      where:
-        (resultOptions === null || resultOptions === void 0
-          ? void 0
-          : resultOptions.where) || {},
-      select:
-        (_a = options.options) === null || _a === void 0 ? void 0 : _a.select,
+      where: (resultOptions === null || resultOptions === void 0 ? void 0 : resultOptions.where) || {},
+      select: (_a = options.options) === null || _a === void 0 ? void 0 : _a.select,
     };
     const countOptions = {
-      where:
-        (resultOptions === null || resultOptions === void 0
-          ? void 0
-          : resultOptions.where) || {},
+      where: (resultOptions === null || resultOptions === void 0 ? void 0 : resultOptions.where) || {},
     };
     // FindMany pagination
-    if (
-      action === 'findMany' &&
-      (typeof isPagination === 'undefined' || isPagination)
-    ) {
-      const page =
-        ((_b = req.query) === null || _b === void 0 ? void 0 : _b.page) || '1';
-      const limit =
-        ((_c = req.query) === null || _c === void 0 ? void 0 : _c.limit) ||
-        '20';
+    if (action === 'findMany' && (typeof isPagination === 'undefined' || isPagination)) {
+      const page = ((_b = req.query) === null || _b === void 0 ? void 0 : _b.page) || '1';
+      const limit = ((_c = req.query) === null || _c === void 0 ? void 0 : _c.limit) || '20';
       const take = Number(limit) || 20;
       const skip = (Number(page) - 1) * take;
       findOptions.take = take;
