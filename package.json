@@ -12,7 +12,7 @@
     "clear": "node scripts/clear-build.js",
     "build": "yarn clear && tsc -b && node scripts/copy-build.js",
     "start": "nodemon ./src/example/index.ts --ext ts",
-    "prepublish": "yarn build"
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
