@@ -1,3 +1,3 @@
 export * from './types';
 export * from './constant';
-export { createOpenAPI } from './openapi';
+export { default as createOpenAPI } from './openapi';
