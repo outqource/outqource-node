@@ -1,73 +1,73 @@
 import { Request, Response, NextFunction } from "express";
-import Ajv, { JSONSchemaType, ValidateFunction } from "ajv";
+import Ajv, {JSONSchemaType, Options, ValidateFunction} from "ajv";
 
-export type CreateAJVMiddlewareProps<P = any, Q = any, B = any> = {
+export type CreateAJVMiddlewareProps<P, Q, B> = {
   params?: JSONSchemaType<P>;
   query?: JSONSchemaType<Q>;
   body?: JSONSchemaType<B>;
 };
 
-export type AjvValidators<P = any, Q = any, B = any> = {
+export type AjvValidators<P, Q, B> = {
   params?: ValidateFunction<P>;
   query?: ValidateFunction<Q>;
   body?: ValidateFunction<B>;
 };
 
-const createAjvMiddleware = <P = any, Q = any, B = any>(
+const createAjvMiddleware = <P, Q, B>(
   props?: CreateAJVMiddlewareProps<P, Q, B>
 ) => {
-  let ajv: Ajv | undefined = undefined;
-
   if (!props) props = {};
+
+  const ajv: Ajv = (() => {
+    const options: Options = {};
+
+    if (props.params)
+        options.coerceTypes = true;
+
+    return new Ajv(options);
+  })();
 
   const validators: AjvValidators<P, Q, B> = {};
 
   if (props.params) {
-    ajv = new Ajv({ coerceTypes: true });
     validators.params = ajv.compile<P>(props.params);
   }
 
   if (props.query) {
-    ajv = new Ajv();
     validators.query = ajv.compile<Q>(props.query);
   }
 
   if (props.body) {
-    ajv = new Ajv();
     validators.body = ajv.compile<B>(props.body);
   }
 
   return (req: Request, res: Response, next: NextFunction) => {
     if (req.params && validators.params) {
-      const validation = (ajv as Ajv).validate(validators.params, req.params);
+      const validation = ajv.validate(validators.params, req.params);
       if (!validation) {
         return next({
           status: 400,
-          message: ajv?.errorsText(),
+          message: ajv.errorsText(),
         });
       }
     }
 
     if (req.query && validators.query) {
-      const validation = (ajv as Ajv).validate(validators.query, req.query);
+      const validation = ajv.validate(validators.query, req.query);
       if (!validation) {
         return next({
           status: 400,
-          message: `Request url parameters validation failed: ${(
-            ajv as Ajv
-          ).errorsText()}`,
+          message: `Request url parameters validation failed: ${ajv.errorsText()}`,
         });
       }
     }
 
     if (req.body && validators.body) {
-      const validation = (ajv as Ajv).validate(validators.body, req.body);
+      const validation = ajv.validate(validators.body, req.body);
       if (!validation) {
         return next({
           status: 400,
-          message: `Request body validation failed: ${(
-            ajv as Ajv
-          ).errorsText()}`,
+          message: `Request body validation failed: ${ajv.errorsText()}`,
         });
       }
     }
