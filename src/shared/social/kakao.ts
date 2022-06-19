@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export type KakaoUser = {
   id: string;
@@ -11,10 +11,10 @@ export class Kakao {
   static async getUser(token: string): Promise<KakaoUser | undefined> {
     const headers = {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
     try {
-      const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
+      const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
         headers,
       });
 

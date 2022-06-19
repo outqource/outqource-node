@@ -10,7 +10,10 @@ export const validator = (req: Request, _: Response, next: NextFunction) => {
       status: 400,
       message: errors
         .array()
-        .map((error: ValidatorMethod.ValidationError) => `${error.param}: ${error.msg}`)
+        .map(
+          (error: ValidatorMethod.ValidationError) =>
+            `${error.param}: ${error.msg}`,
+        )
         .join(', '),
     });
   } else {
@@ -48,7 +51,7 @@ export const createValidator = (key: ValidatorKey, api: ValidatorItem) => {
   if (!Array.isArray(api.type)) {
     method = createValidation(method, api.type);
   } else {
-    api.type.forEach((type) => {
+    api.type.forEach(type => {
       method = createValidation(method, type);
     });
   }
@@ -56,15 +59,20 @@ export const createValidator = (key: ValidatorKey, api: ValidatorItem) => {
   return method;
 };
 
-export const createValidators = (controllers: Record<string, any>): Record<string, any> => {
+export const createValidators = (
+  controllers: Record<string, any>,
+): Record<string, any> => {
   const validators: Record<string, any> = {};
   Object.entries(controllers).forEach(([key, value]: [string, any]) => {
     if (key.indexOf('API') > -1) {
       const validatorName = key.replace('API', '');
       const validator: any[] = [];
 
-      Object.entries(value).forEach((valueItem) => {
-        const [controllerKey, apis] = valueItem as [ValidatorKey | string, ValidatorItem[]];
+      Object.entries(value).forEach(valueItem => {
+        const [controllerKey, apis] = valueItem as [
+          ValidatorKey | string,
+          ValidatorItem[],
+        ];
 
         if (
           controllerKey === 'param' ||

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { URL } from "url";
+import type { URL } from 'url';
 
 export type OpenAPIOptions = {
   title: string;
@@ -8,14 +8,14 @@ export type OpenAPIOptions = {
 };
 
 // API
-export type ControllerAPIMethod = "GET" | "POST" | "DELETE" | "PATCH" | "PUT";
+export type ControllerAPIMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
 
 export type ControllerAPIMethodLowerCase =
-  | "get"
-  | "post"
-  | "delete"
-  | "patch"
-  | "put";
+  | 'get'
+  | 'post'
+  | 'delete'
+  | 'patch'
+  | 'put';
 
 export type ControllerAPIResponsStatusCode =
   | 200
@@ -46,23 +46,23 @@ export type ControllerAPI = {
   query?: ValidatorItem[];
   header?: ValidatorItem[];
   body?: ValidatorItem[];
-  auth?: "jwt" | "cookie" | "session";
+  auth?: 'jwt' | 'cookie' | 'session';
   summary?: string;
-  formData?: { key: string; type: "single" | "multiple" };
+  formData?: { key: string; type: 'single' | 'multiple' };
   responses?: ControllerAPIResponses;
 };
 
 // Validator
-export type ValidatorKey = "param" | "query" | "header" | "body";
+export type ValidatorKey = 'param' | 'query' | 'header' | 'body';
 
 export type ValidationItemType =
-  | "string"
-  | "number"
-  | "boolean"
-  | "array"
-  | "object"
-  | "file"
-  | "none";
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'array'
+  | 'object'
+  | 'file'
+  | 'none';
 
 export type ValidatorItem = {
   key: string;
@@ -139,17 +139,17 @@ export interface OperationObject {
 export interface ParameterObject {
   name?: string; // required
   in?:
-    | "query"
-    | "header"
-    | "path"
-    | /* V3 */ "cookie"
-    | /* V2 */ "formData"
-    | /* V2 */ "body"; // required
+    | 'query'
+    | 'header'
+    | 'path'
+    | /* V3 */ 'cookie'
+    | /* V2 */ 'formData'
+    | /* V2 */ 'body'; // required
   description?: string;
   required?: boolean;
   deprecated?: boolean;
   schema?: ReferenceObject | SchemaObject; // required
-  type?: "string" | "number" | "integer" | "boolean" | "array" | "file"; // V2 ONLY
+  type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'file'; // V2 ONLY
   items?: ReferenceObject | SchemaObject; // V2 ONLY
   enum?: string[]; // V2 ONLY
 }

@@ -3,8 +3,8 @@ import axios, {
   AxiosInstance,
   AxiosRequestHeaders,
   AxiosResponse,
-} from "axios";
-import queryString from "query-string";
+} from 'axios';
+import queryString from 'query-string';
 
 export interface onRequestProps {
   instance?: AxiosInstance;

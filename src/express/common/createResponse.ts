@@ -9,7 +9,7 @@ export const createResponse = (props: ICreateResponseProps) => {
   const { skip, take, count, data } = props;
 
   if (count && Array.isArray(data)) {
-    if (typeof skip !== "number" || typeof take !== "number") {
+    if (typeof skip !== 'number' || typeof take !== 'number') {
       return { count, rows: data };
     }
 

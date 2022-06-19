@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Request, Response, NextFunction } from "express";
-import type { PrismaClient } from "@prisma/client";
-import type { ControllerAPI } from "../openapi";
-import { parseAutoValue, parseValue } from "../shared/utils";
-import Flat from "flat";
+import type { Request, Response, NextFunction } from 'express';
+import type { PrismaClient } from '@prisma/client';
+import type { ControllerAPI } from '../openapi';
+import { parseAutoValue, parseValue } from '../shared/utils';
+import Flat from 'flat';
 
 export type PrismaAction =
-  | "findUnique"
-  | "findMany"
-  | "findFirst"
-  | "create"
-  | "createMany"
-  | "update"
-  | "updateMany"
-  | "upsert"
-  | "delete"
-  | "deleteMany"
-  | "executeRaw"
-  | "queryRaw"
-  | "aggregate"
-  | "count";
+  | 'findUnique'
+  | 'findMany'
+  | 'findFirst'
+  | 'create'
+  | 'createMany'
+  | 'update'
+  | 'updateMany'
+  | 'upsert'
+  | 'delete'
+  | 'deleteMany'
+  | 'executeRaw'
+  | 'queryRaw'
+  | 'aggregate'
+  | 'count';
 
 export type CreatePrismaControllerOptions<T = any> = {
   table: string;
@@ -43,8 +43,8 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
     ([key, value]: [string, string]) => {
       Object.entries(request).forEach(
         ([requestKey, requestValue]: [string, any]) => {
-          if (typeof value === "string" && value?.includes("$value")) {
-            const splitted = value.split("/");
+          if (typeof value === 'string' && value?.includes('$value')) {
+            const splitted = value.split('/');
             const valueKey = splitted.length > 1 ? splitted[1] : null;
             const parseDataType = splitted.length > 2 ? splitted[2] : null;
 
@@ -54,50 +54,50 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
                 : parseAutoValue(requestValue);
             }
           }
-        }
+        },
       );
-    }
+    },
   );
 
   Object.entries(flatten as object).forEach(
     ([key, value]: [string, string]) => {
-      const originKeys = key.split(".");
+      const originKeys = key.split('.');
       const originKey = originKeys[originKeys.length - 1];
 
       Object.entries(params).forEach(
         ([paramKey, paramValue]: [string, string]) => {
-          if (value === "$param" && paramKey === originKey) {
+          if (value === '$param' && paramKey === originKey) {
             flatten[key] = parseAutoValue(paramValue);
           }
-        }
+        },
       );
 
       Object.entries(query).forEach(([queryKey, queryValue]) => {
-        if (value === "$query" && queryKey === originKey) {
+        if (value === '$query' && queryKey === originKey) {
           flatten[key] =
-            typeof queryValue === "string"
+            typeof queryValue === 'string'
               ? parseAutoValue(queryValue)
               : queryValue;
         }
       });
 
       Object.entries(body).forEach(([bodyKey, bodyValue]) => {
-        if (value === "$body" && bodyKey === originKey) {
+        if (value === '$body' && bodyKey === originKey) {
           (flatten as any)[key] =
-            typeof bodyValue === "string"
+            typeof bodyValue === 'string'
               ? parseAutoValue(bodyValue)
               : bodyValue;
         }
       });
-    }
+    },
   );
 
   Object.entries(flatten as object).forEach(([key, value]) => {
     if (
-      value === "$param" ||
-      value === "$query" ||
-      value === "$body" ||
-      (typeof value === "string" && value.includes("$value"))
+      value === '$param' ||
+      value === '$query' ||
+      value === '$body' ||
+      (typeof value === 'string' && value.includes('$value'))
     ) {
       delete (flatten as any)[key];
     }
@@ -110,7 +110,7 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
 const createPrismaGetController = (
   database: PrismaClient,
   controllerAPI: ControllerAPI,
-  options: CreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions,
 ) => {
   const { table, actions, pagination: isPagination, softDelete } = options;
   let action: PrismaAction;
@@ -118,17 +118,17 @@ const createPrismaGetController = (
 
   // check GET
   if (Array.isArray(actions)) {
-    actions.forEach((item) => {
+    actions.forEach(item => {
       if (
-        item !== "findMany" &&
-        item !== "findUnique" &&
-        item !== "findFirst" &&
-        item !== "count"
+        item !== 'findMany' &&
+        item !== 'findUnique' &&
+        item !== 'findFirst' &&
+        item !== 'count'
       ) {
-        throw "Error Occured! createPrismaController props.actions is not GET Controller!";
+        throw 'Error Occured! createPrismaController props.actions is not GET Controller!';
       }
 
-      if (item !== "count") {
+      if (item !== 'count') {
         action = item;
       } else {
         isCount = true;
@@ -136,15 +136,15 @@ const createPrismaGetController = (
     });
   } else {
     if (
-      actions !== "findMany" &&
-      actions !== "findUnique" &&
-      actions !== "findFirst" &&
-      actions !== "count"
+      actions !== 'findMany' &&
+      actions !== 'findUnique' &&
+      actions !== 'findFirst' &&
+      actions !== 'count'
     ) {
-      throw "Error Occured! createPrismaController props.actions is not GET Controller!";
+      throw 'Error Occured! createPrismaController props.actions is not GET Controller!';
     }
 
-    if (actions === "findMany") {
+    if (actions === 'findMany') {
       isCount = true;
     }
 
@@ -168,11 +168,11 @@ const createPrismaGetController = (
 
     // FindMany pagination
     if (
-      action === "findMany" &&
-      (typeof isPagination === "undefined" || isPagination)
+      action === 'findMany' &&
+      (typeof isPagination === 'undefined' || isPagination)
     ) {
-      const page = (req.query?.page || "1") as string;
-      const limit = (req.query?.limit || "20") as string;
+      const page = (req.query?.page || '1') as string;
+      const limit = (req.query?.limit || '20') as string;
 
       const take = Number(limit) || 20;
       const skip = (Number(page) - 1) * take;
@@ -187,11 +187,11 @@ const createPrismaGetController = (
 
     // Soft Delete Check
     if (Array.isArray(softDelete)) {
-      softDelete.forEach((item) => {
+      softDelete.forEach(item => {
         findOptions.where[item] = null;
       });
     }
-    if (typeof softDelete === "string") {
+    if (typeof softDelete === 'string') {
       findOptions.where[softDelete] = null;
     }
 
@@ -210,7 +210,7 @@ const createPrismaGetController = (
       const rows = await db[table][action](findOptions);
       response.rows = rows;
 
-      if (action === "findUnique" || action === "findFirst") {
+      if (action === 'findUnique' || action === 'findFirst') {
         if (!rows) {
           throw { status: 404, message: `NotFound ${table} data!` };
         }
@@ -227,17 +227,17 @@ const createPrismaGetController = (
 const createPrismaPostController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: CreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions,
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
   const action = actions;
 
   if (Array.isArray(action)) {
-    throw "Error Occured! createPrismaPostController props.actions is can not be array";
+    throw 'Error Occured! createPrismaPostController props.actions is can not be array';
   }
-  if (action !== "create" && action !== "createMany") {
-    throw "Error Occured! createPrismaController props.actions is not POST Controller!";
+  if (action !== 'create' && action !== 'createMany') {
+    throw 'Error Occured! createPrismaController props.actions is not POST Controller!';
   }
 
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -245,7 +245,7 @@ const createPrismaPostController = (
       const resultOptions = getTraverseOption(req, options.options || {});
       const row = await db[table][action](resultOptions);
 
-      if (typeof response === "boolean" && !response) {
+      if (typeof response === 'boolean' && !response) {
         res.status(204).json();
       } else {
         res.status(201).json(row);
@@ -259,7 +259,7 @@ const createPrismaPostController = (
 const createPrismaDeleteController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: CreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions,
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
@@ -268,7 +268,7 @@ const createPrismaDeleteController = (
   if (Array.isArray(action)) {
     throw `Error Occured! createPrismaDeleteController props.actions is can not be array in ${table} DELETE`;
   }
-  if (action !== "delete" && action !== "deleteMany") {
+  if (action !== 'delete' && action !== 'deleteMany') {
     throw `Error Occured! createPrismaController props.actions is not ${table} DELETE Controller!`;
   }
 
@@ -286,7 +286,7 @@ const createPrismaDeleteController = (
 
       const row = await db[table][action](resultOptions);
 
-      if (typeof response === "boolean" && !response) {
+      if (typeof response === 'boolean' && !response) {
         res.status(204).json();
       } else {
         res.status(200).json({ id: row.id, isDeleted: true });
@@ -300,17 +300,17 @@ const createPrismaDeleteController = (
 const createPrismaPutController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: CreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions,
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
   const action = actions;
 
   if (Array.isArray(action)) {
-    throw "Error Occured! createPrismaPutController props.actions is can not be array";
+    throw 'Error Occured! createPrismaPutController props.actions is can not be array';
   }
-  if (action !== "update" && action !== "updateMany") {
-    throw "Error Occured! createPrismaController props.actions is not PUT Controller!";
+  if (action !== 'update' && action !== 'updateMany') {
+    throw 'Error Occured! createPrismaController props.actions is not PUT Controller!';
   }
 
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -327,7 +327,7 @@ const createPrismaPutController = (
 
       const row = await db[table][action](resultOptions);
 
-      if (typeof response === "boolean" && !response) {
+      if (typeof response === 'boolean' && !response) {
         res.status(204).json();
       } else {
         res.status(200).json(row);
@@ -341,23 +341,23 @@ const createPrismaPutController = (
 const createPrismaPatchController = (
   database: PrismaClient,
   _: ControllerAPI,
-  options: CreatePrismaControllerOptions
+  options: CreatePrismaControllerOptions,
 ) => {
   const { table, actions, response } = options;
   const db = database as any;
   const action = actions;
 
   if (Array.isArray(action)) {
-    throw "Error Occured! createPrismaPatchController props.actions is can not be array";
+    throw 'Error Occured! createPrismaPatchController props.actions is can not be array';
   }
-  if (action !== "update" && action !== "updateMany") {
-    throw "Error Occured! createPrismaController props.actions is not PATCH Controller!";
+  if (action !== 'update' && action !== 'updateMany') {
+    throw 'Error Occured! createPrismaController props.actions is not PATCH Controller!';
   }
 
   return async (req: Request, res: Response, next: NextFunction) => {
     const resultOptions = getTraverseOption(req, options.options || {});
     if (!resultOptions.where) {
-      throw "Error Occured! createPrismaController props.options.where not found in PATCH";
+      throw 'Error Occured! createPrismaController props.options.where not found in PATCH';
     }
 
     try {
@@ -374,7 +374,7 @@ const createPrismaPatchController = (
         },
       });
 
-      if (typeof response === "boolean" && !response) {
+      if (typeof response === 'boolean' && !response) {
         res.status(204).json();
       } else {
         res.status(200).json(row);
@@ -388,25 +388,25 @@ const createPrismaPatchController = (
 export const createPrismaController = <T = any>(
   database: PrismaClient,
   controllerAPI: ControllerAPI,
-  options: CreatePrismaControllerOptions<T>
+  options: CreatePrismaControllerOptions<T>,
 ) => {
   const db = database as any;
   if (!db[options.table]) {
-    throw "Error Occured! createPrismaController props.table is not in database table!";
+    throw 'Error Occured! createPrismaController props.table is not in database table!';
   }
 
   switch (controllerAPI.method) {
-    case "GET":
+    case 'GET':
       return createPrismaGetController(database, controllerAPI, options);
-    case "POST":
+    case 'POST':
       return createPrismaPostController(database, controllerAPI, options);
-    case "DELETE":
+    case 'DELETE':
       return createPrismaDeleteController(database, controllerAPI, options);
-    case "PUT":
+    case 'PUT':
       return createPrismaPutController(database, controllerAPI, options);
-    case "PATCH":
+    case 'PATCH':
       return createPrismaPatchController(database, controllerAPI, options);
     default:
-      throw new Error("지원하지 않은 Method 입니다");
+      throw new Error('지원하지 않은 Method 입니다');
   }
 };

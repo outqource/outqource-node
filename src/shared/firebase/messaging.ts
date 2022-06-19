@@ -12,7 +12,10 @@ class FirebaseMessaging {
     });
   }
 
-  async sendMessage({ token, notification }: Types.sendMessage): Promise<Types.TsendMessage> {
+  async sendMessage({
+    token,
+    notification,
+  }: Types.sendMessage): Promise<Types.TsendMessage> {
     try {
       await this.app.messaging().send({
         token,
@@ -24,7 +27,9 @@ class FirebaseMessaging {
     }
   }
 
-  async sendMessages(messages: Types.sendMessages): Promise<Types.TsendMessages> {
+  async sendMessages(
+    messages: Types.sendMessages,
+  ): Promise<Types.TsendMessages> {
     const result: Types.TsendMessages = { success: [], failure: [] };
     for await (const message of messages) {
       const messageResult = await this.sendMessage({

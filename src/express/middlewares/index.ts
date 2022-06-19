@@ -1,15 +1,15 @@
-import { json, urlencoded } from "express";
-import jsonwebtoken from "./jsonwebtoken";
-import swagger from "./swagger";
-import test from "./test";
-import cors from "cors";
-import pagination from "./pagination";
+import { json, urlencoded } from 'express';
+import jsonwebtoken from './jsonwebtoken';
+import swagger from './swagger';
+import test from './test';
+import cors from 'cors';
+import pagination from './pagination';
 import createUploader, {
   allUploader,
   imageUploader,
   videoUploader,
   imageAndVideoUploader,
-} from "./multer";
+} from './multer';
 
 export {
   json,

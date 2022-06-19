@@ -1,5 +1,5 @@
-import { Kakao, KakaoUser } from "./kakao";
-import { Google, GoogleUser } from "./google";
+import { Kakao, KakaoUser } from './kakao';
+import { Google, GoogleUser } from './google';
 
 class SocialLogin {
   public Kakao = Kakao;

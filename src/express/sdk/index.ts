@@ -1,18 +1,18 @@
-import Generator from "./Generator";
+import Generator from './Generator';
 
 if (require.main === module) {
-    const root = process.argv[2];
-    const dest = process.argv[3];
-    if (!root || !dest) {
-        console.error("Usage: npx outqource-node <root> <dest>");
-        process.exit(1);
-    }
+  const root = process.argv[2];
+  const dest = process.argv[3];
+  if (!root || !dest) {
+    console.error('Usage: npx outqource-node <root> <dest>');
+    process.exit(1);
+  }
 
-    generate(root, dest).then(() => {
-        console.log("Done");
-    });
+  generate(root, dest).then(() => {
+    console.log('Done');
+  });
 }
 
 export default async function generate(root: string, dest: string) {
-    await Generator.generate(root, dest);
+  await Generator.generate(root, dest);
 }

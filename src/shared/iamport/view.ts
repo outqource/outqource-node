@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from 'fs';
 
 export interface getRequestPaymentHTMLProps {
   title?: string;
@@ -39,19 +39,19 @@ export const getRequestPaymentHTML = ({
   buttonStyle,
   ...props
 }: getRequestPaymentHTMLProps): string => {
-  if (typeof buttonWrapperStyle === "object") {
+  if (typeof buttonWrapperStyle === 'object') {
     buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce(
       (prev, cur) => {
         return prev + `${cur[0]}:${cur[1]}; `;
       },
-      ""
+      '',
     );
   }
 
-  if (typeof buttonStyle === "object") {
+  if (typeof buttonStyle === 'object') {
     buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
       return prev + `${cur[0]}:${cur[1]}; `;
-    }, "");
+    }, '');
   }
 
   return `
@@ -62,9 +62,9 @@ export const getRequestPaymentHTML = ({
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ""}">
-			<button onclick="requestPay()" style="${buttonStyle || ""}">${
-    buttonText || "결제하기"
+		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${
+    buttonText || '결제하기'
   }</button>
 		</main>
     
@@ -125,19 +125,19 @@ export const getCertificationHTML = ({
   buttonStyle,
   ...props
 }: getRequestCertifcationHTML): string => {
-  if (typeof buttonWrapperStyle === "object") {
+  if (typeof buttonWrapperStyle === 'object') {
     buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce(
       (prev, cur) => {
         return prev + `${cur[0]}:${cur[1]}; `;
       },
-      ""
+      '',
     );
   }
 
-  if (typeof buttonStyle === "object") {
+  if (typeof buttonStyle === 'object') {
     buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
       return prev + `${cur[0]}:${cur[1]}; `;
-    }, "");
+    }, '');
   }
 
   return `
@@ -148,9 +148,9 @@ export const getCertificationHTML = ({
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ""}">
-			<button onclick="requestPay()" style="${buttonStyle || ""}">${
-    buttonText || "결제하기"
+		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${
+    buttonText || '결제하기'
   }</button>
 		</main>
     

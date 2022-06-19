@@ -4,9 +4,9 @@ import type {
   ControllerAPIResponsStatusCode,
   ControllerAPIResponse,
   OpenAPI3,
-} from "./types";
+} from './types';
 
-import { OPEN_API_RESPONSES } from "./constant";
+import { OPEN_API_RESPONSES } from './constant';
 
 interface IgetOpenAPI extends OpenAPIOptions {
   tags: any[];
@@ -15,14 +15,14 @@ interface IgetOpenAPI extends OpenAPIOptions {
 
 const getOpenAPIPath = (api: ControllerAPI) => {
   const path = api.path
-    .split("/")
-    .map((pathItem) => {
-      if (pathItem.indexOf(":") > -1) {
-        return `{${pathItem.replace(":", "")}}`;
+    .split('/')
+    .map(pathItem => {
+      if (pathItem.indexOf(':') > -1) {
+        return `{${pathItem.replace(':', '')}}`;
       }
       return pathItem;
     })
-    .join("/");
+    .join('/');
 
   return path;
 };
@@ -34,7 +34,7 @@ const getOpenAPIPathSummary = (api: ControllerAPI, name: string) => {
 const getOpenAPIPathSecurity = (api: ControllerAPI) => {
   const security = [];
   if (api.auth) {
-    if (api.auth === "jwt") security.push({ bearerAuth: [] });
+    if (api.auth === 'jwt') security.push({ bearerAuth: [] });
   }
 
   return security;
@@ -52,10 +52,10 @@ const getOpenAPIPathParameters = (api: ControllerAPI) => {
   }> = [];
 
   if (Array.isArray(api.param)) {
-    api.param.forEach((item) => {
+    api.param.forEach(item => {
       parameters.push({
         name: item.key,
-        in: "path",
+        in: 'path',
         required: !item.nullable && !item.default,
         description: item.example || item.default || item.key,
         schema: {
@@ -66,14 +66,14 @@ const getOpenAPIPathParameters = (api: ControllerAPI) => {
   }
 
   if (Array.isArray(api.query)) {
-    api.query.forEach((item) => {
+    api.query.forEach(item => {
       parameters.push({
         name: item.key,
-        in: "query",
+        in: 'query',
         required: !item.nullable && !item.default,
         description: item.example || item.default || item.key,
         schema: {
-          type: item.type === "array" ? "array" : item.type,
+          type: item.type === 'array' ? 'array' : item.type,
         },
       });
     });
@@ -83,27 +83,27 @@ const getOpenAPIPathParameters = (api: ControllerAPI) => {
 };
 
 const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
-  if (api.method === "GET") return null;
+  if (api.method === 'GET') return null;
 
   if (api.formData) {
-    const type = api.formData.key === "multiple" ? "array" : "object";
+    const type = api.formData.key === 'multiple' ? 'array' : 'object';
     let formDataProperties: any = {};
 
-    if (type === "array") {
+    if (type === 'array') {
       formDataProperties = {
-        type: "array",
-        items: { format: "binary", type: "string" },
+        type: 'array',
+        items: { format: 'binary', type: 'string' },
       };
     } else {
       formDataProperties = {
-        type: "string",
-        format: "binary",
+        type: 'string',
+        format: 'binary',
       };
     }
 
     const otherProperties: Record<string, any> = {};
     if (Array.isArray(api.body)) {
-      api.body.forEach((item) => {
+      api.body.forEach(item => {
         otherProperties[item.key] = {
           type: item.type,
           example:
@@ -116,9 +116,9 @@ const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
 
     return {
       content: {
-        "multipart/form-data": {
+        'multipart/form-data': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               [api.formData.key]: formDataProperties,
               ...otherProperties,
@@ -130,7 +130,7 @@ const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
   } else {
     const example: Record<string, any> = {};
     if (Array.isArray(api.body)) {
-      api.body.forEach((item) => {
+      api.body.forEach(item => {
         example[item.key] =
           item.example ||
           item.default ||
@@ -140,9 +140,9 @@ const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
 
     const requestBody = {
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             example,
           },
         },
@@ -158,26 +158,26 @@ const getOpenAPIPathResponses = (api: ControllerAPI) => {
     500: {
       description: OPEN_API_RESPONSES[500],
       content: {
-        "application/json": {},
+        'application/json': {},
       },
     },
   };
 
   if (Array.isArray(api.responses)) {
     api.responses.forEach((item: ControllerAPIResponse) => {
-      if (typeof item === "number") {
+      if (typeof item === 'number') {
         const statusCode = item as ControllerAPIResponsStatusCode;
         responses[statusCode] = {
           description: OPEN_API_RESPONSES[statusCode] as string,
           content: {
-            "application/json": {},
+            'application/json': {},
           },
         };
       } else {
         const {
           status,
           message = OPEN_API_RESPONSES[item.status],
-          exampleContentType = "application/json",
+          exampleContentType = 'application/json',
           example = {},
         } = item;
         const content: any = { [exampleContentType]: {} };
@@ -195,7 +195,7 @@ const getOpenAPIPathResponses = (api: ControllerAPI) => {
     responses[200] = {
       description: OPEN_API_RESPONSES[200],
       content: {
-        "application/json": {},
+        'application/json': {},
       },
     };
   }
@@ -210,18 +210,18 @@ const getOpenAPI = ({
   tags,
   paths,
 }: IgetOpenAPI): OpenAPI3 => ({
-  openapi: "3.0.0",
+  openapi: '3.0.0',
   info: {
     title,
     version,
   },
-  servers: urls.map((url) => ({ url })),
+  servers: urls.map(url => ({ url })),
   components: {
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
     },
   },
@@ -233,7 +233,7 @@ const getOpenAPITags = (controllers: any): Array<{ name: string }> => {
   const tags: string[] = [];
 
   Object.entries(controllers).forEach(([key, value]: [string, any]) => {
-    if (key.indexOf("API") > -1) {
+    if (key.indexOf('API') > -1) {
       const api = value as ControllerAPI;
       if (Array.isArray(api.tags)) {
         tags.push(...value.tags);
@@ -245,16 +245,16 @@ const getOpenAPITags = (controllers: any): Array<{ name: string }> => {
     .filter((item, index) => tags.indexOf(item) === index)
     .map((tag: string) => ({ name: tag }))
     .sort((tag1, tag2) =>
-      tag1.name.toUpperCase().localeCompare(tag2.name.toUpperCase())
+      tag1.name.toUpperCase().localeCompare(tag2.name.toUpperCase()),
     );
 };
 
 const getOpenAPIPaths = (controllers: Record<string, any>) => {
   const paths: any = {};
   Object.entries(controllers).forEach(([key, value]: [string, any]) => {
-    if (key.indexOf("API") > -1) {
+    if (key.indexOf('API') > -1) {
       const api = value as ControllerAPI;
-      const name = key.replace("API", "");
+      const name = key.replace('API', '');
 
       const path = getOpenAPIPath(api);
       const summary = getOpenAPIPathSummary(api, name);
@@ -282,7 +282,7 @@ const getOpenAPIPaths = (controllers: Record<string, any>) => {
 
 export const createOpenAPI = async (
   { title, version, urls }: OpenAPIOptions,
-  controllers: any
+  controllers: any,
 ): Promise<string> => {
   const tags = getOpenAPITags(controllers);
   const paths = getOpenAPIPaths(controllers);

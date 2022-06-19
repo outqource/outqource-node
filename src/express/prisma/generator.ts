@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import fs from "fs";
+import fs from 'fs';
 
 interface IprismaControllerGenerator {
   jsonPath: string;
@@ -13,11 +13,11 @@ export const prismaControllerGenerator = async ({
   const file = await fs.readFileSync(jsonPath);
   const crudJson = JSON.parse(file.toString());
 
-  const filename = crudJson.filename || "crud";
-  const prefix = crudJson.prefix || "";
+  const filename = crudJson.filename || 'crud';
+  const prefix = crudJson.prefix || '';
 
   Object.entries(crudJson).forEach(([controllerName, controllerInfo]: any) => {
-    if (typeof controllerInfo === "object") {
+    if (typeof controllerInfo === 'object') {
       const tags = controllerInfo.tags;
       const controllers = controllerInfo.controllers;
 
@@ -59,9 +59,9 @@ import database from 'database';
         if (responses) controllerAPIData.responses = responses;
 
         const controllerAPI = `export const ${name}API: ControllerAPI = ${JSON.stringify(
-          controllerAPIData
+          controllerAPIData,
         )};`;
-        result = result + controllerAPI + "\n\n";
+        result = result + controllerAPI + '\n\n';
 
         // CRUD Controller
         const crudData = {
@@ -71,14 +71,14 @@ import database from 'database';
           options,
         };
         const crud = `export const ${name} = createPrismaController(database, ${name}API, ${JSON.stringify(
-          crudData
+          crudData,
         )});`;
-        result = result + crud + "\n\n";
+        result = result + crud + '\n\n';
       });
 
       const writFilePath = `${writePath}/${controllerName}/${filename}.ts`;
 
-      fs.writeFile(writFilePath, result, (err) => {
+      fs.writeFile(writFilePath, result, err => {
         if (err) throw err;
         console.log(`${controllerName}`);
       });

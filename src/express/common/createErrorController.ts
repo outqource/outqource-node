@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from 'express';
 
 type Error = {
   status?: number;
@@ -17,14 +17,14 @@ export const createErrorController = (props?: IErrorProps) => {
 
     const error = {
       status: err.status || 500,
-      message: err.message || "Server Internal Error",
+      message: err.message || 'Server Internal Error',
       ...err,
     };
 
     if (!header) {
       header = `Error! Occurred`;
     }
-    if (typeof isConsole === "undefined" || isConsole) {
+    if (typeof isConsole === 'undefined' || isConsole) {
       console.warn(header, err);
     }
 
