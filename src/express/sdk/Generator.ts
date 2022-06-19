@@ -1,5 +1,4 @@
-import * as fs from "fs/promises";
-import * as path from "path";
+import APITree from "./APITree";
 
 export default class Generator {
     readonly #root: string;
@@ -15,17 +14,7 @@ export default class Generator {
     }
 
     async #generate() {
-        const files = await fs.readdir(this.#root);
-        for (const file of files) {
-            const filePath = path.join(this.#root, file);
-            const stat = await fs.stat(filePath);
-            if (stat.isDirectory()) {
-                await this.#generate(filePath, this.#dest);
-            } else {
-                const content = await fs.readFile(filePath, "utf8");
-                const destPath = path.join(this.#dest, file);
-                await fs.writeFile(destPath, content);
-            }
-        }
+        const tree = await APITree.create(this.#root, this.#dest);
+        console.log(tree);
     }
 }
