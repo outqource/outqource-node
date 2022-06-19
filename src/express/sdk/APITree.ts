@@ -90,15 +90,15 @@ export const ${this.name} = async (request: ${this.interfaceName}) => {
 
     ${
     this.param.length > 0 && `
-        if (params && Object.keys(params).length > 0) {
-            url = url.replace(/:(\\w+)/g, (match, key) => {
-                const value = params[key];
-                if (value) {
-                    return value;
-                }
-                return match;
-            });
-        }
+    if (params && Object.keys(params).length > 0) {
+        url = url.replace(/:(\\w+)/g, (match, key) => {
+            const value = params[key];
+            if (value) {
+                return value;
+            }
+            return match;
+        });
+    }
     `}
 
     ${
