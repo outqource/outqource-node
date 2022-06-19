@@ -62,54 +62,54 @@ export class APITreeItem {
 
     public getTypescriptInterface(): string {
         return `
-            export interface ${this.interfaceName} {
-                ${this.param.length > 0 && `
-                params${this.param.every((item) => item.required) ? '' : '?'}: {
-                    ${this.param.map((item) => item.getTypescriptInterface()).join("\n")}
-                }`}
-                ${this.query.length > 0 && `
-                query${this.query.every((item) => item.required) ? '' : '?'}: {
-                    ${this.query.map((item) => item.getTypescriptInterface()).join("\n")}
-                }`}
-                ${this.body.length > 0 && `
-                body${this.body.every((item) => item.required) ? '' : '?'}: {
-                    ${this.body.map((item) => item.getTypescriptInterface()).join("\n")}
-                }
-                `}
-        }
-        `;
+export interface ${this.interfaceName} {
+    ${this.param.length > 0 && `
+    params${this.param.every((item) => item.required) ? '' : '?'}: {
+        ${this.param.map((item) => item.getTypescriptInterface()).join("\n")}
+    }`}
+    ${this.query.length > 0 && `
+    query${this.query.every((item) => item.required) ? '' : '?'}: {
+        ${this.query.map((item) => item.getTypescriptInterface()).join("\n")}
+    }`}
+    ${this.body.length > 0 && `
+    body${this.body.every((item) => item.required) ? '' : '?'}: {
+        ${this.body.map((item) => item.getTypescriptInterface()).join("\n")}
+    }
+    `}
+}
+`;
     }
 
     public getExecutor(): string {
         return `
-        import axios from 'axios';
+import axios from 'axios';
 
-        export const ${this.name} = async (request: ${this.interfaceName}) => {
-            const { params, query, body } = request;
-            let url = '${this.path}';
+export const ${this.name} = async (request: ${this.interfaceName}) => {
+    const { params, query, body } = request;
+    let url = '${this.path}';
 
-            ${
-            this.param.length > 0 && `
-                if (params && Object.keys(params).length > 0) {
-                    url = url.replace(/:(\\w+)/g, (match, key) => {
-                        const value = params[key];
-                        if (value) {
-                            return value;
-                        }
-                        return match;
-                    });
+    ${
+    this.param.length > 0 && `
+        if (params && Object.keys(params).length > 0) {
+            url = url.replace(/:(\\w+)/g, (match, key) => {
+                const value = params[key];
+                if (value) {
+                    return value;
                 }
-            `}
+                return match;
+            });
+        }
+    `}
 
-            ${
-            this.query.length > 0 && `
-            if (query && Object.keys(query).length > 0) {
-                url += '?' + Object.keys(query).map(key => key + '=' + query[key]).join('&');
-            }
-            `}
-            
-            // TODO
-        }`
+    ${
+    this.query.length > 0 && `
+    if (query && Object.keys(query).length > 0) {
+        url += '?' + Object.keys(query).map(key => key + '=' + query[key]).join('&');
+    }
+    `}
+    
+    // TODO
+}`;
     }
 
     private get interfaceName() {
