@@ -29,7 +29,7 @@ const createAjvMiddleware = (props) => {
             if (!validation) {
                 return next({
                     status: 400,
-                    message: ajv.errorsText(),
+                    message: `Request url parameters validation failed: ${ajv.errorsText()}`,
                 });
             }
         }
@@ -38,7 +38,7 @@ const createAjvMiddleware = (props) => {
             if (!validation) {
                 return next({
                     status: 400,
-                    message: `Request url parameters validation failed: ${ajv.errorsText()}`,
+                    message: `Request query parameters validation failed: ${ajv.errorsText()}`,
                 });
             }
         }
