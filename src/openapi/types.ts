@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { URL } from 'url';
+import { CreateAJVMiddlewareProps } from '../express/validator/createAjvMiddleware';
 
 export type OpenAPIOptions = {
   title: string;
@@ -37,21 +38,6 @@ export type ControllerAPIResponse =
 
 export type ControllerAPIResponses = Array<ControllerAPIResponse>;
 
-export type ControllerAPI = {
-  tags?: string[];
-  path: string;
-  method: ControllerAPIMethod;
-  middlewares?: Array<any>;
-  param?: ValidatorItem[];
-  query?: ValidatorItem[];
-  header?: ValidatorItem[];
-  body?: ValidatorItem[];
-  auth?: 'jwt' | 'cookie' | 'session';
-  summary?: string;
-  formData?: { key: string; type: 'single' | 'multiple' };
-  responses?: ControllerAPIResponses;
-};
-
 // Validator
 export type ValidatorKey = 'param' | 'query' | 'header' | 'body';
 
@@ -70,6 +56,28 @@ export type ValidatorItem = {
   nullable?: boolean;
   default?: any;
   example?: any;
+};
+
+export type AjvValidator<P = any, Q = any, B = any> = CreateAJVMiddlewareProps<
+  P,
+  Q,
+  B
+>;
+
+export type ControllerAPI<P = any, Q = any, B = any> = {
+  tags?: string[];
+  path: string;
+  method: ControllerAPIMethod;
+  middlewares?: Array<any>;
+  param?: ValidatorItem[];
+  query?: ValidatorItem[];
+  header?: ValidatorItem[];
+  body?: ValidatorItem[];
+  ajv?: AjvValidator<P, Q, B>;
+  auth?: 'jwt' | 'cookie' | 'session';
+  summary?: string;
+  formData?: { key: string; type: 'single' | 'multiple' };
+  responses?: ControllerAPIResponses;
 };
 
 // OpenAPI

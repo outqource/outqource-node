@@ -20,6 +20,7 @@ import {
   IGlobalProps,
   ExpressController,
 } from '.';
+import { createAjvValidator } from '../validator';
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
   title: 'outqource-node/express',
@@ -119,7 +120,13 @@ export class InitApp {
     errorOptions?: IErrorProps;
     globalOptions?: IGlobalProps;
   }) {
-    const validators = createValidators(this.controllers);
+    const validators = {
+      ...createValidators(this.controllers),
+      ...createAjvValidator(this.controllers),
+    };
+
+    console.log(`validators`, validators);
+
     createRouter(this.app, this.controllers, validators);
     this.app.use(createErrorController(options?.errorOptions));
     this.app.use(createGlobalController(options?.globalOptions));
