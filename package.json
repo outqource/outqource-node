@@ -12,7 +12,8 @@
     "start": "nodemon ./src/example/index.ts --ext ts",
     "prepublishOnly": "yarn build",
     "prepare": "husky install",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "test-sdk": "node --trace-warnings --unhandled-rejections=strict build/express/sdk/index.js ./src/example/controllers ./test-sdk"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
@@ -41,6 +42,7 @@
     "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
+    "@types/babel__generator": "^7.6.4",
     "@types/bcrypt": "^5.0.0",
     "@types/crypto-js": "^4.1.1",
     "@types/dotenv": "^8.2.0",

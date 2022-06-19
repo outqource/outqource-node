@@ -4,6 +4,7 @@ import type { ControllerAPI, ExpressController } from '../../../express';
 export const getPostAPI: ControllerAPI = {
   path: '/posts/:id',
   method: 'GET',
+  param: [{ key: 'id', type: 'string' }],
 };
 
 export const getPost: ExpressController = async (req, res, next) => {

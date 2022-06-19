@@ -1,12 +1,12 @@
 import { ControllerAPI, ValidatorItem } from '../';
 export default class APITree {
-  #private;
   readonly parent: string;
   readonly children: APITree[];
   readonly items: APITreeItem[];
   constructor(parent: string);
   static create(parent: string, filePath: string): Promise<APITree>;
-  writeFiles(dest: string): Promise<void>;
+  static isExistPath(dest: string): boolean;
+  writeFiles(dest: string, isFirst?: boolean): Promise<void>;
 }
 export declare class APITreeItem {
   readonly name: string;

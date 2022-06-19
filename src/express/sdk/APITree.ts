@@ -1,5 +1,5 @@
 import * as fs from 'fs/promises';
-import { constants } from 'fs';
+import { existsSync } from 'fs';
 import path from 'path';
 import { ControllerAPI, ValidationItemType, ValidatorItem } from '../';
 
@@ -18,20 +18,28 @@ export default class APITree {
     const files = await fs.readdir(filePath);
 
     for await (const file of files) {
+      if (file.endsWith('index.ts')) continue;
+
       const indexPath = path.join(filePath, file);
       const stat = await fs.stat(indexPath);
       if (stat.isDirectory()) {
         tree.children.push(await APITree.create(`${parent}/${file}`, indexPath));
       } else {
-        const content = require(indexPath);
+        const content = await fs.readFile(indexPath, 'utf-8');
+        const result = /export const (.+API): ControllerAPI = ({[^;]+);/.exec(content);
 
-        const apiKey = Object.keys(content).find(key => key.endsWith('API'));
+        if (!result) {
+          throw new Error(`Controller API not specified at: ${indexPath}`);
+        }
+
+        const apiKey = result[1];
+
+        const api = eval(`(function(){return ${result[2]}})()`);
 
         if (!apiKey) {
           throw new Error(`Controller API not specified at: ${indexPath}`);
         }
 
-        const api: ControllerAPI = content[apiKey];
         tree.items.push(new APITreeItem(api, apiKey));
       }
     }
@@ -39,23 +47,24 @@ export default class APITree {
     return tree;
   }
 
-  static async #isExistPath(dest: string): Promise<boolean> {
-    try {
-      await fs.access(dest, constants.F_OK);
-      return true;
-    } catch {
-      return false;
-    }
+  static isExistPath(dest: string): boolean {
+    return existsSync(dest);
   }
 
-  public async writeFiles(dest: string) {
-    if (!(await APITree.#isExistPath(dest))) {
+  public async writeFiles(dest: string, isFirst = false) {
+    if (isFirst && !APITree.isExistPath(dest)) {
       await fs.mkdir(dest);
     }
 
+    const childrenPath = path.join(dest, this.parent);
+
+    if (!APITree.isExistPath(childrenPath)) {
+      await fs.mkdir(childrenPath);
+    }
+
     await Promise.all([
-      ...this.items.map(item => item.writeFile(path.join(dest, this.parent))),
-      ...this.children.map(child => child.writeFiles(path.join(dest, this.parent))),
+      ...this.items.map(item => item.writeFile(childrenPath)),
+      ...this.children.map(child => child.writeFiles(childrenPath)),
     ]);
   }
 }
@@ -82,8 +91,7 @@ export class APITreeItem {
   }
 
   public getImportSource(): string {
-    return `
-import axios from 'axios';
+    return `import axios from 'axios';
 `;
   }
 
@@ -91,95 +99,100 @@ import axios from 'axios';
     return `
 export interface ${this.interfaceName} {
     ${
-      this.param.length > 0 &&
-      `
-    params${this.param.every(item => item.required) ? '' : '?'}: {
+      this.param.length > 0
+        ? `params${this.param.every(item => item.required) ? '' : '?'}: {
         ${this.param.map(item => item.getTypescriptInterface()).join('\n')}
-    }`
     }
-    ${
-      this.query.length > 0 &&
-      `
-    query${this.query.every(item => item.required) ? '' : '?'}: {
+`
+        : ''
+    }${
+      this.query.length > 0
+        ? `query${this.query.every(item => item.required) ? '' : '?'}: {
         ${this.query.map(item => item.getTypescriptInterface()).join('\n')}
-    }`
     }
-    ${
-      this.body.length > 0 &&
-      `
-    body${this.body.every(item => item.required) ? '' : '?'}: {
+`
+        : ''
+    }${
+      this.body.length > 0
+        ? `body${this.body.every(item => item.required) ? '' : '?'}: {
         ${this.body.map(item => item.getTypescriptInterface()).join('\n')}
     }
-    `
+`
+        : ''
     }
-}
-
-`;
+}`;
   }
 
   public getExecutor(): string {
     return `
 export const ${this.name} = async (request: ${this.interfaceName}) => {
-    const { params, query, body } = request;
-    let url = '${this.path}';
-
-    ${
-      this.param.length > 0 &&
-      `
-    if (params && Object.keys(params).length > 0) {
+    let url = '${this.path}';${
+      this.param.length > 0
+        ? `
+    if (request.params && Object.keys(request.params).length > 0) {
         url = url.replace(/:(\\w+)/g, (match, key) => {
-            const value = params[key];
+            const value = request.params[key as keyof ${this.interfaceName}['params']];
             if (value) {
                 return value;
             }
             return match;
         });
     }
-    `
+`
+        : ''
+    }${
+      this.query.length > 0
+        ? `
+    if (request.query && Object.keys(request.query).length > 0) {
+        url += '?' + Object.keys(request.query).map(key => key + '=' + request.query[key]).join('&');
     }
-
-    ${
-      this.query.length > 0 &&
-      `
-    if (query && Object.keys(query).length > 0) {
-        url += '?' + Object.keys(query).map(key => key + '=' + query[key]).join('&');
-    }
-    `
-    }
-    
-    ${
+`
+        : ''
+    }${
       this.body.some(item => item.type === 'File')
         ? `
-    const request = new FormData();
+    const req = new FormData();
 ${this.body
   .map(
     item => `
-    if (body && body.${item.name}) {
-        request.append('${item.name}', body.${item.name});
+    if (request.body && request.body.${item.name}) {
+        req.append('${item.name}', request.body.${item.name});
     }
 `,
   )
   .join('\n')}
-    `
-        : `
-    const request = body;
-    `
+`
+        : ''
     }
-
-    const response = await axios.${this.method}(url, request);
+    const response = await axios.${this.method.toLowerCase()}(url, ${
+      ['PUT', 'PATCH', 'POST'].includes(this.method)
+        ? this.body.some(item => item.type === 'File')
+          ? 'req'
+          : 'request.body'
+        : `{${
+            this.param.length > 0
+              ? `
+            params: request.params,
+            `
+              : ''
+          }${
+            this.query.length > 0
+              ? `query: request.query,
+          `
+              : ''
+          }}`
+    });
 
     return response.data;
-}
+};
 `;
   }
 
   public async writeFile(dest: string) {
     const filePath = path.join(dest, `${this.name}.ts`);
-    const source = `
-        ${this.getImportSource()}
-        ${this.getTypescriptInterface()}
-        ${this.getExecutor()}
-        `;
+    const source = `${this.getImportSource()}
+${this.getTypescriptInterface()}
+${this.getExecutor()}`;
 
     await fs.writeFile(filePath, source);
   }

@@ -80,5 +80,5 @@ exports.default = Generator;
   (_Generator_instances = new WeakSet()),
   (_Generator_generate = async function _Generator_generate() {
     const tree = await APITree_1.default.create('', __classPrivateFieldGet(this, _Generator_root, 'f'));
-    await tree.writeFiles(__classPrivateFieldGet(this, _Generator_dest, 'f'));
+    await tree.writeFiles(__classPrivateFieldGet(this, _Generator_dest, 'f'), true);
   });

@@ -17,6 +17,6 @@ export default class Generator {
 
   async #generate() {
     const tree = await APITree.create('', this.#root);
-    await tree.writeFiles(this.#dest);
+    await tree.writeFiles(this.#dest, true);
   }
 }

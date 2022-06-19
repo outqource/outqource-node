@@ -48,7 +48,7 @@ var __importDefault =
   function (mod) {
     return mod && mod.__esModule ? mod : { default: mod };
   };
-var _a, _APITree_isExistPath, _b, _Parameter_getType;
+var _a, _Parameter_getType;
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.Parameter = exports.APITreeItem = void 0;
 const fs = __importStar(require('fs/promises'));
@@ -64,42 +64,45 @@ class APITree {
     const tree = new APITree(parent);
     const files = await fs.readdir(filePath);
     for await (const file of files) {
+      if (file.endsWith('index.ts')) continue;
       const indexPath = path_1.default.join(filePath, file);
       const stat = await fs.stat(indexPath);
       if (stat.isDirectory()) {
         tree.children.push(await APITree.create(`${parent}/${file}`, indexPath));
       } else {
-        const content = require(indexPath);
-        const apiKey = Object.keys(content).find(key => key.endsWith('API'));
+        const content = await fs.readFile(indexPath, 'utf-8');
+        const result = /export const (.+API): ControllerAPI = ({[^;]+);/.exec(content);
+        if (!result) {
+          throw new Error(`Controller API not specified at: ${indexPath}`);
+        }
+        const apiKey = result[1];
+        const api = eval(`(function(){return ${result[2]}})()`);
         if (!apiKey) {
           throw new Error(`Controller API not specified at: ${indexPath}`);
         }
-        const api = content[apiKey];
         tree.items.push(new APITreeItem(api, apiKey));
       }
     }
     return tree;
   }
-  async writeFiles(dest) {
-    if (!(await __classPrivateFieldGet(APITree, _a, 'm', _APITree_isExistPath).call(APITree, dest))) {
+  static isExistPath(dest) {
+    return (0, fs_1.existsSync)(dest);
+  }
+  async writeFiles(dest, isFirst = false) {
+    if (isFirst && !APITree.isExistPath(dest)) {
       await fs.mkdir(dest);
     }
+    const childrenPath = path_1.default.join(dest, this.parent);
+    if (!APITree.isExistPath(childrenPath)) {
+      await fs.mkdir(childrenPath);
+    }
     await Promise.all([
-      ...this.items.map(item => item.writeFile(path_1.default.join(dest, this.parent))),
-      ...this.children.map(child => child.writeFiles(path_1.default.join(dest, this.parent))),
+      ...this.items.map(item => item.writeFile(childrenPath)),
+      ...this.children.map(child => child.writeFiles(childrenPath)),
     ]);
   }
 }
 exports.default = APITree;
-(_a = APITree),
-  (_APITree_isExistPath = async function _APITree_isExistPath(dest) {
-    try {
-      await fs.access(dest, fs_1.constants.F_OK);
-      return true;
-    } catch (_c) {
-      return false;
-    }
-  });
 class APITreeItem {
   // TODO: Response Type
   // readonly response: Response[];
@@ -116,101 +119,105 @@ class APITreeItem {
     if (api.body) this.body = api.body.map(item => new Parameter(item));
   }
   getImportSource() {
-    return `
-import axios from 'axios';
+    return `import axios from 'axios';
 `;
   }
   getTypescriptInterface() {
     return `
 export interface ${this.interfaceName} {
     ${
-      this.param.length > 0 &&
-      `
-    params${this.param.every(item => item.required) ? '' : '?'}: {
+      this.param.length > 0
+        ? `params${this.param.every(item => item.required) ? '' : '?'}: {
         ${this.param.map(item => item.getTypescriptInterface()).join('\n')}
-    }`
     }
-    ${
-      this.query.length > 0 &&
-      `
-    query${this.query.every(item => item.required) ? '' : '?'}: {
+`
+        : ''
+    }${
+      this.query.length > 0
+        ? `query${this.query.every(item => item.required) ? '' : '?'}: {
         ${this.query.map(item => item.getTypescriptInterface()).join('\n')}
-    }`
     }
-    ${
-      this.body.length > 0 &&
-      `
-    body${this.body.every(item => item.required) ? '' : '?'}: {
+`
+        : ''
+    }${
+      this.body.length > 0
+        ? `body${this.body.every(item => item.required) ? '' : '?'}: {
         ${this.body.map(item => item.getTypescriptInterface()).join('\n')}
     }
-    `
+`
+        : ''
     }
-}
-
-`;
+}`;
   }
   getExecutor() {
     return `
 export const ${this.name} = async (request: ${this.interfaceName}) => {
-    const { params, query, body } = request;
-    let url = '${this.path}';
-
-    ${
-      this.param.length > 0 &&
-      `
-    if (params && Object.keys(params).length > 0) {
+    let url = '${this.path}';${
+      this.param.length > 0
+        ? `
+    if (request.params && Object.keys(request.params).length > 0) {
         url = url.replace(/:(\\w+)/g, (match, key) => {
-            const value = params[key];
+            const value = request.params[key as keyof ${this.interfaceName}['params']];
             if (value) {
                 return value;
             }
             return match;
         });
     }
-    `
+`
+        : ''
+    }${
+      this.query.length > 0
+        ? `
+    if (request.query && Object.keys(request.query).length > 0) {
+        url += '?' + Object.keys(request.query).map(key => key + '=' + request.query[key]).join('&');
     }
-
-    ${
-      this.query.length > 0 &&
-      `
-    if (query && Object.keys(query).length > 0) {
-        url += '?' + Object.keys(query).map(key => key + '=' + query[key]).join('&');
-    }
-    `
-    }
-    
-    ${
+`
+        : ''
+    }${
       this.body.some(item => item.type === 'File')
         ? `
-    const request = new FormData();
+    const req = new FormData();
 ${this.body
   .map(
     item => `
-    if (body && body.${item.name}) {
-        request.append('${item.name}', body.${item.name});
+    if (request.body && request.body.${item.name}) {
+        req.append('${item.name}', request.body.${item.name});
     }
 `,
   )
   .join('\n')}
-    `
-        : `
-    const request = body;
-    `
+`
+        : ''
     }
-
-    const response = await axios.${this.method}(url, request);
+    const response = await axios.${this.method.toLowerCase()}(url, ${
+      ['PUT', 'PATCH', 'POST'].includes(this.method)
+        ? this.body.some(item => item.type === 'File')
+          ? 'req'
+          : 'request.body'
+        : `{${
+            this.param.length > 0
+              ? `
+            params: request.params,
+            `
+              : ''
+          }${
+            this.query.length > 0
+              ? `query: request.query,
+          `
+              : ''
+          }}`
+    });
 
     return response.data;
-}
+};
 `;
   }
   async writeFile(dest) {
     const filePath = path_1.default.join(dest, `${this.name}.ts`);
-    const source = `
-        ${this.getImportSource()}
-        ${this.getTypescriptInterface()}
-        ${this.getExecutor()}
-        `;
+    const source = `${this.getImportSource()}
+${this.getTypescriptInterface()}
+${this.getExecutor()}`;
     await fs.writeFile(filePath, source);
   }
   get interfaceName() {
@@ -221,7 +228,7 @@ exports.APITreeItem = APITreeItem;
 class Parameter {
   constructor(item) {
     this.name = item.key;
-    this.type = __classPrivateFieldGet(Parameter, _b, 'm', _Parameter_getType).call(Parameter, item.type);
+    this.type = __classPrivateFieldGet(Parameter, _a, 'm', _Parameter_getType).call(Parameter, item.type);
     this.required = !item.nullable && !item.default;
   }
   getTypescriptInterface() {
@@ -229,7 +236,7 @@ class Parameter {
   }
 }
 exports.Parameter = Parameter;
-(_b = Parameter),
+(_a = Parameter),
   (_Parameter_getType = function _Parameter_getType(type) {
     switch (type) {
       case 'array':

@@ -6,3 +6,4 @@ build
 scripts
 package.json
 yarn.lock
+test-sdk
