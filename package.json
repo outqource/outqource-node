@@ -12,11 +12,14 @@
     "clear": "node scripts/clear-build.js",
     "build": "yarn clear && tsc -b && node scripts/copy-build.js",
     "start": "nodemon ./src/example/index.ts --ext ts",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "prepare": "husky install",
+    "lint:staged": "lint-staged"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
     "@types/stompjs": "^2.3.5",
+    "ajv": "^8.11.0",
     "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "crypto-js": "^4.1.1",
@@ -52,8 +55,26 @@
     "@types/qrcode": "^1.4.2",
     "@types/sharp": "^0.29.5",
     "@types/swagger-ui-express": "^4.1.3",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "fs-extra": "^10.0.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.2",
     "nodemon": "^2.0.15",
+    "prettier": "^2.7.1",
     "typescript": "^4.5.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --parser flow --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --parser babel-ts --write"
+    ]
   }
 }
