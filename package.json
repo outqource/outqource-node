@@ -2,6 +2,9 @@
   "name": "outqource-node",
   "version": "0.9.1",
   "main": "build/index.js",
+  "bin": {
+    "outqource-node": "build/express/sdk/index.js"
+  },
   "repository": "https://github.com/outqource/outqource-node",
   "author": "AlpoxDev <contact@alpox.dev>",
   "license": "MIT",
@@ -9,8 +12,8 @@
     "clear": "node scripts/clear-build.js",
     "build": "yarn clear && tsc -b && node scripts/copy-build.js",
     "start": "nodemon ./src/example/index.ts --ext ts",
+    "prepublishOnly": "yarn build",
     "prepare": "husky install",
-    "prepublish": "yarn build",
     "lint:staged": "lint-staged"
   },
   "dependencies": {
