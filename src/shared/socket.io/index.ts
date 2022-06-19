@@ -1,11 +1,11 @@
 // https://github.com/tegioz/chat/blob/master/chatServer.js
 
-import { Server as HttpServer } from "http";
-import { Server as SocketIOServer } from "socket.io";
-import Events from "events";
-import Redis from "redis";
-import SocketIORedis from "socket.io-redis";
-import _ from "lodash";
+import { Server as HttpServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import Events from 'events';
+import Redis from 'redis';
+import SocketIORedis from 'socket.io-redis';
+import _ from 'lodash';
 
 export class SocketIO {
   public io: SocketIOServer;
@@ -24,9 +24,9 @@ export class SocketIO {
   }
 
   init(logger: Events.EventEmitter) {
-    this.io.on("connection", function (socket) {
-      socket.emit("connected", "Welcome to chat server");
-      logger.emit("newEvent", "userConnected", { socket: socket.id });
+    this.io.on('connection', function (socket) {
+      socket.emit('connected', 'Welcome to chat server');
+      logger.emit('newEvent', 'userConnected', { socket: socket.id });
     });
   }
 

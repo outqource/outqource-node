@@ -1,10 +1,5 @@
-import axios, {
-  Method,
-  AxiosInstance,
-  AxiosRequestHeaders,
-  AxiosResponse,
-} from "axios";
-import queryString from "query-string";
+import axios, { Method, AxiosInstance, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import queryString from 'query-string';
 
 export interface onRequestProps {
   instance?: AxiosInstance;

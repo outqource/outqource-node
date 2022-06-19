@@ -1,12 +1,12 @@
-export type ParseDataType = "string" | "boolean" | "number" | "json";
+export type ParseDataType = 'string' | 'boolean' | 'number' | 'json';
 
 const checkJsonString = (value: string): boolean => {
   try {
     const result = JSON.parse(value);
-    if (result && typeof result === "object") {
+    if (result && typeof result === 'object') {
       return true;
     }
-    throw new Error("not json");
+    throw new Error('not json');
   } catch (error) {
     return false;
   }
@@ -14,17 +14,13 @@ const checkJsonString = (value: string): boolean => {
 
 export const parseAutoValue = (value: string) => {
   const isNumberValue = Number(value);
-  const isBooleanValue =
-    value === "TRUE" ||
-    value === "FALSE" ||
-    value === "true" ||
-    value === "false";
+  const isBooleanValue = value === 'TRUE' || value === 'FALSE' || value === 'true' || value === 'false';
   const isJsonValue = checkJsonString(value);
 
   if (isNumberValue) {
     return isNumberValue;
   } else if (isBooleanValue) {
-    return value === "TRUE" || value === "true";
+    return value === 'TRUE' || value === 'true';
   } else if (isJsonValue) {
     return JSON.parse(value);
   } else {
@@ -32,21 +28,18 @@ export const parseAutoValue = (value: string) => {
   }
 };
 
-export const parseValue = (
-  value: string,
-  type: ParseDataType | string | "auto" = "auto"
-) => {
+export const parseValue = (value: string, type: ParseDataType | string | 'auto' = 'auto') => {
   switch (type) {
-    case "string":
+    case 'string':
       return value;
-    case "boolean":
+    case 'boolean':
       console.log(`parseValue`, value, type);
-      return value === "TRUE" || value === "true";
-    case "number":
+      return value === 'TRUE' || value === 'true';
+    case 'number':
       return Number(value);
-    case "json":
+    case 'json':
       return JSON.parse(value);
-    case "auto":
+    case 'auto':
       return parseAutoValue(value);
     default:
       return parseAutoValue(value);

@@ -1,4 +1,4 @@
-import sharp, { ResizeOptions } from "sharp";
+import sharp, { ResizeOptions } from 'sharp';
 
 export class Sharp {
   private maxWidth?: number;
@@ -14,7 +14,7 @@ export class Sharp {
     const { width, height } = metadata;
 
     const options: ResizeOptions = {
-      fit: "contain",
+      fit: 'contain',
     };
 
     if (width && height && this.maxWidth && this.maxHeight) {
@@ -31,10 +31,7 @@ export class Sharp {
       }
     }
 
-    const newBuffer = await sharp(buffer)
-      .resize(options)
-      .withMetadata()
-      .toBuffer();
+    const newBuffer = await sharp(buffer).resize(options).withMetadata().toBuffer();
 
     return newBuffer;
   }

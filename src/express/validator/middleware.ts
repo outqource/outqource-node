@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import Ajv, { JSONSchemaType, Options, ValidateFunction } from "ajv";
+import { Request, Response, NextFunction } from 'express';
+import Ajv, { JSONSchemaType, Options, ValidateFunction } from 'ajv';
 
 export type CreateAJVMiddlewareProps<P, Q, B> = {
   params?: JSONSchemaType<P>;
@@ -13,9 +13,7 @@ export type AjvValidators<P, Q, B> = {
   body?: ValidateFunction<B>;
 };
 
-const createAjvMiddleware = <P, Q, B>(
-  props?: CreateAJVMiddlewareProps<P, Q, B>
-) => {
+const createAjvMiddleware = <P, Q, B>(props?: CreateAJVMiddlewareProps<P, Q, B>) => {
   if (!props) props = {};
 
   const ajv: Ajv = (() => {

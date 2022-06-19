@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
-import Crypto from "crypto-js";
-import type { Encrypt as Types } from "./types";
+import bcrypt from 'bcrypt';
+import Crypto from 'crypto-js';
+import type { Encrypt as Types } from './types';
 
 export class Encrypt {
   private aesKey?: string;

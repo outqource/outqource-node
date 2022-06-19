@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export type GoogleUser = {
   id: string;
@@ -10,15 +10,8 @@ export type GoogleUser = {
 export class Google {
   static async getUser(token: string): Promise<GoogleUser | undefined> {
     try {
-      const response = await axios.get(
-        `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
-      );
-      const {
-        id,
-        email,
-        name: nickname,
-        picture: profileImage,
-      } = response.data;
+      const response = await axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`);
+      const { id, email, name: nickname, picture: profileImage } = response.data;
       return {
         id,
         email,
@@ -27,8 +20,7 @@ export class Google {
       };
     } catch (error: any) {
       const { response } = error;
-      if (response.data.error === "invalid_token")
-        throw { status: 403, message: "GOOGLE_TOKEN_EXPIRED" };
+      if (response.data.error === 'invalid_token') throw { status: 403, message: 'GOOGLE_TOKEN_EXPIRED' };
       return undefined;
     }
   }

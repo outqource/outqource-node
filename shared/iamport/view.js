@@ -1,30 +1,18 @@
-"use strict";
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.getCertificationHTML = exports.getRequestPaymentHTML = void 0;
-const getRequestPaymentHTML = (_a) => {
-    var { title, merchant_id, buttonText, buttonWrapperStyle, buttonStyle } = _a, props = __rest(_a, ["title", "merchant_id", "buttonText", "buttonWrapperStyle", "buttonStyle"]);
-    if (typeof buttonWrapperStyle === "object") {
-        buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
-            return prev + `${cur[0]}:${cur[1]}; `;
-        }, "");
-    }
-    if (typeof buttonStyle === "object") {
-        buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
-            return prev + `${cur[0]}:${cur[1]}; `;
-        }, "");
-    }
-    return `
+const getRequestPaymentHTML = ({ title, merchant_id, buttonText, buttonWrapperStyle, buttonStyle, ...props }) => {
+  if (typeof buttonWrapperStyle === 'object') {
+    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
+  }
+  if (typeof buttonStyle === 'object') {
+    buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
+  }
+  return `
 <!DOCTYPE html>
 <html>
   <head>
@@ -32,8 +20,8 @@ const getRequestPaymentHTML = (_a) => {
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ""}">
-			<button onclick="requestPay()" style="${buttonStyle || ""}">${buttonText || "결제하기"}</button>
+		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
 		</main>
     
 
@@ -84,19 +72,26 @@ const getRequestPaymentHTML = (_a) => {
 `;
 };
 exports.getRequestPaymentHTML = getRequestPaymentHTML;
-const getCertificationHTML = (_a) => {
-    var { title, imp_uid, merchant_uid, buttonText, buttonWrapperStyle, buttonStyle } = _a, props = __rest(_a, ["title", "imp_uid", "merchant_uid", "buttonText", "buttonWrapperStyle", "buttonStyle"]);
-    if (typeof buttonWrapperStyle === "object") {
-        buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
-            return prev + `${cur[0]}:${cur[1]}; `;
-        }, "");
-    }
-    if (typeof buttonStyle === "object") {
-        buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
-            return prev + `${cur[0]}:${cur[1]}; `;
-        }, "");
-    }
-    return `
+const getCertificationHTML = ({
+  title,
+  imp_uid,
+  merchant_uid,
+  buttonText,
+  buttonWrapperStyle,
+  buttonStyle,
+  ...props
+}) => {
+  if (typeof buttonWrapperStyle === 'object') {
+    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
+  }
+  if (typeof buttonStyle === 'object') {
+    buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
+      return prev + `${cur[0]}:${cur[1]}; `;
+    }, '');
+  }
+  return `
 <!DOCTYPE html>
 <html>
   <head>
@@ -104,8 +99,8 @@ const getCertificationHTML = (_a) => {
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ""}">
-			<button onclick="requestPay()" style="${buttonStyle || ""}">${buttonText || "결제하기"}</button>
+		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
+			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
 		</main>
     
 

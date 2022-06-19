@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from 'express';
 
 declare global {
   namespace Express {
@@ -11,8 +11,8 @@ declare global {
 
 const pagination = () => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const page = (req.query?.page || "1") as string;
-    const limit = (req.query?.limit || "20") as string;
+    const page = (req.query?.page || '1') as string;
+    const limit = (req.query?.limit || '20') as string;
 
     const take = Number(limit) || 20;
     const skip = (Number(page) - 1) * take;

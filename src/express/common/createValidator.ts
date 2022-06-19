@@ -48,7 +48,7 @@ export const createValidator = (key: ValidatorKey, api: ValidatorItem) => {
   if (!Array.isArray(api.type)) {
     method = createValidation(method, api.type);
   } else {
-    api.type.forEach((type) => {
+    api.type.forEach(type => {
       method = createValidation(method, type);
     });
   }
@@ -63,7 +63,7 @@ export const createValidators = (controllers: Record<string, any>): Record<strin
       const validatorName = key.replace('API', '');
       const validator: any[] = [];
 
-      Object.entries(value).forEach((valueItem) => {
+      Object.entries(value).forEach(valueItem => {
         const [controllerKey, apis] = valueItem as [ValidatorKey | string, ValidatorItem[]];
 
         if (
