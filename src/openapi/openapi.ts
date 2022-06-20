@@ -9,11 +9,10 @@ import getOpenAPIPathSecurity from './getOpenAPIPathSecurity';
 import getOpenAPIPathParameters from './getOpenAPIPathParameters';
 import getOpenAPIPathRequestBody from './getOpenAPIPathRequestBody';
 import getOpenAPIPathResponses from './getOpenAPIPathResponses';
-import { compareSync } from 'bcrypt';
 
 const getOpenAPIPaths = async (controllers: Record<string, any>) => {
   const paths: any = {};
-  const sdk = await sdkGenerator('./src/example/controllers', './src/example/config/test-sdk');
+  const sdk = await sdkGenerator('./src/controllers', './src/example/config/test-sdk');
 
   Object.entries(controllers).forEach(([key, value]: [string, any]) => {
     if (key.indexOf('API') > -1) {
