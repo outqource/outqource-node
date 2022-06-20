@@ -11,7 +11,6 @@ const fs_1 = __importDefault(require('fs'));
 const shared_1 = require('../../shared');
 const middlewares_1 = require('../middlewares');
 const _1 = require('.');
-const sdk_1 = __importDefault(require('../../sdk'));
 const defaultOpenAPIOptions = {
   title: 'outqource-node/express',
   version: '1.0.0',
@@ -19,7 +18,7 @@ const defaultOpenAPIOptions = {
 };
 class InitApp {
   constructor(props) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c;
     this.app = (0, express_1.default)();
     this.controllers = props === null || props === void 0 ? void 0 : props.controllers;
     if ((_a = props.openAPI) === null || _a === void 0 ? void 0 : _a.path) {
@@ -29,20 +28,11 @@ class InitApp {
         endPoint: ((_c = props.openAPI) === null || _c === void 0 ? void 0 : _c.endPoint) || '/api-docs',
       };
     }
-    if (props.sdk) {
-      this.sdk = {
-        root: (_d = props.sdk.root) !== null && _d !== void 0 ? _d : './controllers',
-        dest: (_e = props.sdk.dest) !== null && _e !== void 0 ? _e : './config/sdk',
-      };
-    }
   }
   async init() {
     if (this.openAPI) {
       const openAPI = await (0, shared_1.createOpenAPI)(this.openAPI.options, this.controllers);
       await fs_1.default.writeFileSync(this.openAPI.path, openAPI);
-    }
-    if (this.sdk) {
-      await (0, sdk_1.default)(this.sdk.root, this.sdk.dest);
     }
   }
   applyMiddlewares(middlewares) {

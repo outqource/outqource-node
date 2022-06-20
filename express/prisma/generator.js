@@ -68,7 +68,6 @@ import database from 'database';
       const writFilePath = `${writePath}/${controllerName}/${filename}.ts`;
       fs_1.default.writeFile(writFilePath, result, err => {
         if (err) throw err;
-        console.log(`${controllerName}`);
       });
     }
   });

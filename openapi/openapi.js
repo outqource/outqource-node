@@ -16,14 +16,14 @@ const getOpenAPIPathRequestBody_1 = __importDefault(require('./getOpenAPIPathReq
 const getOpenAPIPathResponses_1 = __importDefault(require('./getOpenAPIPathResponses'));
 const getOpenAPIPaths = async controllers => {
   const paths = {};
-  const sdk = await (0, sdk_1.default)('./src/controllers', './src/example/config/test-sdk');
+  const sdk = await new sdk_1.default(controllers).writeSDKs();
   Object.entries(controllers).forEach(([key, value]) => {
-    if (key.indexOf('API') > -1) {
+    if (key.includes('API')) {
       const api = value;
       const name = key.replace('API', '');
       let description = api.description ? `# ${name}\n${api.description}` : `# ${name}`;
       if (sdk[name]) {
-        description = description + `\n\`\`\`ts\n${sdk[name]}\n\`\`\``;
+        description = description + `\n\`\`\`ts\n${sdk[name].source}\n\`\`\``;
       }
       const path = (0, getOpenAPIPath_1.default)(api);
       const summary = (0, getOpenAPIPathSummary_1.default)(api, name);

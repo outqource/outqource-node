@@ -1,40 +1,4 @@
 'use strict';
-var __createBinding =
-  (this && this.__createBinding) ||
-  (Object.create
-    ? function (o, m, k, k2) {
-        if (k2 === undefined) k2 = k;
-        Object.defineProperty(o, k2, {
-          enumerable: true,
-          get: function () {
-            return m[k];
-          },
-        });
-      }
-    : function (o, m, k, k2) {
-        if (k2 === undefined) k2 = k;
-        o[k2] = m[k];
-      });
-var __setModuleDefault =
-  (this && this.__setModuleDefault) ||
-  (Object.create
-    ? function (o, v) {
-        Object.defineProperty(o, 'default', { enumerable: true, value: v });
-      }
-    : function (o, v) {
-        o['default'] = v;
-      });
-var __importStar =
-  (this && this.__importStar) ||
-  function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null)
-      for (var k in mod)
-        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-  };
 var __classPrivateFieldGet =
   (this && this.__classPrivateFieldGet) ||
   function (receiver, state, kind, f) {
@@ -43,66 +7,9 @@ var __classPrivateFieldGet =
       throw new TypeError('Cannot read private member from an object whose class did not declare it');
     return kind === 'm' ? f : kind === 'a' ? f.call(receiver) : f ? f.value : state.get(receiver);
   };
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
 var _a, _Parameter_getType;
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.Parameter = exports.APITreeItem = void 0;
-const fs = __importStar(require('fs/promises'));
-const fs_1 = require('fs');
-const path_1 = __importDefault(require('path'));
-class APITree {
-  constructor(parent) {
-    this.children = [];
-    this.items = [];
-    this.parent = parent;
-  }
-  static async create(parent, filePath) {
-    const tree = new APITree(parent);
-    const files = await fs.readdir(filePath);
-    for await (const file of files) {
-      if (file.endsWith('index.ts')) continue;
-      const indexPath = path_1.default.join(filePath, file);
-      const stat = await fs.stat(indexPath);
-      if (stat.isDirectory()) {
-        tree.children.push(await APITree.create(`${parent}/${file}`, indexPath));
-      } else {
-        const content = await fs.readFile(indexPath, 'utf-8');
-        const result = /export const (.+API): ControllerAPI = ({[^;]+);/.exec(content);
-        if (!result) {
-          throw new Error(`Controller API not specified at: ${indexPath}`);
-        }
-        const apiKey = result[1];
-        const api = eval(`(function(){return ${result[2]}})()`);
-        if (!apiKey) {
-          throw new Error(`Controller API not specified at: ${indexPath}`);
-        }
-        tree.items.push(new APITreeItem(api, apiKey));
-      }
-    }
-    return tree;
-  }
-  static isExistPath(dest) {
-    return (0, fs_1.existsSync)(dest);
-  }
-  async writeFiles(dest, isFirst = false) {
-    const childrenPath = path_1.default.join(dest, this.parent);
-    let sources = {};
-    for await (const item of this.items) {
-      const { name, source } = await item.writeFile(childrenPath);
-      sources[name] = source;
-    }
-    for await (const child of this.children) {
-      const childSources = await child.writeFiles(childrenPath);
-      sources = { ...sources, ...childSources };
-    }
-    return sources;
-  }
-}
-exports.default = APITree;
 class APITreeItem {
   // TODO: Response Type
   // readonly response: Response[];
@@ -212,7 +119,7 @@ ${this.body
 };
 `;
   }
-  async writeFile(dest) {
+  writeFile() {
     const importSource = this.getImportSource();
     const typescriptInterfaceSource = this.getTypescriptInterface();
     const executorSource = this.getExecutor();
@@ -236,7 +143,6 @@ class Parameter {
     this.required = !item.nullable && !item.default;
   }
   getTypescriptInterface() {
-    console.log(`${this.name}: ${this.type} ${this.required}`);
     return `${this.name}${this.required ? '' : '?'}: ${this.type === 'File' ? 'unknown' : this.type}`;
   }
 }

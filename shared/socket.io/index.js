@@ -15,9 +15,6 @@ class SocketIO {
     this.io = io;
     const logger = new events_1.default.EventEmitter();
     this.logger = logger;
-    // this.logger.on("newEvent", function (event, data) {
-    //   console.log(`newEvent Event`, event, JSON.stringify(data));
-    // });
   }
   init(logger) {
     this.io.on('connection', function (socket) {

@@ -55,10 +55,8 @@ const getRequestPaymentHTML = ({ title, merchant_id, buttonText, buttonWrapperSt
 					dataType: 'json',
 					data: props.data,
 				}).done(function(json){
-					// console.log('done', json);
 					window.location.replace('${props.done_redirect_uri}');
 				}).fail(function(json){
-					// console.log('fail', json);
 					window.location.replace('${props.fail_redirect_uri}');
 				})
 			}

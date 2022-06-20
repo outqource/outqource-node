@@ -1,5 +1,8 @@
+import { SDKSources } from './APITree';
 export default class Generator {
-  #private;
-  constructor(root: string, dest: string);
-  static generate(root: string, dest: string): Promise<Record<string, string>>;
+  readonly controllers: Record<string, any>;
+  private treeItems;
+  private sdkSources;
+  constructor(controllers: Record<string, any>);
+  writeSDKs(): SDKSources;
 }
