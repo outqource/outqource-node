@@ -21,10 +21,6 @@ const initApp = new InitApp({
     options: openAPIOptions,
     endPoint: '/api-docs',
   },
-  sdk: {
-    root: './src/example/controllers',
-    dest: './src/example/config/test-sdk',
-  },
 });
 
 export default initApp;

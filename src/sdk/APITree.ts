@@ -1,73 +1,14 @@
-import * as fs from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
 import { ControllerAPI, ValidationItemType, ValidatorItem } from '../express';
 
-export default class APITree {
-  readonly parent: string;
-  readonly children: APITree[] = [];
-  readonly items: APITreeItem[] = [];
+export type SDKSource = {
+  name: string;
+  source: string;
+  importSource: string;
+  typescriptInterfaceSource: string;
+  executorSource: string;
+};
 
-  public constructor(parent: string) {
-    this.parent = parent;
-  }
-
-  public static async create(parent: string, filePath: string): Promise<APITree> {
-    const tree = new APITree(parent);
-
-    const files = await fs.readdir(filePath);
-
-    for await (const file of files) {
-      if (file.endsWith('index.ts')) continue;
-
-      const indexPath = path.join(filePath, file);
-      const stat = await fs.stat(indexPath);
-      if (stat.isDirectory()) {
-        tree.children.push(await APITree.create(`${parent}/${file}`, indexPath));
-      } else {
-        const content = await fs.readFile(indexPath, 'utf-8');
-        const result = /export const (.+API): ControllerAPI = ({[^;]+);/.exec(content);
-
-        if (!result) {
-          throw new Error(`Controller API not specified at: ${indexPath}`);
-        }
-
-        const apiKey = result[1];
-
-        const api = eval(`(function(){return ${result[2]}})()`);
-
-        if (!apiKey) {
-          throw new Error(`Controller API not specified at: ${indexPath}`);
-        }
-
-        tree.items.push(new APITreeItem(api, apiKey));
-      }
-    }
-
-    return tree;
-  }
-
-  static isExistPath(dest: string): boolean {
-    return existsSync(dest);
-  }
-
-  public async writeFiles(dest: string, isFirst = false) {
-    const childrenPath = path.join(dest, this.parent);
-    let sources: Record<string, string> = {};
-
-    for await (const item of this.items) {
-      const { name, source } = await item.writeFile(childrenPath);
-      sources[name] = source;
-    }
-
-    for await (const child of this.children) {
-      const childSources = await child.writeFiles(childrenPath);
-      sources = { ...sources, ...childSources };
-    }
-
-    return sources;
-  }
-}
+export type SDKSources = Record<string, SDKSource>;
 
 export class APITreeItem {
   readonly name: string;
@@ -187,7 +128,7 @@ ${this.body
 `;
   }
 
-  public async writeFile(dest?: string) {
+  public writeFile(): SDKSource {
     const importSource = this.getImportSource();
     const typescriptInterfaceSource = this.getTypescriptInterface();
     const executorSource = this.getExecutor();

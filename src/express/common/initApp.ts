@@ -27,22 +27,15 @@ type InitAppOpenAPI = {
   endPoint?: string;
 };
 
-type InitAppSDK = {
-  root?: string;
-  dest?: string;
-};
-
 export interface InitAppProps {
   controllers: Record<string, any>;
   openAPI?: InitAppOpenAPI;
-  sdk?: InitAppSDK;
 }
 
 export class InitApp {
   public app: Application;
   private controllers: any;
   private openAPI?: InitAppOpenAPI;
-  private sdk?: InitAppSDK;
 
   constructor(props: InitAppProps) {
     this.app = Express();
@@ -55,23 +48,12 @@ export class InitApp {
         endPoint: props.openAPI?.endPoint || '/api-docs',
       };
     }
-
-    if (props.sdk) {
-      this.sdk = {
-        root: props.sdk.root ?? './controllers',
-        dest: props.sdk.dest ?? './config/sdk',
-      };
-    }
   }
 
   public async init() {
     if (this.openAPI) {
       const openAPI = await createOpenAPI(this.openAPI.options as OpenAPIOptions, this.controllers);
       await fs.writeFileSync(this.openAPI.path, openAPI);
-    }
-
-    if (this.sdk) {
-      await sdkGenerator(this.sdk.root as string, this.sdk.dest as string);
     }
   }
 

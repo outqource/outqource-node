@@ -1,6 +1,6 @@
 import type { OpenAPIOptions, ControllerAPI } from './types';
 
-import sdkGenerator from '../sdk';
+import SDKGenerator from '../sdk';
 import getOpenAPI from './getOpenAPI';
 import getOpenAPITags from './getOpenAPITags';
 import getOpenAPIPath from './getOpenAPIPath';
@@ -12,7 +12,9 @@ import getOpenAPIPathResponses from './getOpenAPIPathResponses';
 
 const getOpenAPIPaths = async (controllers: Record<string, any>) => {
   const paths: any = {};
-  const sdk = await sdkGenerator('./src/controllers', './src/example/config/test-sdk');
+  const sdk = await new SDKGenerator(controllers).writeSDKs();
+
+  console.log(`sdk`, sdk);
 
   Object.entries(controllers).forEach(([key, value]: [string, any]) => {
     if (key.indexOf('API') > -1) {
@@ -22,7 +24,7 @@ const getOpenAPIPaths = async (controllers: Record<string, any>) => {
       let description = api.description ? `# ${name}\n${api.description}` : `# ${name}`;
 
       if (sdk[name]) {
-        description = description + `\n\`\`\`ts\n${sdk[name]}\n\`\`\``;
+        description = description + `\n\`\`\`ts\n${sdk[name].source}\n\`\`\``;
       }
 
       const path = getOpenAPIPath(api);
