@@ -6,14 +6,12 @@ import { json, urlencoded, cors, jsonwebtoken, pagination, swagger } from '../mi
 
 import {
   createRouter,
-  createValidators,
   createErrorController,
   createGlobalController,
   IErrorProps,
   IGlobalProps,
   ExpressController,
 } from '.';
-import sdkGenerator from '../../sdk';
 import Validator from '../validator';
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
@@ -107,16 +105,9 @@ export class InitApp {
   }
 
   public routers(options?: { errorOptions?: IErrorProps; globalOptions?: IGlobalProps }) {
-    const expressValidator = createValidators(this.controllers);
+    const validator = Validator.create(this.controllers);
+    createRouter(this.app, this.controllers, validator);
 
-    const validator = new Validator(this.controllers);
-    const ajvValidator = validator.create();
-
-    console.log(`validator v1`, expressValidator);
-    console.log(`validator v2`, ajvValidator);
-    // const validators = { ...expressValidator, ...ajvValidator };
-
-    createRouter(this.app, this.controllers, ajvValidator);
     this.app.use(createErrorController(options?.errorOptions));
     this.app.use(createGlobalController(options?.globalOptions));
   }

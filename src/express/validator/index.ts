@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Ajv, { JSONSchemaType, Options, ValidateFunction } from 'ajv';
+import Ajv, { ErrorObject, JSONSchemaType, Options, ValidateFunction } from 'ajv';
 import type { JTDDataType } from 'ajv/dist/jtd';
 import createAjvValidator from './createAjvValidator';
 import { ControllerAPI, ValidatorItem } from '../../openapi';
@@ -31,7 +31,12 @@ export default class Validator {
     this.controllers = controllers;
   }
 
-  public create() {
+  public static create(controllers: Record<string, any>) {
+    const instance = new Validator(controllers);
+    return instance._create();
+  }
+
+  public _create() {
     Object.entries(this.controllers).forEach(([key, value]: [string, ControllerAPI | any]) => {
       if (key.includes('API')) {
         const name = key.replace('API', '');
@@ -39,7 +44,7 @@ export default class Validator {
 
         Object.entries(value).forEach(([key, value]: [string, any]) => {
           if (key === 'param' || key === 'query' || key === 'body') {
-            const validator = this.createAPIValidators(value as ValidatorItem[]);
+            const validator = this.createValidators(value as ValidatorItem[]);
             apiValidators[key] = validator;
           }
         });
@@ -52,7 +57,7 @@ export default class Validator {
     return this.middlewares;
   }
 
-  public createAPIValidators(validatorItems: ValidatorItem[]): UnknownSchemaType {
+  public createValidators(validatorItems: ValidatorItem[]): UnknownSchemaType {
     const validator: UnknownSchemaType = {
       type: 'object',
       properties: {},
@@ -109,7 +114,7 @@ export default class Validator {
 
       if (req.params && validators.param) {
         const validation = validators.param(req.params);
-        errorMessage = validators.param.errors?.map(error => error.message).join(', ') ?? '';
+        errorMessage = this.getErrorMessage(validators.param.errors) ?? '';
 
         if (!validation) {
           return next({
@@ -121,7 +126,7 @@ export default class Validator {
 
       if (req.query && validators.query) {
         const validation = validators.query(req.query);
-        errorMessage = validators.query.errors?.map(error => error.message).join(', ') ?? '';
+        errorMessage = this.getErrorMessage(validators.query.errors) ?? '';
 
         if (!validation) {
           return next({
@@ -133,7 +138,7 @@ export default class Validator {
 
       if (req.body && validators.body) {
         const validation = validators.body(req.body);
-        errorMessage = validators.body.errors?.map(error => error.message).join(', ') ?? '';
+        errorMessage = this.getErrorMessage(validators.body.errors) ?? '';
 
         if (!validation) {
           return next({
@@ -145,5 +150,10 @@ export default class Validator {
 
       next();
     };
+  }
+
+  public getErrorMessage(errors?: ErrorObject[] | null): string | undefined {
+    if (!errors) return undefined;
+    return errors?.map(error => `${error.instancePath.replace('/', '')} - ${error.message}`).join(', ') ?? '';
   }
 }
