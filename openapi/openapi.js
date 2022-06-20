@@ -16,7 +16,7 @@ const getOpenAPIPathRequestBody_1 = __importDefault(require('./getOpenAPIPathReq
 const getOpenAPIPathResponses_1 = __importDefault(require('./getOpenAPIPathResponses'));
 const getOpenAPIPaths = async controllers => {
   const paths = {};
-  const sdk = await (0, sdk_1.default)('./src/example/controllers', './src/example/config/test-sdk');
+  const sdk = await (0, sdk_1.default)('./src/controllers', './src/example/config/test-sdk');
   Object.entries(controllers).forEach(([key, value]) => {
     if (key.indexOf('API') > -1) {
       const api = value;
