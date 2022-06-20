@@ -5,8 +5,8 @@ export const createPostAPI: ControllerAPI = {
   method: 'POST',
   middlewares: [],
   body: [
-    { key: 'title', type: 'string', nullable: true },
-    { key: 'content', type: 'string', nullable: true },
+    { key: 'title', type: 'string' },
+    { key: 'content', type: 'string' },
   ],
 };
 
