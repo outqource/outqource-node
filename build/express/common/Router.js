@@ -3,7 +3,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 exports.createRouter = void 0;
 const createRouter = (app, controllers, validators) => {
   Object.entries(controllers).forEach(([key, value]) => {
-    if (key.indexOf('API') > -1) {
+    if (key.includes('API')) {
       const api = value;
       const name = key.replace('API', '');
       const controller = controllers[name];

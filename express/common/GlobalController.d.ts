@@ -3,6 +3,6 @@ export interface IGlobalProps {
   html?: string;
   status?: number;
 }
-export declare const createGlobalController: (
+export declare const globalController: (
   props?: IGlobalProps | undefined,
 ) => (req: Request, res: Response, next: NextFunction) => void;

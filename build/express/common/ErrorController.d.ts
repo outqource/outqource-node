@@ -7,7 +7,7 @@ export interface IErrorProps {
   header?: string;
   isConsole?: boolean;
 }
-export declare const createErrorController: (
+export declare const errorController: (
   props?: IErrorProps | undefined,
 ) => (err: Error, req: Request, res: Response, next: NextFunction) => void;
 export {};

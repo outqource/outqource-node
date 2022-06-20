@@ -25,3 +25,4 @@ Object.defineProperty(exports, '__esModule', { value: true });
 __exportStar(require('./getPosts'), exports);
 __exportStar(require('./getPost'), exports);
 __exportStar(require('./createPost'), exports);
+__exportStar(require('./deleteComments'), exports);

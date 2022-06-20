@@ -11,6 +11,7 @@ const fs_1 = __importDefault(require('fs'));
 const shared_1 = require('../../shared');
 const middlewares_1 = require('../middlewares');
 const _1 = require('.');
+const validator_1 = __importDefault(require('../validator'));
 const defaultOpenAPIOptions = {
   title: 'outqource-node/express',
   version: '1.0.0',
@@ -69,14 +70,10 @@ class InitApp {
     }
   }
   routers(options) {
-    const expressValidator = (0, _1.createValidators)(this.controllers);
-    // const ajvValidator = createAjvValidator(this.controllers);
-    // const validators = { ...expressValidator, ...ajvValidator };
-    (0, _1.createRouter)(this.app, this.controllers, expressValidator);
-    this.app.use((0, _1.createErrorController)(options === null || options === void 0 ? void 0 : options.errorOptions));
-    this.app.use(
-      (0, _1.createGlobalController)(options === null || options === void 0 ? void 0 : options.globalOptions),
-    );
+    const validator = validator_1.default.create(this.controllers);
+    (0, _1.createRouter)(this.app, this.controllers, validator);
+    this.app.use((0, _1.errorController)(options === null || options === void 0 ? void 0 : options.errorOptions));
+    this.app.use((0, _1.globalController)(options === null || options === void 0 ? void 0 : options.globalOptions));
   }
 }
 exports.InitApp = InitApp;

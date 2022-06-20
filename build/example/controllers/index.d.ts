@@ -7,5 +7,7 @@ declare const controllers: {
   getPost: import('../..').ExpressController;
   createPostAPI: import('../..').ControllerAPI<any, any, any>;
   createPost: import('../..').ExpressController;
+  deleteCommentsAPI: import('../..').ControllerAPI<any, any, any>;
+  deleteComments: import('../..').ExpressController;
 };
 export default controllers;

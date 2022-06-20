@@ -22,6 +22,7 @@ export declare type ValidationItemType = 'string' | 'number' | 'boolean' | 'arra
 export declare type ValidatorItem = {
   key: string;
   type: ValidationItemType;
+  items?: string | ValidatorItem[];
   nullable?: boolean;
   additionalProperties?: boolean;
   default?: any;
