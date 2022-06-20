@@ -1,4 +1,4 @@
-const buildFolders = ["express", "prisma", "openapi", "shared"];
+const buildFolders = ['express', 'prisma', 'openapi', 'shared', 'sdk'];
 
 module.exports = {
   buildFolders,

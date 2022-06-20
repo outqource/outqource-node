@@ -44,6 +44,7 @@ export declare type ControllerAPI<P = any, Q = any, B = any> = {
   ajv?: AjvValidator;
   auth?: 'jwt' | 'cookie' | 'session';
   summary?: string;
+  description?: string;
   formData?: {
     key: string;
     type: 'single' | 'multiple';
