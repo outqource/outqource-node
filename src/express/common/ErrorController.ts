@@ -10,7 +10,7 @@ export interface IErrorProps {
   isConsole?: boolean;
 }
 
-export const createErrorController = (props?: IErrorProps) => {
+export const errorController = (props?: IErrorProps) => {
   return (err: Error, req: Request, res: Response, next: NextFunction) => {
     let header = props?.header;
     const isConsole = props?.isConsole;

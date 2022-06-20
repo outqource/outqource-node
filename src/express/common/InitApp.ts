@@ -4,14 +4,7 @@ import fs from 'fs';
 import { createOpenAPI, OpenAPIOptions } from '../../shared';
 import { json, urlencoded, cors, jsonwebtoken, pagination, swagger } from '../middlewares';
 
-import {
-  createRouter,
-  createErrorController,
-  createGlobalController,
-  IErrorProps,
-  IGlobalProps,
-  ExpressController,
-} from '.';
+import { createRouter, errorController, globalController, IErrorProps, IGlobalProps, ExpressController } from '.';
 import Validator from '../validator';
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
@@ -108,7 +101,7 @@ export class InitApp {
     const validator = Validator.create(this.controllers);
     createRouter(this.app, this.controllers, validator);
 
-    this.app.use(createErrorController(options?.errorOptions));
-    this.app.use(createGlobalController(options?.globalOptions));
+    this.app.use(errorController(options?.errorOptions));
+    this.app.use(globalController(options?.globalOptions));
   }
 }

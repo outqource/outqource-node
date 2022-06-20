@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import Ajv, { ErrorObject, JSONSchemaType, Options, ValidateFunction } from 'ajv';
 import type { JTDDataType } from 'ajv/dist/jtd';
-import createAjvValidator from './createAjvValidator';
 import { ControllerAPI, ValidatorItem } from '../../openapi';
 
-export { Ajv, createAjvValidator };
+export { Ajv };
 export type { JSONSchemaType, JTDDataType };
 
 type UnknownSchemaType = JSONSchemaType<Record<string, any>>;
@@ -66,14 +65,17 @@ export default class Validator {
     };
 
     validatorItems.forEach(validatorItem => {
-      const { key, type, items } = validatorItem;
+      const { key, type } = validatorItem;
 
       if (type === 'string' || type === 'number' || type === 'boolean') {
         (validator as UnknownSchemaType).properties[key] = { type };
       }
 
-      if (validatorItem.type === 'array') {
-        (validator as UnknownSchemaType).properties[key] = { type, items };
+      if (validatorItem.type === 'array' && validatorItem.items) {
+        (validator as UnknownSchemaType).properties[key] = {
+          type,
+          items: this.createChildValidators(validatorItem.items),
+        };
       }
 
       if (!validatorItem.nullable) {
@@ -82,6 +84,46 @@ export default class Validator {
     });
 
     return validator;
+  }
+
+  public createChildValidators(validatorItems: string | ValidatorItem[]): any {
+    if (typeof validatorItems === 'string') {
+      if (validatorItems === 'string' || validatorItems === 'number' || validatorItems === 'boolean') {
+        return { type: validatorItems };
+      }
+    }
+
+    if (Array.isArray(validatorItems)) {
+      const validator: UnknownSchemaType = {
+        type: 'object',
+        properties: {},
+        required: [],
+        additionalProperties: false,
+      };
+
+      validatorItems.forEach(validatorItem => {
+        const { key, type } = validatorItem;
+
+        if (type === 'string' || type === 'number' || type === 'boolean') {
+          (validator as UnknownSchemaType).properties[key] = { type };
+        }
+
+        if (validatorItem.type === 'array' && validatorItem.items) {
+          (validator as UnknownSchemaType).properties[key] = {
+            type,
+            items: this.createChildValidators(validatorItem.items),
+          };
+        }
+
+        if (!validatorItem.nullable) {
+          (validator as UnknownSchemaType).required.push(key);
+        }
+      });
+
+      return validator;
+    }
+
+    return {};
   }
 
   public createMiddleware<P, Q, B>(props?: CreateMiddlewareProps<P, Q, B>) {

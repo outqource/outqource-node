@@ -5,7 +5,7 @@ export interface IGlobalProps {
   status?: number;
 }
 
-export const createGlobalController = (props?: IGlobalProps) => {
+export const globalController = (props?: IGlobalProps) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const html = props?.html || '<h1>outqource-node/express</h1>';
     const status = props?.status || 404;

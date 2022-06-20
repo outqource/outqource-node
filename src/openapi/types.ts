@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { URL } from 'url';
-import { CreateAJVMiddlewareProps } from '../express/validator/createAjvMiddleware';
 
 export type OpenAPIOptions = {
   title: string;
@@ -34,7 +33,7 @@ export type ValidationItemType = 'string' | 'number' | 'boolean' | 'array' | 'ob
 export type ValidatorItem = {
   key: string;
   type: ValidationItemType;
-  items?: ValidatorItem[];
+  items?: string | ValidatorItem[];
   nullable?: boolean;
   additionalProperties?: boolean;
   default?: any;
