@@ -3,7 +3,7 @@ import type { ControllerAPI, ControllerAPIMethodLowerCase } from '../../shared';
 
 export const createRouter = (app: Application, controllers: Record<string, any>, validators: any) => {
   Object.entries(controllers).forEach(([key, value]: [string, any]) => {
-    if (key.indexOf('API') > -1) {
+    if (key.includes('API')) {
       const api = value as ControllerAPI;
 
       const name = key.replace('API', '');

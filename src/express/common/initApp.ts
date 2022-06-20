@@ -14,6 +14,7 @@ import {
   ExpressController,
 } from '.';
 import sdkGenerator from '../../sdk';
+import Validator from '../validator';
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
   title: 'outqource-node/express',
@@ -107,10 +108,15 @@ export class InitApp {
 
   public routers(options?: { errorOptions?: IErrorProps; globalOptions?: IGlobalProps }) {
     const expressValidator = createValidators(this.controllers);
-    // const ajvValidator = createAjvValidator(this.controllers);
+
+    const validator = new Validator(this.controllers);
+    const ajvValidator = validator.create();
+
+    console.log(`validator v1`, expressValidator);
+    console.log(`validator v2`, ajvValidator);
     // const validators = { ...expressValidator, ...ajvValidator };
 
-    createRouter(this.app, this.controllers, expressValidator);
+    createRouter(this.app, this.controllers, ajvValidator);
     this.app.use(createErrorController(options?.errorOptions));
     this.app.use(createGlobalController(options?.globalOptions));
   }

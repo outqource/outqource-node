@@ -34,6 +34,7 @@ export type ValidationItemType = 'string' | 'number' | 'boolean' | 'array' | 'ob
 export type ValidatorItem = {
   key: string;
   type: ValidationItemType;
+  items?: ValidatorItem[];
   nullable?: boolean;
   additionalProperties?: boolean;
   default?: any;
