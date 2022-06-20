@@ -1,8 +1,16 @@
-node_modules
-build
 .DS_Store
+.idea
 
+node_modules
 .env
+./build
+./express
+./openapi
+./prisma
+./sdk
+./shared
+
+
 scripts
 package.json
 yarn.lock
