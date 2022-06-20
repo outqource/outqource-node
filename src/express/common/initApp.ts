@@ -13,7 +13,7 @@ import {
   IGlobalProps,
   ExpressController,
 } from '.';
-import sdkGenerator from '../sdk';
+import sdkGenerator from '../../sdk';
 
 const defaultOpenAPIOptions: OpenAPIOptions = {
   title: 'outqource-node/express',

@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
-import { ControllerAPI, ValidationItemType, ValidatorItem } from '../';
+import { ControllerAPI, ValidationItemType, ValidatorItem } from '../express';
 
 export default class APITree {
   readonly parent: string;
@@ -52,20 +52,20 @@ export default class APITree {
   }
 
   public async writeFiles(dest: string, isFirst = false) {
-    if (isFirst && !APITree.isExistPath(dest)) {
-      await fs.mkdir(dest);
-    }
-
     const childrenPath = path.join(dest, this.parent);
+    let sources: Record<string, string> = {};
 
-    if (!APITree.isExistPath(childrenPath)) {
-      await fs.mkdir(childrenPath);
+    for await (const item of this.items) {
+      const { name, source } = await item.writeFile(childrenPath);
+      sources[name] = source;
     }
 
-    await Promise.all([
-      ...this.items.map(item => item.writeFile(childrenPath)),
-      ...this.children.map(child => child.writeFiles(childrenPath)),
-    ]);
+    for await (const child of this.children) {
+      const childSources = await child.writeFiles(childrenPath);
+      sources = { ...sources, ...childSources };
+    }
+
+    return sources;
   }
 }
 
@@ -91,8 +91,7 @@ export class APITreeItem {
   }
 
   public getImportSource(): string {
-    return `import axios from 'axios';
-`;
+    return "import axios from 'axios';\n";
   }
 
   public getTypescriptInterface(): string {
@@ -188,13 +187,18 @@ ${this.body
 `;
   }
 
-  public async writeFile(dest: string) {
-    const filePath = path.join(dest, `${this.name}.ts`);
-    const source = `${this.getImportSource()}
-${this.getTypescriptInterface()}
-${this.getExecutor()}`;
+  public async writeFile(dest?: string) {
+    const importSource = this.getImportSource();
+    const typescriptInterfaceSource = this.getTypescriptInterface();
+    const executorSource = this.getExecutor();
 
-    await fs.writeFile(filePath, source);
+    return {
+      name: this.name,
+      source: `${importSource}\n${typescriptInterfaceSource}\n${executorSource}`,
+      importSource,
+      typescriptInterfaceSource,
+      executorSource,
+    };
   }
 
   private get interfaceName() {

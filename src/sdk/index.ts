@@ -14,5 +14,5 @@ if (require.main === module) {
 }
 
 export default async function generate(root: string, dest: string) {
-  await Generator.generate(root, dest);
+  return await Generator.generate(root, dest);
 }
