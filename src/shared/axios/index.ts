@@ -1,4 +1,4 @@
-import axios, { Method, AxiosInstance, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import axios, { Method, AxiosInstance, AxiosRequestHeaders, AxiosResponse, AxiosError } from 'axios';
 import queryString from 'query-string';
 
 export interface onRequestProps {
@@ -17,11 +17,12 @@ export const onRequest = async ({
   query,
   data,
   headers,
-}: onRequestProps): Promise<AxiosResponse> => {
+}: onRequestProps): Promise<AxiosResponse | AxiosError> => {
   try {
     if (query) {
       url = `${url}?${queryString.stringify(query)}`;
     }
+
     return await instance({
       method,
       url,
@@ -29,7 +30,7 @@ export const onRequest = async ({
       headers,
     });
   } catch (error) {
-    const e = error as any;
+    const e = error as AxiosError;
     return e;
   }
 };

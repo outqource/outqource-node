@@ -1,5 +1,4 @@
 import axios from 'axios';
-import type { Aligo as Types } from './types';
 
 interface SendMessageProps {
   phoneNumber: string;
@@ -8,8 +7,9 @@ interface SendMessageProps {
 
 type SendMessagesProps = Array<SendMessageProps>;
 
-type SendMessageResponse = Promise<boolean>;
-type SendMessagesResponse = Promise<{ success: SendMessageProps[]; failure: SendMessageProps[] }>;
+type SendMessageResponse = boolean;
+
+type SendMessagesResponse = { success: SendMessageProps[]; failure: SendMessageProps[] };
 
 export class Aligo {
   private userId: string;
@@ -22,7 +22,7 @@ export class Aligo {
     this.sender = sender;
   }
 
-  async sendMessage({ phoneNumber, message }: SendMessageProps): SendMessageResponse {
+  async sendMessage({ phoneNumber, message }: SendMessageProps): Promise<SendMessageResponse> {
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const params = new URLSearchParams();
     params.append('user_id', this.userId);
@@ -40,8 +40,8 @@ export class Aligo {
     }
   }
 
-  async sendMessages(props: SendMessagesProps): SendMessagesResponse {
-    const result: Types.TsendMessages = { success: [], failure: [] };
+  async sendMessages(props: SendMessagesProps): Promise<SendMessagesResponse> {
+    const result: SendMessagesResponse = { success: [], failure: [] };
     for (const prop of props) {
       const response = await this.sendMessage(prop);
       if (response) {
