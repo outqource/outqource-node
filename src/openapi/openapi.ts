@@ -14,10 +14,8 @@ const getOpenAPIPaths = async (controllers: Record<string, any>) => {
   const paths: any = {};
   const sdk = await new SDKGenerator(controllers).writeSDKs();
 
-  console.log(`sdk`, sdk);
-
   Object.entries(controllers).forEach(([key, value]: [string, any]) => {
-    if (key.indexOf('API') > -1) {
+    if (key.includes('API')) {
       const api = value as ControllerAPI;
       const name = key.replace('API', '');
 

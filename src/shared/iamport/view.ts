@@ -94,10 +94,8 @@ export const getRequestPaymentHTML = ({
 					dataType: 'json',
 					data: props.data,
 				}).done(function(json){
-					// console.log('done', json);
 					window.location.replace('${props.done_redirect_uri}');
 				}).fail(function(json){
-					// console.log('fail', json);
 					window.location.replace('${props.fail_redirect_uri}');
 				})
 			}

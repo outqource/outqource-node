@@ -17,10 +17,6 @@ export class SocketIO {
 
     const logger = new Events.EventEmitter();
     this.logger = logger;
-
-    // this.logger.on("newEvent", function (event, data) {
-    //   console.log(`newEvent Event`, event, JSON.stringify(data));
-    // });
   }
 
   init(logger: Events.EventEmitter) {

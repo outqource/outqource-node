@@ -174,7 +174,6 @@ export class Parameter {
   }
 
   public getTypescriptInterface(): string {
-    console.log(`${this.name}: ${this.type} ${this.required}`);
     return `${this.name}${this.required ? '' : '?'}: ${this.type === 'File' ? 'unknown' : this.type}`;
   }
 }

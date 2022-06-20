@@ -75,7 +75,6 @@ import database from 'database';
 
       fs.writeFile(writFilePath, result, err => {
         if (err) throw err;
-        console.log(`${controllerName}`);
       });
     }
   });

@@ -33,7 +33,6 @@ export const parseValue = (value: string, type: ParseDataType | string | 'auto' 
     case 'string':
       return value;
     case 'boolean':
-      console.log(`parseValue`, value, type);
       return value === 'TRUE' || value === 'true';
     case 'number':
       return Number(value);

@@ -11,8 +11,6 @@ export const createPostAPI: ControllerAPI = {
 };
 
 export const createPost: ExpressController = async (req, res, next) => {
-  console.log(`file`, req.files);
-
   try {
     res.status(200).json({
       body: { title: req.body.title, content: req.body.content },
