@@ -1,6 +1,6 @@
 {
   "name": "outqource-node",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "build/index.js",
   "bin": "build/express/sdk/index.js",
   "repository": "https://github.com/outqource/outqource-node",
