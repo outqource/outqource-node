@@ -3,9 +3,10 @@ import fs from 'fs';
 export interface getRequestPaymentHTMLProps {
   title?: string;
   pg?: string;
-  merchant_id?: string;
+  merchant_id: string;
   pay_method: string;
   merchant_uid: string;
+  imp_uid: string;
   name: string;
   amount: number;
   buyer_email?: string;
@@ -23,17 +24,18 @@ export interface getRequestPaymentHTMLProps {
 
 export interface getRequestCertifcationHTML {
   title?: string;
-  imp_uid?: string;
+  imp_uid: string;
   merchant_uid: string;
   buttonText?: string;
   buttonWrapperStyle?: object | string;
   buttonStyle?: object | string;
-  [key: string]: any;
+  popup?: boolean;
+  m_redirect_url?: string;
 }
 
 export const getRequestPaymentHTML = ({
   title,
-  merchant_id,
+  imp_uid,
   buttonText,
   buttonWrapperStyle,
   buttonStyle,
@@ -71,7 +73,7 @@ export const getRequestPaymentHTML = ({
 
     <script>
 			const IMP = window.IMP;
-			IMP.init("${merchant_id}"); // Example: imp00000000
+			IMP.init("${imp_uid}"); // Example: imp00000000
 
       function requestPay() {
         IMP.request_pay(
@@ -109,10 +111,15 @@ export const getRequestPaymentHTML = ({
 `;
 };
 
+/**
+ *     merchant_uid: "ORD20180131-0000011", // 주문 번호
+    m_redirect_url : "{리디렉션 될 URL}", // 모바일환경에서 popup:false(기본값) 인 경우 필수, 예: https://www.myservice.com/payments/complete/mobile
+    popup : false 
+ * 
+ */
 export const getCertificationHTML = ({
   title,
   imp_uid,
-  merchant_uid,
   buttonText,
   buttonWrapperStyle,
   buttonStyle,

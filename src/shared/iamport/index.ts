@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import axios from 'axios';
 import type { Iamport as IamportTypes } from './types';
-import { getRequestPaymentHTML, getRequestPaymentHTMLProps } from './view';
+import { getRequestCertifcationHTML, getRequestPaymentHTML, getRequestPaymentHTMLProps } from './view';
 
 const api = axios.create({
   baseURL: 'https://api.iamport.kr',
@@ -70,7 +70,7 @@ class Iamport {
     return getRequestPaymentHTML({
       ...props,
       title: props.title || '결제하기',
-      merchant_id: props.merchant_id || this.merchant_id,
+      merchant_id: props.merchant_id ?? this.merchant_id,
       pg: props.pg || this.pg,
     });
   }
@@ -192,10 +192,14 @@ class Iamport {
     return response.data.response;
   }
 
-  // TODO
-  // 휴대폰 본인인증 HTML
-  async getCeritifcationHTML(): Promise<string> {
-    return '';
+  async getCeritifcationHTML(props: getRequestCertifcationHTML): Promise<string | null> {
+    if (!this.merchant_id && !props.merchant_uid) return null;
+
+    return this.getCeritifcationHTML({
+      ...props,
+      imp_uid: props.imp_uid,
+      merchant_uid: props.merchant_uid ?? this.merchant_id,
+    });
   }
 
   // 휴대폰 본인인증 정보 얻기
