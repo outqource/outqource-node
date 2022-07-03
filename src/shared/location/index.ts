@@ -13,6 +13,7 @@ import type {
   IGoogleGeocode,
   GoogleGeocode,
   GoogleGeocodeResponse,
+  DistanceProps,
 } from './type';
 
 const kakaoApi = axios.create({
@@ -163,6 +164,30 @@ class Location {
     if (!response) return null;
 
     return { data: this.parseGoogleGeocode(response.data.results), count: response.data.results.length };
+  }
+
+  public getDistance({ target, current }: DistanceProps): number {
+    if (!target.latitude || !target.longitude) return 0;
+
+    if (target.latitude === current.latitude && target.longitude === current.longitude) return 0;
+
+    const { latitude: lat2, longitude: lon2 } = target;
+    const { latitude: lat1, longitude: lon1 } = current;
+
+    const radLat1 = (Math.PI * Number(lat1)) / 180;
+    const radLat2 = (Math.PI * Number(lat2)) / 180;
+    const theta = Number(lon1) - Number(lon2);
+    const radTheta = (Math.PI * theta) / 180;
+    let dist = Math.sin(radLat1) * Math.sin(radLat2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+    if (dist > 1) dist = 1;
+
+    dist = Math.acos(dist);
+    dist = (dist * 180) / Math.PI;
+    dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+    if (dist < 100) dist = Math.round(dist / 10) * 10;
+    else dist = Math.round(dist / 100) * 100;
+
+    return Number((dist / 1000).toFixed(3));
   }
 }
 

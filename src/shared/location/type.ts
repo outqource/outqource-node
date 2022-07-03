@@ -14,6 +14,7 @@ export interface Geocode {
   latitude: string;
   longitude: string;
 }
+
 export interface GoogleGeocode {
   lat: number;
   lng: number;
@@ -22,6 +23,11 @@ export interface GoogleGeocode {
 export interface KakaoGeocode {
   x: string;
   y: string;
+}
+
+export interface DistanceProps {
+  target: Geocode;
+  current: Geocode;
 }
 
 interface Address {
