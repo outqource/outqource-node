@@ -8,14 +8,14 @@ import type { Kakao as KakaoSocial } from './types';
 import { KAKAO_URL } from './constant';
 
 interface IKakao {
-  kakaoRestKey: string | undefined;
+  kakaoRestKey: string;
   kakaoSecretKey: string | undefined;
   kakaoAdminKey: string | undefined;
   kakaoRedirectUrl: string | undefined;
 }
 
 export class Kakao {
-  private restKey: string | undefined;
+  private restKey: string;
   private secretKey: string | undefined;
   private redirectUrl: string | undefined;
   private adminKey: string | undefined;
@@ -32,7 +32,7 @@ export class Kakao {
       throw { status: 500, message: 'Kakao Redirect Url is not defined' };
     }
 
-    res.redirect(redirectUrl ?? this.redirectUrl!);
+    res.redirect(KAKAO_URL.AUTH(this.restKey, redirectUrl ?? this.redirectUrl!));
   }
 
   public async getUser(token: string): Promise<KakaoSocial.TgetUser | undefined> {
