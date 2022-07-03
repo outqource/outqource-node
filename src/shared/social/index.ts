@@ -1,4 +1,4 @@
-import { Kakao, KakaoUser } from './kakao';
+import { Kakao } from './kakao';
 import { Google, GoogleUser } from './google';
 
 class SocialLogin {
@@ -7,4 +7,4 @@ class SocialLogin {
 }
 
 export { SocialLogin, Kakao, Google };
-export type { KakaoUser, GoogleUser };
+export type { GoogleUser };
