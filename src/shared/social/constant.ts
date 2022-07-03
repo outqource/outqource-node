@@ -56,4 +56,4 @@ const NAVER_URL = {
   },
 };
 
-export { KAKAO_URL, GOOGLE_URL, APPLE_URL };
+export { KAKAO_URL, GOOGLE_URL, APPLE_URL, NAVER_URL };

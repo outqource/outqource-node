@@ -54,3 +54,22 @@ export namespace Google {
     user: User;
   };
 }
+
+export namespace Naver {
+  export type User = {
+    id: string;
+    email?: string;
+    gender?: string;
+    age?: string;
+    phoneNumber?: string;
+  };
+
+  export type Token = {
+    token: string;
+    tokenType: string;
+  };
+
+  export type TgetRestCallabck = Token & {
+    user: User;
+  };
+}

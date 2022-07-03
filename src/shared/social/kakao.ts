@@ -13,6 +13,7 @@ interface IKakao {
   kakaoAdminKey: string | undefined;
   kakaoRedirectUrl: string | undefined;
 }
+export type KakaoUser = KakaoSocial.User;
 
 export class Kakao {
   private restKey: string;

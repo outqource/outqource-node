@@ -11,6 +11,8 @@ interface IGoogle {
   clientSecret: string | undefined;
   redirectUri: string | undefined;
 }
+
+export type GoogleUser = GoogleSocial.User;
 export class Google {
   private clientId: string;
   private clientSecret: string | undefined;
