@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import axios from 'axios';
 import queryString from 'query-string';
+
 import type { Response } from 'express';
 import type { Kakao as KakaoSocial } from './types';
+
+import { KAKAO_URL } from './constant';
 
 interface IKakao {
   kakaoRestKey: string | undefined;
@@ -10,10 +13,6 @@ interface IKakao {
   kakaoAdminKey: string | undefined;
   kakaoRedirectUrl: string | undefined;
 }
-
-const api = axios.create({
-  baseURL: 'https://kauth.kakao.com',
-});
 
 export class Kakao {
   private restKey: string | undefined;
@@ -42,7 +41,7 @@ export class Kakao {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
     try {
-      const response = await api.get('/v2/user/me', {
+      const response = await axios.get(KAKAO_URL.USER, {
         headers,
       });
 
@@ -67,7 +66,7 @@ export class Kakao {
     });
 
     try {
-      const response = await api.post('/oauth/token', data, {
+      const response = await axios.post(KAKAO_URL.TOKEN, data, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -114,7 +113,7 @@ export class Kakao {
         target_id: id,
       });
 
-      await api.post('/v1/user/logout', data, { headers });
+      await axios.post(KAKAO_URL.LOGOUT, data, { headers });
 
       return true;
     } catch (err: any) {

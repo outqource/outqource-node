@@ -1,12 +1,11 @@
-const constant = {
-  KAKAO: {
-    TOKEN_URL: 'https://kauth.kakao.com/oauth/token',
-    USER_URL: 'https://kapi.kakao.com/v2/user/me',
-  },
-  GOOGLE: {
-    TOKEN_URL: 'https://oauth2.googleapis.com/token',
-    USER_URL: 'https://www.googleapis.com/oauth2/v2/userinfo',
-  },
+const KAKAO_URL = {
+  TOKEN: 'https://kauth.kakao.com/oauth/token',
+  USER: 'https://kapi.kakao.com/v2/user/me',
+  LOGOUT: 'https://kapi.kakao.com/v1/user/logout',
+};
+const GOOGLE_URL = {
+  TOKEN: 'https://oauth2.googleapis.com/token',
+  USER: 'https://www.googleapis.com/oauth2/v2/userinfo',
 };
 
-export default constant;
+export { KAKAO_URL, GOOGLE_URL };
