@@ -1,7 +1,12 @@
 /* eslint-disable no-case-declarations */
 import axios from 'axios';
 import type { Iamport as IamportTypes } from './types';
-import { getRequestCertifcationHTML, getRequestPaymentHTML, getRequestPaymentHTMLProps } from './view';
+import {
+  getCertificationHTML,
+  getRequestCertifcationHTML,
+  getRequestPaymentHTML,
+  getRequestPaymentHTMLProps,
+} from './view';
 
 const api = axios.create({
   baseURL: 'https://api.iamport.kr',
@@ -192,10 +197,10 @@ class Iamport {
     return response.data.response;
   }
 
-  async getCeritifcationHTML(props: getRequestCertifcationHTML): Promise<string | null> {
+  async getCeritifcationHTMLData(props: getRequestCertifcationHTML): Promise<string | null> {
     if (!this.merchant_id && !props.merchant_uid) return null;
 
-    return this.getCeritifcationHTML({
+    return getCertificationHTML({
       ...props,
       imp_uid: props.imp_uid,
       merchant_uid: props.merchant_uid ?? this.merchant_id,

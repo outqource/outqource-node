@@ -25,7 +25,7 @@ export interface getRequestPaymentHTMLProps {
 export interface getRequestCertifcationHTML {
   title?: string;
   imp_uid: string;
-  merchant_uid: string;
+  merchant_uid?: string;
   buttonText?: string;
   buttonWrapperStyle?: object | string;
   buttonStyle?: object | string;
@@ -61,11 +61,6 @@ export const getRequestPaymentHTML = ({
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
-		</main>
-    
-
 		<!-- jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <!-- iamport.payment.js -->
