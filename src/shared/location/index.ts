@@ -166,7 +166,7 @@ class Location {
     return { data: this.parseGoogleGeocode(response.data.results), count: response.data.results.length };
   }
 
-  public getDistance({ target, current }: DistanceProps): number {
+  static getDistance({ target, current }: DistanceProps): number {
     if (!target.latitude || !target.longitude) return 0;
 
     if (target.latitude === current.latitude && target.longitude === current.longitude) return 0;
