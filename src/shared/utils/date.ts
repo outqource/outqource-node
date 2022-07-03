@@ -11,9 +11,7 @@ const weekNumberByThurFnc = (paramDate: Date) => {
   const lastDay = lastDate.getDate();
 
   const firstWeekCheck = firstDayOfWeek === 5 || firstDayOfWeek === 6 || firstDayOfWeek === 7;
-
   const lastWeekCheck = lastDayOfweek === 1 || lastDayOfweek === 2 || lastDayOfweek === 3;
-
   const lastWeekNo = Math.ceil((firstDayOfWeek - 1 + lastDay) / 7);
 
   let weekNo: string | number = Math.ceil((firstDayOfWeek - 1 + date) / 7);
