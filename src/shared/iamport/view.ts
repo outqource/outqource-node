@@ -26,9 +26,6 @@ export interface getRequestCertifcationHTML {
   title?: string;
   imp_uid: string;
   merchant_uid?: string;
-  buttonText?: string;
-  buttonWrapperStyle?: object | string;
-  buttonStyle?: object | string;
   popup?: boolean;
   m_redirect_url?: string;
 }
@@ -61,6 +58,10 @@ export const getRequestPaymentHTML = ({
     
   </head>
   <body onload="onload();">
+    <main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
+      <button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
+    </main>
+
 		<!-- jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <!-- iamport.payment.js -->
@@ -115,23 +116,9 @@ export const getRequestPaymentHTML = ({
 export const getCertificationHTML = ({
   title,
   imp_uid,
-  buttonText,
-  buttonWrapperStyle,
-  buttonStyle,
+
   ...props
 }: getRequestCertifcationHTML): string => {
-  if (typeof buttonWrapperStyle === 'object') {
-    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
-      return prev + `${cur[0]}:${cur[1]}; `;
-    }, '');
-  }
-
-  if (typeof buttonStyle === 'object') {
-    buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
-      return prev + `${cur[0]}:${cur[1]}; `;
-    }, '');
-  }
-
   return `
 <!DOCTYPE html>
 <html>
@@ -140,9 +127,7 @@ export const getCertificationHTML = ({
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
-		</main>
+
     
 
 		<!-- jQuery -->
