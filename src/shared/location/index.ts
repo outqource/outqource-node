@@ -56,7 +56,7 @@ class Location {
         region_3depth_h_name: '',
       };
       const addressComponents = row.address_components;
-      addressComponents.forEach((addressComponent: any) => {
+      addressComponents.forEach(addressComponent => {
         if (addressComponent.types.includes('administrative_area_level_1')) {
           tmpResult.region_1depth_name = addressComponent.long_name;
         } else if (addressComponent.types.includes('sublocality_area_level_2')) {
