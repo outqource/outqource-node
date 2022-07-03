@@ -73,3 +73,10 @@ export namespace Naver {
     user: User;
   };
 }
+
+export namespace Apple {
+  export type User = {
+    id: string;
+    email?: string;
+  };
+}
