@@ -8,6 +8,7 @@ export * from './firebase';
 export * from './iamport';
 export * from './jsonwebtoken';
 export * from './social';
+export * from './qrcode';
 export * from './sharp';
 
 // export * from './socket.io';
