@@ -35,7 +35,7 @@ export class Kakao {
     res.redirect(KAKAO_URL.AUTH(this.restKey, redirectUrl ?? this.redirectUrl!));
   }
 
-  public async getUser(token: string): Promise<KakaoSocial.TgetUser | undefined> {
+  static async getUser(token: string): Promise<KakaoSocial.TgetUser | undefined> {
     const headers = {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
@@ -45,9 +45,10 @@ export class Kakao {
         headers,
       });
 
-      const { properties, kakao_account: kakaoAccount } = response.data;
+      const { id, properties, kakao_account: kakaoAccount } = response.data;
 
       return {
+        id,
         kakaoAccount,
         properties,
       };
@@ -86,7 +87,7 @@ export class Kakao {
         throw { status: 400, message: '카카오 토큰 발급 오류!' };
       }
 
-      const user = await this.getUser(token);
+      const user = await Kakao.getUser(token);
       if (!user) {
         throw { status: 500, message: '카카오 유저정보 발급 오류!' };
       }

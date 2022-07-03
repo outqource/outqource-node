@@ -27,6 +27,7 @@ export namespace Kakao {
     [key: string]: any;
   };
   export type TgetUser = {
+    id: string;
     properties: Pick<profile, 'nickname'> & {
       profile_image: string;
       thumbnail_image: string;
@@ -47,9 +48,9 @@ export namespace Google {
     nickname?: string;
     profileImage?: string;
   };
-  export type TgetUserWithToken = {
-    status: number;
-    message: string;
-    data?: { token: string; user: User };
+
+  export type TgetRestCallback = {
+    token: string;
+    user: User;
   };
 }
