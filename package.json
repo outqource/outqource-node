@@ -19,6 +19,7 @@
     "@prisma/client": "^3.10.0",
     "@types/stompjs": "^2.3.5",
     "ajv": "^8.11.0",
+    "apple-auth": "^1.0.7",
     "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "crypto-js": "^4.1.1",
