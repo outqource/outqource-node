@@ -114,7 +114,7 @@ export class Kakao {
         target_id: id,
       });
 
-      const response = await api.post('/v1/user/logout', data, { headers });
+      await api.post('/v1/user/logout', data, { headers });
 
       return true;
     } catch (err: any) {
