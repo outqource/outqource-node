@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Request, Response, NextFunction } from 'express';
 import type { PrismaClient } from '@prisma/client';
@@ -21,13 +22,49 @@ export type PrismaAction =
   | 'aggregate'
   | 'count';
 
+type NoUndefinedField<T> = { [P in keyof T]-?: NonNullable<T[P]> };
+
+type TrueKeyObject<T, V extends string> = T extends Record<string, any>
+  ? T[V] extends undefined
+    ? false
+    : Record<V, T[V]>
+  : false;
+
+type Keys<T> = T extends string ? `${T}` : never;
+
+type EveryKeyword<T> = T extends string ? `$param` | `$query` | `$param/${T}` | `$query/${T}` | `$body/${T}` : never;
+
+export type PrismaOption<T> = {
+  [K in keyof T]: T[K] extends object | undefined
+    ? TrueKeyObject<NoUndefinedField<T>, 'where'> extends Record<infer S, any>
+      ? TrueKeyObject<NoUndefinedField<T>, 'where'>[S] extends T[K]
+        ? {
+            [U in keyof TrueKeyObject<NoUndefinedField<T>, 'where'>[S]]: `${EveryKeyword<Keys<U>>}`;
+          }
+        : TrueKeyObject<NoUndefinedField<T>, 'select' | 'include'> extends Record<infer S, any>
+        ? TrueKeyObject<NoUndefinedField<T>, 'select' | 'include'>[S] extends T[K]
+          ? {
+              [U in keyof TrueKeyObject<NoUndefinedField<T>, 'select' | 'include'>[S]]: boolean;
+            }
+          : TrueKeyObject<NoUndefinedField<T>, 'data'> extends Record<infer S, any>
+          ? TrueKeyObject<NoUndefinedField<T>, 'data'>[S] extends T[K]
+            ? {
+                [U in keyof TrueKeyObject<NoUndefinedField<T>, 'data'>[S]]: `$value/${Keys<U>}`;
+              }
+            : unknown
+          : unknown
+        : unknown
+      : unknown
+    : T[K];
+};
+
 export type CreatePrismaControllerOptions<T = any> = {
   table: string;
   actions: PrismaAction[] | PrismaAction;
   pagination?: boolean;
   response?: boolean;
   softDelete?: string | string[];
-  options?: T;
+  options: PrismaOption<T>;
 };
 
 const getTraverseOption = (req: Request, jsonObj: any) => {
@@ -59,6 +96,8 @@ const getTraverseOption = (req: Request, jsonObj: any) => {
 
     Object.entries(params).forEach(([paramKey, paramValue]: [string, string]) => {
       if (value === '$param' && paramKey === originKey) {
+        flatten[key] = parseAutoValue(paramValue);
+      } else if (value.includes('$param') && value.includes(paramKey) && paramKey === originKey) {
         flatten[key] = parseAutoValue(paramValue);
       }
     });
@@ -362,9 +401,9 @@ export const createPrismaController = <T = any>(
   options: CreatePrismaControllerOptions<T>,
 ) => {
   const db = database as any;
-  if (!db[options.table]) {
-    throw 'Error Occured! createPrismaController props.table is not in database table!';
-  }
+  // if (!db[options.table]) {
+  //   throw 'Error Occured! createPrismaController props.table is not in database table!';
+  // }
 
   switch (controllerAPI.method) {
     case 'GET':

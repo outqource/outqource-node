@@ -4,13 +4,7 @@ interface GetOpenAPIProps extends OpenAPIOptions {
   paths: any;
 }
 
-const getOpenAPI = ({
-  title,
-  version,
-  urls,
-  tags,
-  paths,
-}: GetOpenAPIProps): OpenAPI3 => ({
+const getOpenAPI = ({ title, version, urls, tags, paths }: GetOpenAPIProps): OpenAPI3 => ({
   openapi: '3.0.0',
   info: {
     title,

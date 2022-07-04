@@ -1,8 +1,4 @@
-import {
-  ControllerAPI,
-  ControllerAPIResponse,
-  ControllerAPIResponsStatusCode,
-} from './types';
+import { ControllerAPI, ControllerAPIResponse, ControllerAPIResponsStatusCode } from './types';
 import { OPEN_API_RESPONSES } from './constant';
 
 const getOpenAPIPathResponses = (api: ControllerAPI) => {

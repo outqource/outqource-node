@@ -24,10 +24,7 @@ const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
       api.body.forEach(item => {
         otherProperties[item.key] = {
           type: item.type,
-          example:
-            item.example ||
-            item.default ||
-            (Array.isArray(item.type) ? item.type[0] : item.type),
+          example: item.example || item.default || (Array.isArray(item.type) ? item.type[0] : item.type),
         };
       });
     }
@@ -49,10 +46,7 @@ const getOpenAPIPathRequestBody = (api: ControllerAPI) => {
     const example: Record<string, any> = {};
     if (Array.isArray(api.body)) {
       api.body.forEach(item => {
-        example[item.key] =
-          item.example ||
-          item.default ||
-          (Array.isArray(item.type) ? item.type[0] : item.type);
+        example[item.key] = item.example || item.default || (Array.isArray(item.type) ? item.type[0] : item.type);
       });
     }
 

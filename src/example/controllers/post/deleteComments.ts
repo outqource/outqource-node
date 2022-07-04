@@ -1,4 +1,5 @@
-import type { ControllerAPI, ExpressController } from '../../../express';
+import { PrismaClient } from '@prisma/client';
+import { ControllerAPI, createPrismaController, ExpressController } from '../../../express';
 
 export const deleteCommentsAPI: ControllerAPI = {
   path: '/posts/:id/comments',
