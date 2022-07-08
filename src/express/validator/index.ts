@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import Ajv, { ErrorObject, JSONSchemaType, Options, ValidateFunction } from 'ajv';
 import type { JTDDataType } from 'ajv/dist/jtd';
 import { ControllerAPI, ValidatorItem } from '../../openapi';
+import { compareSync } from 'bcrypt';
 
 export { Ajv };
 export type { JSONSchemaType, JTDDataType };
@@ -35,6 +36,23 @@ export default class Validator {
     return instance._create();
   }
 
+  public static parseObjectValues(object: any) {
+    const newObject = { ...object };
+    Object.entries(newObject).forEach(([key, value]: [string, any]) => {
+      if (Number(value)) {
+        newObject[key] = Number(value);
+      } else if (value === 'true' || value === 'false' || value === 'TRUE' || value === 'FALSE') {
+        newObject[key] = value === 'true' || value === 'TRUE';
+      } else if (value === 'null' || value === 'NULL') {
+        newObject[key] = null;
+      } else if (value === 'undefined' || value === 'UNDEFINED') {
+        newObject[key] = undefined;
+      }
+    });
+
+    return newObject;
+  }
+
   public _create() {
     Object.entries(this.controllers).forEach(([key, value]: [string, ControllerAPI | any]) => {
       if (key.includes('API')) {
@@ -43,8 +61,7 @@ export default class Validator {
 
         Object.entries(value).forEach(([key, value]: [string, any]) => {
           if (key === 'param' || key === 'query' || key === 'body') {
-            const validator = this.createValidators(value as ValidatorItem[]);
-            apiValidators[key] = validator;
+            apiValidators[key] = this.createValidators(value as ValidatorItem[]);
           }
         });
 
@@ -155,7 +172,7 @@ export default class Validator {
       let errorMessage = '';
 
       if (req.params && validators.param) {
-        const validation = validators.param(req.params);
+        const validation = validators.param(Validator.parseObjectValues(req.params));
         errorMessage = this.getErrorMessage(validators.param.errors) ?? '';
 
         if (!validation) {
@@ -167,7 +184,8 @@ export default class Validator {
       }
 
       if (req.query && validators.query) {
-        const validation = validators.query(req.query);
+        const newQuery = Validator.parseObjectValues(req.query);
+        const validation = validators.query(Validator.parseObjectValues(req.query));
         errorMessage = this.getErrorMessage(validators.query.errors) ?? '';
 
         if (!validation) {
@@ -179,7 +197,7 @@ export default class Validator {
       }
 
       if (req.body && validators.body) {
-        const validation = validators.body(req.body);
+        const validation = validators.body(Validator.parseObjectValues(req.body));
         errorMessage = this.getErrorMessage(validators.body.errors) ?? '';
 
         if (!validation) {

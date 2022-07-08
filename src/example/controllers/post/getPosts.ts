@@ -4,6 +4,10 @@ import { ControllerAPI, ExpressController } from '../../../express';
 export const getPostsAPI: ControllerAPI = {
   path: '/posts',
   method: 'GET',
+  query: [
+    { key: 'page', type: 'number', default: 1 },
+    { key: 'limit', type: 'number', default: 20 },
+  ],
 };
 
 export const getPosts: ExpressController = async (req, res, next) => {

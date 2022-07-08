@@ -40,12 +40,6 @@ export type ValidatorItem = {
   example?: any; // openapi
 };
 
-export type AjvValidator = {
-  params?: ValidatorItem[];
-  query?: ValidatorItem[];
-  body?: ValidatorItem[];
-};
-
 export type ControllerAPI<P = any, Q = any, B = any> = {
   tags?: string[];
   path: string;
@@ -55,7 +49,6 @@ export type ControllerAPI<P = any, Q = any, B = any> = {
   query?: ValidatorItem[];
   header?: ValidatorItem[];
   body?: ValidatorItem[];
-  ajv?: AjvValidator;
   auth?: 'jwt' | 'cookie' | 'session';
   summary?: string;
   description?: string;
