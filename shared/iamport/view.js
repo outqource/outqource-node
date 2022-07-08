@@ -1,7 +1,7 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.getCertificationHTML = exports.getRequestPaymentHTML = void 0;
-const getRequestPaymentHTML = ({ title, merchant_id, buttonText, buttonWrapperStyle, buttonStyle, ...props }) => {
+const getRequestPaymentHTML = ({ title, imp_uid, buttonText, buttonWrapperStyle, buttonStyle, ...props }) => {
   if (typeof buttonWrapperStyle === 'object') {
     buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
       return prev + `${cur[0]}:${cur[1]}; `;
@@ -20,10 +20,9 @@ const getRequestPaymentHTML = ({ title, merchant_id, buttonText, buttonWrapperSt
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
-		</main>
-    
+    <main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
+      <button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
+    </main>
 
 		<!-- jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -32,7 +31,7 @@ const getRequestPaymentHTML = ({ title, merchant_id, buttonText, buttonWrapperSt
 
     <script>
 			const IMP = window.IMP;
-			IMP.init("${merchant_id}"); // Example: imp00000000
+			IMP.init("${imp_uid}"); // Example: imp00000000
 
       function requestPay() {
         IMP.request_pay(
@@ -70,25 +69,13 @@ const getRequestPaymentHTML = ({ title, merchant_id, buttonText, buttonWrapperSt
 `;
 };
 exports.getRequestPaymentHTML = getRequestPaymentHTML;
-const getCertificationHTML = ({
-  title,
-  imp_uid,
-  merchant_uid,
-  buttonText,
-  buttonWrapperStyle,
-  buttonStyle,
-  ...props
-}) => {
-  if (typeof buttonWrapperStyle === 'object') {
-    buttonWrapperStyle = Object.entries(buttonWrapperStyle).reduce((prev, cur) => {
-      return prev + `${cur[0]}:${cur[1]}; `;
-    }, '');
-  }
-  if (typeof buttonStyle === 'object') {
-    buttonStyle = Object.entries(buttonStyle).reduce((prev, cur) => {
-      return prev + `${cur[0]}:${cur[1]}; `;
-    }, '');
-  }
+/**
+ *     merchant_uid: "ORD20180131-0000011", // 주문 번호
+    m_redirect_url : "{리디렉션 될 URL}", // 모바일환경에서 popup:false(기본값) 인 경우 필수, 예: https://www.myservice.com/payments/complete/mobile
+    popup : false
+ *
+ */
+const getCertificationHTML = ({ title, imp_uid, ...props }) => {
   return `
 <!DOCTYPE html>
 <html>
@@ -97,9 +84,7 @@ const getCertificationHTML = ({
     
   </head>
   <body onload="onload();">
-		<main id="buttonWrapper" style="${buttonWrapperStyle || ''}">
-			<button onclick="requestPay()" style="${buttonStyle || ''}">${buttonText || '결제하기'}</button>
-		</main>
+
     
 
 		<!-- jQuery -->

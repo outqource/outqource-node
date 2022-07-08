@@ -10,6 +10,10 @@ const axios_1 = __importDefault(require('axios'));
 exports.getPostsAPI = {
   path: '/posts',
   method: 'GET',
+  query: [
+    { key: 'page', type: 'number', default: 1 },
+    { key: 'limit', type: 'number', default: 20 },
+  ],
 };
 const getPosts = async (req, res, next) => {
   try {

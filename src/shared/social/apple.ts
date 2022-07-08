@@ -3,14 +3,15 @@ import jwt from 'jsonwebtoken';
 
 import type { Response } from 'express';
 import type { AppleAuthConfig } from 'apple-auth';
-import type { Apple } from './types';
+import type { Apple as AppleTypes } from './types';
 
 interface IApple {
   appleConfig: AppleAuthConfig;
   path: string;
 }
 
-export type AppleUser = Apple.User;
+export type AppleUser = AppleTypes.User;
+
 class Apple {
   private appleAuth: AppleAuth;
 
@@ -22,7 +23,7 @@ class Apple {
     res.redirect(this.appleAuth.loginURL());
   }
 
-  static async getUser(id_token: string): Promise<Apple.User | undefined> {
+  static async getUser(id_token: string): Promise<AppleTypes.User | undefined> {
     try {
       const idToken = jwt.decode(id_token) as {
         sub: string;
@@ -40,7 +41,7 @@ class Apple {
     }
   }
 
-  public async getRestCallback(code: string): Promise<Apple.User | undefined> {
+  public async getRestCallback(code: string): Promise<AppleTypes.User | undefined> {
     try {
       const user = await Apple.getUser(code);
 

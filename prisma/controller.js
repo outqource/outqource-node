@@ -36,6 +36,8 @@ const getTraverseOption = (req, jsonObj) => {
     Object.entries(params).forEach(([paramKey, paramValue]) => {
       if (value === '$param' && paramKey === originKey) {
         flatten[key] = (0, utils_1.parseAutoValue)(paramValue);
+      } else if (value.includes('$param') && value.includes(paramKey) && paramKey === originKey) {
+        flatten[key] = (0, utils_1.parseAutoValue)(paramValue);
       }
     });
     Object.entries(query).forEach(([queryKey, queryValue]) => {
@@ -273,9 +275,9 @@ const createPrismaPatchController = (database, _, options) => {
 };
 const createPrismaController = (database, controllerAPI, options) => {
   const db = database;
-  if (!db[options.table]) {
-    throw 'Error Occured! createPrismaController props.table is not in database table!';
-  }
+  // if (!db[options.table]) {
+  //   throw 'Error Occured! createPrismaController props.table is not in database table!';
+  // }
   switch (controllerAPI.method) {
     case 'GET':
       return createPrismaGetController(database, controllerAPI, options);

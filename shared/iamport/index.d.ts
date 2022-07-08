@@ -1,5 +1,5 @@
 import type { Iamport as IamportTypes } from './types';
-import { getRequestPaymentHTMLProps } from './view';
+import { getRequestCertifcationHTML, getRequestPaymentHTMLProps } from './view';
 declare class Iamport {
   private imp_key?;
   private imp_secret?;
@@ -27,7 +27,7 @@ declare class Iamport {
     reason,
     cancelAmount,
   }: IamportTypes.cancelPayment): Promise<any | null>;
-  getCeritifcationHTML(): Promise<string>;
+  getCeritifcationHTMLData(props: getRequestCertifcationHTML): Promise<string | null>;
   getCertificationData({ access_token, imp_uid }: IamportTypes.getCertificationData): Promise<any | null>;
   getCeritificationDataWithAccessToken({
     imp_key,

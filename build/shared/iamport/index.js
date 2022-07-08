@@ -50,6 +50,7 @@ class Iamport {
   }
   // 결제창 서버에서 호출
   getPaymentHTML(props) {
+    var _a;
     // 상품 ID 없으면 에러
     if (!this.merchant_id && !props.merchant_id) {
       return null;
@@ -61,7 +62,7 @@ class Iamport {
     return (0, view_1.getRequestPaymentHTML)({
       ...props,
       title: props.title || '결제하기',
-      merchant_id: props.merchant_id || this.merchant_id,
+      merchant_id: (_a = props.merchant_id) !== null && _a !== void 0 ? _a : this.merchant_id,
       pg: props.pg || this.pg,
     });
   }
@@ -154,10 +155,14 @@ class Iamport {
     const response = await api.post('/payments/cancel', data, { headers });
     return response.data.response;
   }
-  // TODO
-  // 휴대폰 본인인증 HTML
-  async getCeritifcationHTML() {
-    return '';
+  async getCeritifcationHTMLData(props) {
+    var _a;
+    if (!this.merchant_id && !props.merchant_uid) return null;
+    return (0, view_1.getCertificationHTML)({
+      ...props,
+      imp_uid: props.imp_uid,
+      merchant_uid: (_a = props.merchant_uid) !== null && _a !== void 0 ? _a : this.merchant_id,
+    });
   }
   // 휴대폰 본인인증 정보 얻기
   async getCertificationData({ access_token, imp_uid }) {

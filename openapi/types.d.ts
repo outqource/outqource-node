@@ -28,11 +28,6 @@ export declare type ValidatorItem = {
   default?: any;
   example?: any;
 };
-export declare type AjvValidator = {
-  params?: ValidatorItem[];
-  query?: ValidatorItem[];
-  body?: ValidatorItem[];
-};
 export declare type ControllerAPI<P = any, Q = any, B = any> = {
   tags?: string[];
   path: string;
@@ -42,7 +37,6 @@ export declare type ControllerAPI<P = any, Q = any, B = any> = {
   query?: ValidatorItem[];
   header?: ValidatorItem[];
   body?: ValidatorItem[];
-  ajv?: AjvValidator;
   auth?: 'jwt' | 'cookie' | 'session';
   summary?: string;
   description?: string;

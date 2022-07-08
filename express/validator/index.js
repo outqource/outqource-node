@@ -19,6 +19,21 @@ class Validator {
     const instance = new Validator(controllers);
     return instance._create();
   }
+  static parseObjectValues(object) {
+    const newObject = { ...object };
+    Object.entries(newObject).forEach(([key, value]) => {
+      if (Number(value)) {
+        newObject[key] = Number(value);
+      } else if (value === 'true' || value === 'false' || value === 'TRUE' || value === 'FALSE') {
+        newObject[key] = value === 'true' || value === 'TRUE';
+      } else if (value === 'null' || value === 'NULL') {
+        newObject[key] = null;
+      } else if (value === 'undefined' || value === 'UNDEFINED') {
+        newObject[key] = undefined;
+      }
+    });
+    return newObject;
+  }
   _create() {
     Object.entries(this.controllers).forEach(([key, value]) => {
       if (key.includes('API')) {
@@ -26,8 +41,7 @@ class Validator {
         const apiValidators = {};
         Object.entries(value).forEach(([key, value]) => {
           if (key === 'param' || key === 'query' || key === 'body') {
-            const validator = this.createValidators(value);
-            apiValidators[key] = validator;
+            apiValidators[key] = this.createValidators(value);
           }
         });
         const middlewares = this.createMiddleware(apiValidators);
@@ -113,7 +127,7 @@ class Validator {
       var _a, _b, _c;
       let errorMessage = '';
       if (req.params && validators.param) {
-        const validation = validators.param(req.params);
+        const validation = validators.param(Validator.parseObjectValues(req.params));
         errorMessage = (_a = this.getErrorMessage(validators.param.errors)) !== null && _a !== void 0 ? _a : '';
         if (!validation) {
           return next({
@@ -123,7 +137,8 @@ class Validator {
         }
       }
       if (req.query && validators.query) {
-        const validation = validators.query(req.query);
+        const newQuery = Validator.parseObjectValues(req.query);
+        const validation = validators.query(Validator.parseObjectValues(req.query));
         errorMessage = (_b = this.getErrorMessage(validators.query.errors)) !== null && _b !== void 0 ? _b : '';
         if (!validation) {
           return next({
@@ -133,7 +148,7 @@ class Validator {
         }
       }
       if (req.body && validators.body) {
-        const validation = validators.body(req.body);
+        const validation = validators.body(Validator.parseObjectValues(req.body));
         errorMessage = (_c = this.getErrorMessage(validators.body.errors)) !== null && _c !== void 0 ? _c : '';
         if (!validation) {
           return next({

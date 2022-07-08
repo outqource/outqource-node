@@ -21,6 +21,7 @@ export default class Validator {
   middlewares: Record<string, any>;
   constructor(controllers: Record<string, any>);
   static create(controllers: Record<string, any>): Record<string, any>;
+  static parseObjectValues(object: any): any;
   _create(): Record<string, any>;
   createValidators(validatorItems: ValidatorItem[]): UnknownSchemaType;
   createChildValidators(validatorItems: string | ValidatorItem[]): any;
