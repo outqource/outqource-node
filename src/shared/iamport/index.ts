@@ -226,7 +226,7 @@ class Iamport {
     imp_key,
     imp_secret,
     imp_uid,
-  }: IamportTypes.getCeritificationDataWithAccessToken) {
+  }: IamportTypes.getCeritificationDataWithAccessToken): Promise<any | null> {
     try {
       const access_token = await this.getToken({ imp_key, imp_secret });
       if (!access_token) {
@@ -240,7 +240,7 @@ class Iamport {
 
       return { ...data, access_token };
     } catch (error) {
-      return error;
+      return null;
     }
   }
 }
