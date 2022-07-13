@@ -112,7 +112,7 @@ initApp.app.listen(config.PORT, () => {
 
 ### 알리고
 
-> 알리고 문자 메시지 전송 Class
+> `알리고 문자 메시지 전송 Class`
 
 - sendMessage
 - sendMessages
@@ -127,13 +127,17 @@ aligo.sendMessages([
 ]);
 ```
 
+---
+
 ### Axios
 
 - onRequest
 
+--
+
 ### Encrypt (암호화)
 
-> 암호화 Class
+> `암호화 Class`
 
 - async hash
 - signAES
@@ -147,9 +151,11 @@ encrypt.signAES(value);
 encrypt.verifyAES(value);
 ```
 
+---
+
 ### Firebase
 
-> 파이어 베이스 PushNotification Class
+> `파이어 베이스 PushNotification Class`
 
 ```typescript
 const firebaseMessage = new FirebaseMessaging(serviceAccount)
@@ -163,25 +169,25 @@ firebaseMessage.sendMessages(messages : SendMessageProps)
 
 **`sendMessage({token , notificaion} : SendMessageProps) `**
 
-**`SendMessageProps`**
+- `SendMessageProps`
 
-**`token :string`**
+- `token :string`
 
-대상 토큰
+  대상 토큰
 
 **`notifiction : Notification`**
 
-**`title? : string`**
+- `title? : string`
 
-메시지 제목
+  메시지 제목
 
-**`body? : string`**
+- `body? : string`
 
-메시지 내용
+  메시지 내용
 
-**`imageUrl? : string`**
+- `imageUrl? : string`
 
-첨부 이미지
+  첨부 이미지
 
 <br>
 
@@ -189,13 +195,13 @@ firebaseMessage.sendMessages(messages : SendMessageProps)
 
 **`sendMessages(messages : SendMessageProps)`**
 
-**`SendMessagesProps`**
+- `SendMessagesProps`
 
-**`SendMessage[]`**
+- `SendMessage[]`
 
 ### Hangul
 
-> 데이터 초성 검색 가능 Class
+> `데이터 초성 검색 가능 Class`
 
 ```typescript
 const hangul = new Hangul();
@@ -205,21 +211,23 @@ const data = hangul.getChosungSearchedData<T>('name', rowData, 'ㅂㄱㅇ');
 
 **`getChosungSearchedData< T extends Record<string,any> >(target : keyof T , data :T[], keyword : string) => T[]`**
 
-**`target : keyof T`**
+- `target : keyof T`
 
-검색 대상의 key값
+  검색 대상의 key값
 
-**`data : T[]`**
+- `data : T[]`
 
-검색 대상
+  검색 대상
 
-**`keyword : string`**
+- `keyword : string`
 
-검색 키워드
+  검색 키워드
+
+---
 
 ### Iamport
 
-> 아임포트 결제/인증 관련 Class
+> `아임포트 결제/인증 관련 Class`
 
 ```typescript
 const iamport = new Iamport({ imp_key, imp_secret, merchat_id, pg });
@@ -237,21 +245,21 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 **`getToken({imp_key , imp_secret} : IamportTypes.getToken) => Promise<string | null>`**
 
-**`imp_key?: string`**
+- `imp_key?: string`
 
-아임포트로부터 발급받은 key
+  아임포트로부터 발급받은 key
 
-**`imp_secret?: string`**
+- `imp_secret?: string`
 
-아임포트로부터 발급받은 secret_key
+  아임포트로부터 발급받은 secret_key
 
-**`merchant_id?: string`**
+- `merchant_id?: string`
 
-ex) imp00000000
+  ex) imp00000000
 
-**`pg?: string`**
+- `pg?: string`
 
-ex) tosstest
+  ex) tosstest
 
 <br>
 
@@ -259,13 +267,13 @@ ex) tosstest
 
 **`getPaymentData({access_token ,imp_uid} : IamportTypes.getPaymentData) => Promise<any | null>`**
 
-**`access_token: string`**
+- `access_token: string`
 
-getToken을 통해 발급받은 accessToken
+  getToken을 통해 발급받은 accessToken
 
-**`imp_uid: string`**
+- `imp_uid: string`
 
-아임포트로부터 발급받은 imp_uid
+  아임포트로부터 발급받은 imp_uid
 
 <br>
 
@@ -273,17 +281,17 @@ getToken을 통해 발급받은 accessToken
 
 **`getPaymentDataWithAccessToken({imp_key , imp_secret, imp_uid} : IamportTypes.getPaymentDataWithAccessToken) => Promise<any | string>`**
 
-**`imp_key?: string`**
+- `imp_key?: string`
 
 아임포트로부터 발급받은 key
 
-**`imp_secret?: string`**
+- `imp_secret?: string`
 
 아임포트로부터 발급받은 secret_key
 
-**`imp_uid: string`**
+- `imp_uid: string`
 
-아임포트로부터 발급받은 imp_uid
+  아임포트로부터 발급받은 imp_uid
 
 <br>
 
@@ -291,33 +299,33 @@ getToken을 통해 발급받은 accessToken
 
 **`completePayment({imp_key , imp_secret, imp_uid, productAmount } : IamportTypes.getTcompletePaymentoken) => Promise<IamportTypes.TcompletePayment>`**
 
-**`imp_key?: string`**
+- `imp_key?: string`
 
-아임포트로부터 발급받은 key
+  아임포트로부터 발급받은 key
 
-**`imp_secret?: string`**
+- `imp_secret?: string`
 
-아임포트로부터 발급받은 secret_key
+  아임포트로부터 발급받은 secret_key
 
-**`imp_uid: string`**
+- `imp_uid: string`
 
-아임포트로부터 발급받은 imp_uid
+  아임포트로부터 발급받은 imp_uid
 
-**`productAmount: string | number`**
+- `productAmount: string | number`
 
-결제 가격
+  결제 가격
 
 <br>
 
 **`IamportTypes.TcompletePayment`**
 
-**`status: number`**
+- `status: number`
 
-**`message: string`**
+- `message: string`
 
-**`completeStatus?: string`**
+- `completeStatus?: string`
 
-**`data?: any`**
+- `data?: any`
 
 <br>
 
@@ -325,25 +333,25 @@ getToken을 통해 발급받은 accessToken
 
 **`cancelPayment({imp_key , imp_secret, imp_uid, reason ,cancelAmount } : IamportTypes.cancelPayment) => Promise<any | null>`**
 
-**`imp_key?: string`**
+- `imp_key?: string`
 
-아임포트로부터 발급받은 key
+  아임포트로부터 발급받은 key
 
-**`imp_secret?: string`**
+- `imp_secret?: string`
 
-아임포트로부터 발급받은 secret_key
+  아임포트로부터 발급받은 secret_key
 
-**`imp_uid: string`**
+- `imp_uid: string`
 
-아임포트로부터 발급받은 imp_uid
+  아임포트로부터 발급받은 imp_uid
 
-**`reason?: string`**
+- `reason?: string`
 
-취소 사유
+  취소 사유
 
-**`cancelAmount: string | number`**
+- `cancelAmount: string | number`
 
-취소 가격
+  취소 가격
 
 <br>
 
@@ -351,13 +359,13 @@ getToken을 통해 발급받은 accessToken
 
 **`getCertificationData({access_token ,imp_uid} : IamportTypes.getCertificationData) => Promise<any | null>`**
 
-**`access_token: string`**
+- `access_token: string`
 
-getToken을 통해 발급받은 accessToken
+  getToken을 통해 발급받은 accessToken
 
-**`imp_uid: string`**
+- `imp_uid: string`
 
-아임포트로부터 발급받은 imp_uid
+  아임포트로부터 발급받은 imp_uid
 
 <br>
 
@@ -365,14 +373,70 @@ getToken을 통해 발급받은 accessToken
 
 **`getCeritificationDataWithAccessToken({imp_key , imp_secret, imp_uid, productAmount } : IamportTypes.getCeritificationDataWithAccessToken) => Promise<any | null>`**
 
-**`imp_key?: string`**
+- `imp_key?: string`
 
-아임포트로부터 발급받은 key
+  아임포트로부터 발급받은 key
 
-**`imp_secret?: string`**
+- `imp_secret?: string`
 
-아임포트로부터 발급받은 secret_key
+  아임포트로부터 발급받은 secret_key
 
-**`imp_uid: string`**
+- `imp_uid: string`
 
-아임포트로부터 발급받은 imp_uid
+  아임포트로부터 발급받은 imp_uid
+
+---
+
+### JsonwebToken
+
+> `jwt 생성 및 검증 Class`
+
+```typescript
+const jwt = new JsonwebToken(jwt_key, { signOptions, verifyOptions });
+
+const signedPayload = jwt.signJwt<{ id: string }>(value, signOptoins);
+const verifiedPayload = jwt.verifyJwt<{ id: string }>(value, verigyOptions);
+```
+
+**`jwtKey : string`**
+
+jwt 생성에 사용할 key 값`
+
+**`signOptions? : SignOptions`**
+
+- `algorithm` (default: `HS256`)
+- `expiresIn`: expressed in seconds or a string describing a time span [vercel/ms](https://github.com/vercel/ms).
+  > Eg: `60`, `"2 days"`, `"10h"`, `"7d"`. A numeric value is interpreted as a seconds count. If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds unit is used by default (`"120"` is equal to `"120ms"`).
+- `notBefore`: expressed in seconds or a string describing a time span [vercel/ms](https://github.com/vercel/ms).
+  > Eg: `60`, `"2 days"`, `"10h"`, `"7d"`. A numeric value is interpreted as a seconds count. If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds unit is used by default (`"120"` is equal to `"120ms"`).
+- `audience`
+- `issuer`
+- `jwtid`
+- `subject`
+- `noTimestamp`
+- `header`
+- `keyid`
+- `mutatePayload`: if true, the sign function will modify the payload object directly. This is useful if you need a raw reference to the payload after claims have been applied to it but before it has been encoded into a token.
+
+**`verifyOptions? : VerifyOptions`**
+
+- `algorithms`: List of strings with the names of the allowed algorithms. For instance, `["HS256", "HS384"]`.
+- `audience`: if you want to check audience (`aud`), provide a value here. The audience can be checked against a string, a regular expression or a list of strings and/or regular expressions.
+  > Eg: `"urn:foo"`, `/urn:f[o]{2}/`, `[/urn:f[o]{2}/, "urn:bar"]`
+- `complete`: return an object with the decoded `{ payload, header, signature }` instead of only the usual content of the payload.
+- `issuer` (optional): string or array of strings of valid values for the `iss` field.
+- `jwtid` (optional): if you want to check JWT ID (`jti`), provide a string value here.
+- `ignoreExpiration`: if `true` do not validate the expiration of the token.
+- `ignoreNotBefore`...
+- `subject`: if you want to check subject (`sub`), provide a value here
+- `clockTolerance`: number of seconds to tolerate when checking the `nbf` and `exp` claims, to deal with small clock differences among different servers
+- `maxAge`: the maximum allowed age for tokens to still be valid. It is expressed in seconds or a string describing a time span [vercel/ms](https://github.com/vercel/ms).
+  > Eg: `1000`, `"2 days"`, `"10h"`, `"7d"`. A numeric value is interpreted as a seconds count. If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds unit is used by default (`"120"` is equal to `"120ms"`).
+- `clockTimestamp`: the time in seconds that should be used as the current time for all necessary comparisons.
+- `nonce`: if you want to check `nonce` claim, provide a string value here. It is used on Open ID for the ID Tokens.
+
+---
+
+### Location
+
+> `카카오, 구글 기반 위치 정보 및 거리 계산`

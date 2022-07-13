@@ -33,7 +33,7 @@ type ObjectValue<T> = T extends object
   ? DTOToObject<T | null>
   : T extends Record<string, unknown>[]
   ? DTOToObject<T[0]>[]
-  : never;
+  : any;
 
 export type DTOToObject<T> = T extends Record<string, unknown>
   ? {
@@ -45,7 +45,7 @@ export type DTOToObject<T> = T extends Record<string, unknown>
           [K in keyof Partial<T>]: ObjectValue<T[K]>;
         }
       | null
-  : never;
+  : any;
 
 type TPagination = {
   page: number;
