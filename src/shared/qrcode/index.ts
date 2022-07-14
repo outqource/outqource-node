@@ -11,9 +11,9 @@ interface IQrCode {
   fileName: string | undefined;
 }
 
-interface QrCdoesResponse {
-  success: Array<QRCodeData | null>;
-  failure: Array<IQrCode | null>;
+interface QrCodesResponse {
+  success: Array<QRCodeData>;
+  failure: Array<IQrCode>;
 }
 
 class QrCode {
@@ -37,8 +37,8 @@ class QrCode {
     }
   }
 
-  public async createQrCodesData(props: Array<IQrCode>): Promise<QrCdoesResponse> {
-    const result: QrCdoesResponse = { success: [], failure: [] };
+  public async createQrCodesData(props: Array<IQrCode>): Promise<QrCodesResponse> {
+    const result: QrCodesResponse = { success: [], failure: [] };
 
     for (const prop of props) {
       const qrCode = await this.createQRCodeData(prop);

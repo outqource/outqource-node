@@ -65,14 +65,14 @@ export const getReviews = createPrismaController<PrismaClient.ReviewFindManyArgs
 
 ### ExpressController (Type) : req, res, next => void
 
-### createResponse : response generator
+## createResponse : response generator
 
 - skip
 - take
 - count
 - data
 
-### InitApp : Express Application
+## InitApp : Express Application
 
 ```typescript
 const initApp = new InitApp({
@@ -110,7 +110,7 @@ initApp.app.listen(config.PORT, () => {
 
 ## Common
 
-### 알리고
+## 알리고
 
 > `알리고 문자 메시지 전송 Class`
 
@@ -129,13 +129,13 @@ aligo.sendMessages([
 
 ---
 
-### Axios
+## Axios
 
 - onRequest
 
 --
 
-### Encrypt (암호화)
+## Encrypt (암호화)
 
 > `암호화 Class`
 
@@ -153,7 +153,7 @@ encrypt.verifyAES(value);
 
 ---
 
-### Firebase
+## Firebase
 
 > `파이어 베이스 PushNotification Class`
 
@@ -167,7 +167,7 @@ firebaseMessage.sendMessages(messages : SendMessageProps)
 
 > 단일 메시지 전송
 
-**`sendMessage({token , notificaion} : SendMessageProps) `**
+**`sendMessage({token , notificaion : Notification} : SendMessageProps) `**
 
 - `SendMessageProps`
 
@@ -175,19 +175,19 @@ firebaseMessage.sendMessages(messages : SendMessageProps)
 
   대상 토큰
 
-**`notifiction : Notification`**
+- `notifiction : Notification`
 
-- `title? : string`
+  - `title? : string`
 
-  메시지 제목
+    메시지 제목
 
-- `body? : string`
+  - `body? : string`
 
-  메시지 내용
+    메시지 내용
 
-- `imageUrl? : string`
+  - `imageUrl? : string`
 
-  첨부 이미지
+    첨부 이미지
 
 <br>
 
@@ -199,7 +199,9 @@ firebaseMessage.sendMessages(messages : SendMessageProps)
 
 - `SendMessage[]`
 
-### Hangul
+---
+
+## Hangul
 
 > `데이터 초성 검색 가능 Class`
 
@@ -225,7 +227,7 @@ const data = hangul.getChosungSearchedData<T>('name', rowData, 'ㅂㄱㅇ');
 
 ---
 
-### Iamport
+## Iamport
 
 > `아임포트 결제/인증 관련 Class`
 
@@ -283,11 +285,11 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 - `imp_key?: string`
 
-아임포트로부터 발급받은 key
+  아임포트로부터 발급받은 key
 
 - `imp_secret?: string`
 
-아임포트로부터 발급받은 secret_key
+  아임포트로부터 발급받은 secret_key
 
 - `imp_uid: string`
 
@@ -387,7 +389,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 ---
 
-### JsonwebToken
+## JsonwebToken
 
 > `jwt 생성 및 검증 Class`
 
@@ -437,6 +439,370 @@ jwt 생성에 사용할 key 값`
 
 ---
 
-### Location
+## Location
 
 > `카카오, 구글 기반 위치 정보 및 거리 계산`
+
+```typescript
+const location = new Location({ kakaoRestKey, googleRestkey });
+
+const kakaoLocationByAddress = await location.getKakaoLocationByAddress({
+  address,
+  analyze_type,
+  page,
+  limit,
+  kakaoRestKey,
+});
+
+const kakaoLocationByKeyword = await location.getKakaoLocationByKeyword({
+  keyword,
+  latitude,
+  longitude,
+  radius,
+  page,
+  limiy,
+  kakaoRestKey,
+});
+
+const kakaoLocationByGeocode = await location.getKakakoLocationByGeocode({
+  latitude,
+  longitude,
+  page,
+  limit,
+  kakaoRestkey,
+});
+
+const googleLocationByGeocode = await location.getGoogleLocationByGeocode({
+  latitude,
+  longitude,
+  googleRestKey,
+});
+
+const distance = location.getDistance({
+  target: {
+    latitude,
+    longitude,
+  },
+});
+```
+
+**`getKakoLocationByAddres({address, analyze_type, page, limit, kakaoRestKey} : IKakaoAddress) => Promise<{data : KakaoAddressResponse[]; count : number} | null>`**
+
+- **`IKakaoAddress`**
+
+- `address : string`
+
+  검색 대상의 주소
+
+- `analyze_type? : "similar" | "exact"`
+
+  검색 type - similar : 유사 주소, exact : 정확한 주소
+
+- `page? : number`
+
+- `limit? : number`
+
+- `kakaoRestKey? :string`
+
+**` getKakaoLocationByKeyword({ keyword ,latitude ,longitude , radius , page ,limit ,kakaoRestKey,}: IKakaoKeyword) => Promise<{ data: Array<KakaoKeywordResponse>; count: number } | null>`**
+
+- **`IKakaoKeyword`**
+
+- `keyword :string`
+
+  검색을 원하는 질의어
+
+- `radius? : number`
+
+  중심 좌표로부터의 반경거리 (단위 : 미터)
+
+- `latitude? : string`
+
+  중심 좌표의 Y 혹은 위도
+
+- `longitude? : string`
+
+  중심 좌표의 X 혹은 위도
+
+- `page? : number`
+
+- `limit? : number`
+
+- `kakaoRestKey? : string`
+
+**` getKakaoLocationByGeocode({latitude ,longitude , page ,limit ,kakaoRestKey,}: IKakaoGeocode) => Promise<{ data: Array<KakaoKeywordResponse>; count: number } | null>`**
+
+- **`IKakaoGeocode`**
+
+- `latitude? : string`
+
+  중심 좌표의 Y 혹은 위도
+
+- `longitude? : string`
+
+  중심 좌표의 X 혹은 위도
+
+- `page? : number`
+
+- `limit? : number`
+
+- `kakaoRestKey? : string`
+
+- **`KakaoAddressResponse`**
+
+- `address_name : string`
+
+  전체 지번 주소
+
+- `address_type : KakakoAddressType`
+
+  - `KakaoAddressType : "REGION" | "ROAD" | "REGION_ADDR" | "ROAD_ADDR"`
+
+    REGION(지명)
+
+    ROAD(도로명)
+
+    REGION_ADDR(지번 주소)
+
+    ROAD_ADDR(도로명 주소)
+
+- `address : KakaoAddress`
+
+  - `KakaoAddress`
+
+    - `address_name: string`
+
+      전체 지번 주소
+
+    - `region_1depth_name: string`
+
+      지역 1 Depth, 시도 단위
+
+    - `region_2depth_name: string`
+
+      지역 2 Depth, 구 단위
+
+    - `region_3depth_name: string`
+
+      지역 3 Depth, 동 단위
+
+    - `region_3depth_h_name: string`
+
+      지역 3 Depth, 행정동 명칭
+
+    - `h_code: string`
+
+      행정 코드
+
+    - `b_code: string`
+
+      법정 코드
+
+    - `moutain_yn: 'Y' | 'N'`
+
+      산 여부 , Y 또는 N
+
+    - `main_address_no: string`
+
+      지번 주번지
+
+    - `sub_address_no: string`
+
+      지번 부번지, 없을 경우 빈 문자열
+
+    - `x: string`
+
+      X 좌표값, 경위도인 경우 경도(longitude)
+
+    - `y: string`
+
+      Y 좌표값, 경위도인 경우 위도(latitude)
+
+**` getGoogleLocationByGeocode({googleRestKey, latitude, longitude,}: IGoogleGeocode) => Promise<{ data: Array<GoogleGeocodeResponse>; count: number } | null>`**
+
+- **`IKakaoGeocode`**
+
+- `latitude? : string`
+
+  중심 좌표의 Y 혹은 위도
+
+- `longitude? : string`
+
+  중심 좌표의 X 혹은 위도
+
+- `googleRestKey? : string`
+
+- **`GoogleGeocodeResponse`**
+
+  - `id : string`
+
+    해당 좌표의 id 값
+
+  - `address_name: string`
+
+    전체 지번 주소
+
+  - `region_1depth_name: string`
+
+    지역 1 Depth, 시도 단위
+
+  - `region_2depth_name: string`
+
+    지역 2 Depth, 구 단위
+
+  - `region_3depth_name: string`
+
+    지역 3 Depth, 동 단위
+
+  - `region_3depth_h_name: string`
+
+    지역 3 Depth, 행정동 명칭
+
+**`getDistance({target , current} : DistanceProps) => number`**
+
+- **`DistanceProps`**
+
+- `target : Geocode`
+
+- `current : Geocode`
+
+  - `Geocode`
+
+    - `latitude? : string`
+
+      중심 좌표의 Y 혹은 위도
+
+    - `longitude? : string`
+
+      중심 좌표의 X 혹은 위도
+
+<br>
+
+---
+
+<br>
+
+### QrCode
+
+> QrCode를 생성하는 Class
+
+```typescript
+const qrCode = new QrCode();
+
+const { qrFromData, base64 } = await qrCode.createQRCodeData({ target, fileName });
+
+const { success, failure } = await qrCdoe.createQRCodesData([{ target, fileName }]);
+```
+
+**`createQRCodeData({target, fileName} : IQrCode) => Promise<QRCodeData | undefined> `**
+
+- **`IQrCode`**
+
+- `target : string`
+
+  qr코드로 생성할 데이터 (Object -> JSON.stringify)
+
+- `fileName? : string`
+
+  파일 이름
+
+- **`QRCodeData`**
+
+- `qrFormData: FormData`
+
+  qr코드 formData (key : file)
+
+- `base64: Buffer`
+
+  qr코드 Buffer
+
+**`createQRCodesData([{target , fileName}] : Array<IQrCode>) => Promise<QrCodesResponse>`**
+
+- **`QrCodesResponse`**
+
+- `success : Array<QRCodeData>`
+
+  qr코드 생성에 성공한 배열
+
+- `failure : Array<IQrCode>`
+
+  qr코드 생성에 실패한 배열
+
+<br>
+
+---
+
+<br>
+
+### Sharp
+
+> 이미지 리사이징 Class
+
+```typescript
+const sharp = new Sharp({ maxWidth, maxHeight });
+
+const newBuffer = await sharp.resizeImage(buffer);
+```
+
+- `maxWidth? : number`
+
+- `maxHeight? : number`
+
+- **`resizeImage(buffer : Buffer) => Promise<Buffer>`**
+
+<br>
+
+---
+
+<br>
+
+## Social
+
+> 소셜 로그인 관련
+
+### Apple
+
+> 애플 소셜 로그인 Class
+
+```typescript
+const appleSocial = new Apple({ appleConfig, path });
+
+app.get('/auth/apple', (req, res, next) => {
+  appleSocial.getRest(res);
+});
+
+app.post('/auth/apple/callbak', async (req, res, next) => {
+  const { id_token } = req.body;
+  const appleUser = await appleSocial.getRestCallback(id_token);
+});
+
+const appleUser = await appleSocial.getUser(id_token);
+```
+
+- `appleConfig : AppleAuthConfig`
+
+  애플 config 관련 파일 (json)
+
+- `path : string`
+
+  애플 private key 파일 경로
+
+- **`getRestCallback(code : string) => Promise<AppleTypes.User | undefined>`**
+
+- **`getUser(id_token : string) => Promise<AppleTypes.User | undefined>`**
+
+- `AppleTypes.User`
+
+  - `id : string`
+
+  - `email?: string`
+
+    이메일의 경우 유저가 동의해야 사용 가능.
+
+### Google
+
+> 구글 소셜 로그인 Class
+
+```typescript
+
+```
