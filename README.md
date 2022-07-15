@@ -1,5 +1,7 @@
 # Outqource-Node
 
+**기능 작성 진행중**
+
 ## Prisma
 
 ### ControllerAPI (Type)
