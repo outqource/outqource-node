@@ -789,9 +789,9 @@ const appleUser = await appleSocial.getUser(id_token);
 
   애플 private key 파일 경로
 
-- **`getRestCallback(code : string) => Promise<AppleTypes.User | undefined>`**
+**`getRestCallback(code : string) => Promise<AppleTypes.User | undefined>`**
 
-- **`getUser(id_token : string) => Promise<AppleTypes.User | undefined>`**
+**`getUser(id_token : string) => Promise<AppleTypes.User | undefined>`**
 
 - `AppleTypes.User`
 
@@ -806,5 +806,65 @@ const appleUser = await appleSocial.getUser(id_token);
 > 구글 소셜 로그인 Class
 
 ```typescript
+const googleSocial = new Google({ clientId, clientSecret, redirectUrl });
 
+const googleAccessToken = googleSocial.getToken(code);
+const googleAppUser = googleSocial.getAppUser(token); //id_token
+const googleWebUser = googleSocial.getWebUser(token); //accessToken
 ```
+
+- `clientId : string`
+
+  구글 OAuth 2.0 등록 시 발급받은 clientId
+
+- `clientSecret? : string`
+
+  구글 OAuth 2.0 등록 시 발급받은 clientSecret
+
+- `redirectUrl? : string`
+
+  구글 로그인 Callback Url
+
+**`getRest(res : Response, redirectUrl : string)`**
+
+> 구글 로그인 리다이렉팅
+
+**`getToken(code : string) => Promise<string | undefined>`**
+
+- `code : string`
+
+  로그인 성공 후 리다이렉팅을 통해 전달 받은 code
+
+**`getAppUser(token :string) => Promise<GoogleSocial.User | undefined>`**
+
+- `token : string`
+
+  id_token 값
+
+- **`GoogleSocial.User`**
+
+  - `id: string`
+
+  - `email?: string`
+
+  - `nickname?: string`
+
+  - `profileImage?: string`
+
+**`getWebUser(token :string) => Promise<GoogleSocial.User | undefined>`**
+
+- `token : string`
+
+  access_token 값
+
+**`getRestCallback(code :string) => Promise<GoogleSocial.TgetRestCallback | undefined>`**
+
+- `code: : string`
+
+  로그인 성공 후 리다이렉티을 통해 전달 받은 code
+
+- **`GoogleSocial.TgetRestCallback`**
+
+  - `token: string`
+
+  - `user: GoogleSocial.User`

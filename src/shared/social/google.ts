@@ -24,12 +24,12 @@ export class Google {
     this.redirectUri = props.redirectUri;
   }
 
-  public getRest(res: Response, redirectUri: string | undefined) {
-    if (!this.redirectUri && !redirectUri) {
+  public getRest(res: Response, redirectUrl: string | undefined) {
+    if (!this.redirectUri && !redirectUrl) {
       throw { status: 500, message: 'Google Redirect Url is not defined' };
     }
 
-    res.redirect(GOOGLE_URL.AUTH(this.clientId, redirectUri ?? this.redirectUri!));
+    res.redirect(GOOGLE_URL.AUTH(this.clientId, redirectUrl ?? this.redirectUri!));
   }
 
   public async getToken(code: string): Promise<string | undefined> {
