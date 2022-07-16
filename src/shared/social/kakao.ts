@@ -58,12 +58,12 @@ export class Kakao {
     }
   }
 
-  public async getToken(code: string, redirectUri?: string): Promise<string | undefined> {
+  public async getToken(code: string, redirectUrl?: string): Promise<string | undefined> {
     const data = queryString.stringify({
       grant_type: 'authorization_code',
       client_id: this.restKey,
       client_secret: this.secretKey,
-      redirectUri: redirectUri || this.redirectUrl,
+      redirectUri: redirectUrl || this.redirectUrl,
       code,
     });
 

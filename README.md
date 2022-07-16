@@ -773,7 +773,7 @@ app.get('/auth/apple', (req, res, next) => {
   appleSocial.getRest(res);
 });
 
-app.post('/auth/apple/callbak', async (req, res, next) => {
+app.post('/auth/apple/callback', async (req, res, next) => {
   const { id_token } = req.body;
   const appleUser = await appleSocial.getRestCallback(id_token);
 });
@@ -807,6 +807,15 @@ const appleUser = await appleSocial.getUser(id_token);
 
 ```typescript
 const googleSocial = new Google({ clientId, clientSecret, redirectUrl });
+
+app.get('/auth/google', (req, res, next) => {
+  googleSocial.getRest(res);
+});
+
+app.get('/auth/google/callback', (req, res, next) => {
+  const { code } = req.query;
+  const { token, user } = await googleSocial.getRestCallback(code);
+});
 
 const googleAccessToken = googleSocial.getToken(code);
 const googleAppUser = googleSocial.getAppUser(token); //id_token
@@ -868,3 +877,105 @@ const googleWebUser = googleSocial.getWebUser(token); //accessToken
   - `token: string`
 
   - `user: GoogleSocial.User`
+
+### Kakao
+
+> 카카오 소셜 로그인 Class
+
+```typescript
+const kakaoSocial = new Kakao({ kakaoRestKey, kakaoSecreteKey, kakaoAdminKey, kakaoRedirectUrl });
+
+app.get('/auth/kakao', (req, res, next) => {
+  kakaoSocial.getRest(res);
+});
+
+app.get('/auth/kakao/callback', (req, res, next) => {
+  const { code } = req.query;
+  const { token, user } = await kakaoSocial.getRestCallback(code);
+});
+
+const kakaoUser = await kakaoSocial.getUser(token);
+const kakaoAceessToken = await kakaoSocial.getToken(code, redirectUrl);
+```
+
+- `kakaoRestKey : string`
+
+  카카오 어플리케이션 등록시 발급받은 REAT_API_KEY
+
+- `kakaoSecretKey? : string`
+
+  카카오 어플리케이션 등록시 발급받은 SECRET_KEY (추가 설정 요소)
+
+- `kakaoAdminKey? :string`
+
+  카카오 어플리케이션 등로깃 발급받은 ADMIN_KEY
+
+- `kakaoRedirectUrl? : string`
+
+  카카오 로그인 리다이렉트 url
+
+**`getRest(res : Response , redirectUrl? : string)`**
+
+**`getToken(code : string, redirectUrl? :string) => Promise<string | undefined>`**
+
+- `code : string`
+
+  카카오 로그인을 통해 발급 받은 code
+
+- `redirectUrl? : string`
+
+  Class 생성자를 통해 등록하지 않았을 경우 필수
+
+**`getRestCallback(code :string) => Promise<KakaoSocial.TgetRestCallback | undefined>`**
+
+- `code : string`
+
+  카카오 로그인 을 통해 발급 받은 code
+
+- **`KakaoSocail.TgetRestCallback`**
+
+  - `token : string`
+
+    카카오 Access Token
+
+  - `user : TgetUser`
+
+  - **`TgetUser`**
+
+    - `id : string`
+
+    - `properties`
+
+      - `nickname? : string`
+
+      - `profile_image : string`
+
+      - `thumbnail_image : string`
+
+    - `kakaoAcount : account`
+
+      - `profile? : Profile`
+
+        - `nickname? : string`
+
+        - `thumbnail_image_url? : string`
+
+        - `profile_image_url? : string`
+
+        - `is_default_image? : boolean`
+
+      - `name? : string`
+
+      - `email? : string`
+
+      - `birthYear? : string`
+
+      - `birthday? : string`
+
+      - `gender? : "femail" | "mail"`
+
+      - `phone_number? : string`
+
+> 카카오 유저 정보의 경우 카카오 어플리케이션에서 등록 필수
+
+**`getUser(token : string) => Promise<KakaoSocial.TgetUser | undefined>`**
