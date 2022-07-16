@@ -1139,6 +1139,6 @@ const paginationRequestDTO = (): ValidatorItem[] => {
 };
 ```
 
-**`createPaginationResponseDTO<T>(row : T ,status : ControllerAPIResponseStatusCode) : {status , exmaple}`**
+**`createListResponse<T>(row : T ,status : ControllerAPIResponseStatusCode) : {status , exmaple}`**
 
 > 리스트 형식 데이터 example DTO 생성 함수
