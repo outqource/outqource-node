@@ -89,7 +89,7 @@ export const paginationDTO = {
   isNext: 'boolean',
 };
 
-export const createPaginationRequestDTO = <T>(data: T, status?: ControllerAPIResponsStatusCode) => ({
+export const createPaginationResponsetDTO = <T>(data: T, status?: ControllerAPIResponsStatusCode) => ({
   status: status || 200,
   example: { pagination: paginationDTO, rows: range(0, 3).map(() => data) },
 });

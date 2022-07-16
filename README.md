@@ -1065,3 +1065,80 @@ const naverAceessToken = await naverSocial.getToken(code, redirectUrl);
 ---
 
 <br>
+
+## Date
+
+> 날짜와 관련된 Functions
+
+**`getWeekNumberByMonth (date :string) : WeekNumberByMonth `**
+
+> 해당 날짜의 연도, 월, n번째 주 값을 구하는 함수
+
+- `date : string`
+
+  구하고자하는 날짜
+
+- **`WeekNumberByMonth`**
+
+  - `year : number`
+
+  - `month : number`
+
+  - `weekNo : number | string`
+
+**`getTodayStartEnd () : TodayStartEnd `**
+
+> 오늘의 시작과 끝 시간 구하는 함수
+
+- **`TodayStartEnd`**
+
+  - `todayStart : Date`
+
+  - `todayEnd : Date`
+
+**`getDateStartToLast (startDate : string , lastDate : string) : string[] | null `**
+
+> 시작과 끝 사이 날짜 (연월일) 배열 구하는 함수
+
+<br>
+
+---
+
+<br>
+
+## DTO
+
+> DTO 관련 제너레이터
+
+**`getPagination(take :number, skip :number, count : number) : TPagination`**
+
+**`TPagination`**
+
+- `page: number`
+
+- `limit : number`
+
+- `offset : number`
+
+- `count : number`
+
+- `isNext : boolean`
+
+- `isPrev : boolean`
+
+**`paginationRequestDTO():ValidatorItem[]`**
+
+> 페이지네이션 관련 request 형식
+
+```typescript
+const paginationRequestDTO = (): ValidatorItem[] => {
+  return [
+    { key: 'page', type: 'number', default: 1, nullable: true },
+    { key: 'limit', type: 'number', default: 20, nullable: true },
+  ];
+};
+```
+
+**`createPaginationResponseDTO<T>(row : T ,status : ControllerAPIResponseStatusCode) : {status , exmaple}`**
+
+> 리스트 형식 데이터 example DTO 생성 함수
