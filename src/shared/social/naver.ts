@@ -7,7 +7,7 @@ import type { Naver as NaverSocial } from './types';
 interface INaver {
   clientId: string;
   clientSecret: string | undefined;
-  redirectUri: string | undefined;
+  redirectUrl: string | undefined;
 }
 
 export type NaverUser = NaverSocial.User;
@@ -15,18 +15,18 @@ export type NaverUser = NaverSocial.User;
 class Naver {
   private clientId: string;
   private clientSecret: string | undefined;
-  private redirectUri: string | undefined;
+  private redirectUrl: string | undefined;
 
   constructor(props: INaver) {
     this.clientId = props.clientId;
     this.clientSecret = props.clientSecret;
-    this.redirectUri = props.redirectUri;
+    this.redirectUrl = props.redirectUrl;
   }
 
-  public getRest(res: Response, redirectUri: string | undefined, code: string) {
-    if (!this.redirectUri && !redirectUri) throw { status: 500, message: 'Naver Redirect Url is not defined' };
+  public getRest(res: Response, code: string, redirectUrl: string | undefined) {
+    if (!this.redirectUrl && !redirectUrl) throw { status: 500, message: 'Naver Redirect Url is not defined' };
 
-    res.redirect(NAVER_URL.AUTH(code, redirectUri ?? this.redirectUri!, this.clientId));
+    res.redirect(NAVER_URL.AUTH(code, redirectUrl ?? this.redirectUrl!, this.clientId));
   }
 
   static async getUser(token: string): Promise<NaverSocial.User | undefined> {
@@ -66,7 +66,7 @@ class Naver {
     }
   }
 
-  public async getRestCallback(code: string): Promise<NaverSocial.TgetRestCallabck | undefined> {
+  public async getRestCallback(code: string): Promise<NaverSocial.TgetRestCallback | undefined> {
     try {
       const tokenInfo = await this.getToken(code);
 

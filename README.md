@@ -979,3 +979,89 @@ const kakaoAceessToken = await kakaoSocial.getToken(code, redirectUrl);
 > 카카오 유저 정보의 경우 카카오 어플리케이션에서 등록 필수
 
 **`getUser(token : string) => Promise<KakaoSocial.TgetUser | undefined>`**
+
+### Naver
+
+> 네이머 소셜 로그인 Class
+
+```typescript
+const naverSocial = new Naver({ clienId, clientSecret, redirectUrl });
+const code = 'naver_code'; // 임의의 값 사용
+app.get('/auth/naver', (req, res, next) => {
+  naverSocial.getRest(res, code);
+});
+
+app.get('/auth/naver/callback', (req, res, next) => {
+  const { code } = req.query;
+  const { token, user } = await naverSocial.getRestCallback(code);
+});
+
+const naverUser = await naverSocial.getUser(token);
+const naverAceessToken = await naverSocial.getToken(code, redirectUrl);
+```
+
+- `clientId : string`
+
+  네이버 디벨로퍼스 등록시 발급받은 clientId
+
+- `clientSecret? : string`
+
+  네이버 디벨로퍼스 등록시 발급받은 clientSecret
+
+- `redirectUrl? : string`
+
+  네이버 로그인 Callback Url
+
+**`getRest(res: Response , code :string, redirectUrl? : string )`**
+
+- `code : string`
+
+  로그인 검증을 위해 사용되는 임의의 코드
+
+**`getUser(token :string) => Promise<NaverSOcial.User | undefined>`**
+
+- `token : string`
+
+  네이버 Access Token
+
+- **`NaverSocial.User`**
+
+  - `id :string`
+
+  - `email? : string`
+
+  - `gender? : string`
+
+  - `age? : string`
+
+  - `phoneNumber? : string`
+
+**`getToken(code : string) => Promise<NaverSocial.Token | undefined>`**
+
+- `code : string`
+
+  네이버 로그인을 통해 발급받은 code
+
+- **`NaverSocial.Token`**
+
+  - `token : string`
+
+  - `tokenType : string`
+
+    Bearer와 MAC
+
+**`getRestCallback(code : string) => Promise<NaverSocial.TgetRestCallback>`**
+
+- **`NaverSocial.TgetRestCallback`**
+
+- `token : string`
+
+- `tokenType : string`
+
+- `user : NaverSocial.User`
+
+<br>
+
+---
+
+<br>

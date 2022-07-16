@@ -69,7 +69,7 @@ export namespace Naver {
     tokenType: string;
   };
 
-  export type TgetRestCallabck = Token & {
+  export type TgetRestCallback = Token & {
     user: User;
   };
 }
