@@ -213,7 +213,7 @@ const hangul = new Hangul();
 const data = hangul.getChosungSearchedData<T>('name', rowData, 'ㅂㄱㅇ');
 ```
 
-**`getChosungSearchedData< T extends Record<string,any> >(target : keyof T , data :T[], keyword : string) => T[]`**
+**`getChosungSearchedData< T extends Record<string,any> >(target : keyof T , data :T[], keyword : string) : T[]`**
 
 - `target : keyof T`
 
@@ -247,7 +247,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 > 엑세스 토큰 추출 Method
 
-**`getToken({imp_key , imp_secret} : IamportTypes.getToken) => Promise<string | null>`**
+**`getToken({imp_key , imp_secret} : IamportTypes.getToken) : Promise<string | null>`**
 
 - `imp_key?: string`
 
@@ -269,7 +269,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 > 결제 정보 불러오기
 
-**`getPaymentData({access_token ,imp_uid} : IamportTypes.getPaymentData) => Promise<any | null>`**
+**`getPaymentData({access_token ,imp_uid} : IamportTypes.getPaymentData) : Promise<any | null>`**
 
 - `access_token: string`
 
@@ -283,7 +283,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 > 액세스 토큰 발금 + 결제 정보 불러오기
 
-**`getPaymentDataWithAccessToken({imp_key , imp_secret, imp_uid} : IamportTypes.getPaymentDataWithAccessToken) => Promise<any | string>`**
+**`getPaymentDataWithAccessToken({imp_key , imp_secret, imp_uid} : IamportTypes.getPaymentDataWithAccessToken) : Promise<any | string>`**
 
 - `imp_key?: string`
 
@@ -301,7 +301,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 > 액세스 토큰 발금 + 결제 정보 불러오기
 
-**`completePayment({imp_key , imp_secret, imp_uid, productAmount } : IamportTypes.getTcompletePaymentoken) => Promise<IamportTypes.TcompletePayment>`**
+**`completePayment({imp_key , imp_secret, imp_uid, productAmount } : IamportTypes.getTcompletePaymentoken) : Promise<IamportTypes.TcompletePayment>`**
 
 - `imp_key?: string`
 
@@ -335,7 +335,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 > 카드 환불
 
-**`cancelPayment({imp_key , imp_secret, imp_uid, reason ,cancelAmount } : IamportTypes.cancelPayment) => Promise<any | null>`**
+**`cancelPayment({imp_key , imp_secret, imp_uid, reason ,cancelAmount } : IamportTypes.cancelPayment) : Promise<any | null>`**
 
 - `imp_key?: string`
 
@@ -361,7 +361,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 > 휴대폰 본인인증 정보 얻기
 
-**`getCertificationData({access_token ,imp_uid} : IamportTypes.getCertificationData) => Promise<any | null>`**
+**`getCertificationData({access_token ,imp_uid} : IamportTypes.getCertificationData) : Promise<any | null>`**
 
 - `access_token: string`
 
@@ -375,7 +375,7 @@ await iamport.getCeritificationDataWithAccessToken({ imp_key, imp_secret, imp_ui
 
 > 휴대폰 본인인증 토큰 발급과 함께 얻기
 
-**`getCeritificationDataWithAccessToken({imp_key , imp_secret, imp_uid, productAmount } : IamportTypes.getCeritificationDataWithAccessToken) => Promise<any | null>`**
+**`getCeritificationDataWithAccessToken({imp_key , imp_secret, imp_uid, productAmount } : IamportTypes.getCeritificationDataWithAccessToken) : Promise<any | null>`**
 
 - `imp_key?: string`
 
@@ -488,7 +488,7 @@ const distance = location.getDistance({
 });
 ```
 
-**`getKakoLocationByAddres({address, analyze_type, page, limit, kakaoRestKey} : IKakaoAddress) => Promise<{data : KakaoAddressResponse[]; count : number} | null>`**
+**`getKakoLocationByAddres({address, analyze_type, page, limit, kakaoRestKey} : IKakaoAddress) : Promise<{data : KakaoAddressResponse[]; count : number} | null>`**
 
 - **`IKakaoAddress`**
 
@@ -506,7 +506,7 @@ const distance = location.getDistance({
 
 - `kakaoRestKey? :string`
 
-**` getKakaoLocationByKeyword({ keyword ,latitude ,longitude , radius , page ,limit ,kakaoRestKey,}: IKakaoKeyword) => Promise<{ data: Array<KakaoKeywordResponse>; count: number } | null>`**
+**` getKakaoLocationByKeyword({ keyword ,latitude ,longitude , radius , page ,limit ,kakaoRestKey,}: IKakaoKeyword) : Promise<{ data: Array<KakaoKeywordResponse>; count: number } | null>`**
 
 - **`IKakaoKeyword`**
 
@@ -532,7 +532,7 @@ const distance = location.getDistance({
 
 - `kakaoRestKey? : string`
 
-**` getKakaoLocationByGeocode({latitude ,longitude , page ,limit ,kakaoRestKey,}: IKakaoGeocode) => Promise<{ data: Array<KakaoKeywordResponse>; count: number } | null>`**
+**` getKakaoLocationByGeocode({latitude ,longitude , page ,limit ,kakaoRestKey,}: IKakaoGeocode) : Promise<{ data: Array<KakaoKeywordResponse>; count: number } | null>`**
 
 - **`IKakaoGeocode`**
 
@@ -620,7 +620,7 @@ const distance = location.getDistance({
 
       Y 좌표값, 경위도인 경우 위도(latitude)
 
-**` getGoogleLocationByGeocode({googleRestKey, latitude, longitude,}: IGoogleGeocode) => Promise<{ data: Array<GoogleGeocodeResponse>; count: number } | null>`**
+**` getGoogleLocationByGeocode({googleRestKey, latitude, longitude,}: IGoogleGeocode) : Promise<{ data: Array<GoogleGeocodeResponse>; count: number } | null>`**
 
 - **`IKakaoGeocode`**
 
@@ -660,7 +660,7 @@ const distance = location.getDistance({
 
     지역 3 Depth, 행정동 명칭
 
-**`getDistance({target , current} : DistanceProps) => number`**
+**`getDistance({target , current} : DistanceProps) : number`**
 
 - **`DistanceProps`**
 
@@ -696,7 +696,7 @@ const { qrFromData, base64 } = await qrCode.createQRCodeData({ target, fileName 
 const { success, failure } = await qrCdoe.createQRCodesData([{ target, fileName }]);
 ```
 
-**`createQRCodeData({target, fileName} : IQrCode) => Promise<QRCodeData | undefined> `**
+**`createQRCodeData({target, fileName} : IQrCode) : Promise<QRCodeData | undefined> `**
 
 - **`IQrCode`**
 
@@ -718,7 +718,7 @@ const { success, failure } = await qrCdoe.createQRCodesData([{ target, fileName 
 
   qr코드 Buffer
 
-**`createQRCodesData([{target , fileName}] : Array<IQrCode>) => Promise<QrCodesResponse>`**
+**`createQRCodesData([{target , fileName}] : Array<IQrCode>) : Promise<QrCodesResponse>`**
 
 - **`QrCodesResponse`**
 
@@ -750,7 +750,7 @@ const newBuffer = await sharp.resizeImage(buffer);
 
 - `maxHeight? : number`
 
-- **`resizeImage(buffer : Buffer) => Promise<Buffer>`**
+- **`resizeImage(buffer : Buffer) : Promise<Buffer>`**
 
 <br>
 
@@ -789,9 +789,9 @@ const appleUser = await appleSocial.getUser(id_token);
 
   애플 private key 파일 경로
 
-**`getRestCallback(code : string) => Promise<AppleTypes.User | undefined>`**
+**`getRestCallback(code : string) :Promise<AppleTypes.User | undefined>`**
 
-**`getUser(id_token : string) => Promise<AppleTypes.User | undefined>`**
+**`getUser(id_token : string) : Promise<AppleTypes.User | undefined>`**
 
 - `AppleTypes.User`
 
@@ -838,13 +838,13 @@ const googleWebUser = googleSocial.getWebUser(token); //accessToken
 
 > 구글 로그인 리다이렉팅
 
-**`getToken(code : string) => Promise<string | undefined>`**
+**`getToken(code : string) : Promise<string | undefined>`**
 
 - `code : string`
 
   로그인 성공 후 리다이렉팅을 통해 전달 받은 code
 
-**`getAppUser(token :string) => Promise<GoogleSocial.User | undefined>`**
+**`getAppUser(token :string) : Promise<GoogleSocial.User | undefined>`**
 
 - `token : string`
 
@@ -860,13 +860,13 @@ const googleWebUser = googleSocial.getWebUser(token); //accessToken
 
   - `profileImage?: string`
 
-**`getWebUser(token :string) => Promise<GoogleSocial.User | undefined>`**
+**`getWebUser(token :string) : Promise<GoogleSocial.User | undefined>`**
 
 - `token : string`
 
   access_token 값
 
-**`getRestCallback(code :string) => Promise<GoogleSocial.TgetRestCallback | undefined>`**
+**`getRestCallback(code :string) : Promise<GoogleSocial.TgetRestCallback | undefined>`**
 
 - `code: : string`
 
@@ -916,7 +916,7 @@ const kakaoAceessToken = await kakaoSocial.getToken(code, redirectUrl);
 
 **`getRest(res : Response , redirectUrl? : string)`**
 
-**`getToken(code : string, redirectUrl? :string) => Promise<string | undefined>`**
+**`getToken(code : string, redirectUrl? :string) : Promise<string | undefined>`**
 
 - `code : string`
 
@@ -926,7 +926,7 @@ const kakaoAceessToken = await kakaoSocial.getToken(code, redirectUrl);
 
   Class 생성자를 통해 등록하지 않았을 경우 필수
 
-**`getRestCallback(code :string) => Promise<KakaoSocial.TgetRestCallback | undefined>`**
+**`getRestCallback(code :string) : Promise<KakaoSocial.TgetRestCallback | undefined>`**
 
 - `code : string`
 
@@ -978,7 +978,7 @@ const kakaoAceessToken = await kakaoSocial.getToken(code, redirectUrl);
 
 > 카카오 유저 정보의 경우 카카오 어플리케이션에서 등록 필수
 
-**`getUser(token : string) => Promise<KakaoSocial.TgetUser | undefined>`**
+**`getUser(token : string) : Promise<KakaoSocial.TgetUser | undefined>`**
 
 ### Naver
 
@@ -1018,7 +1018,7 @@ const naverAceessToken = await naverSocial.getToken(code, redirectUrl);
 
   로그인 검증을 위해 사용되는 임의의 코드
 
-**`getUser(token :string) => Promise<NaverSOcial.User | undefined>`**
+**`getUser(token :string) :Promise<NaverSOcial.User | undefined>`**
 
 - `token : string`
 
@@ -1036,7 +1036,7 @@ const naverAceessToken = await naverSocial.getToken(code, redirectUrl);
 
   - `phoneNumber? : string`
 
-**`getToken(code : string) => Promise<NaverSocial.Token | undefined>`**
+**`getToken(code : string) : Promise<NaverSocial.Token | undefined>`**
 
 - `code : string`
 
@@ -1050,7 +1050,7 @@ const naverAceessToken = await naverSocial.getToken(code, redirectUrl);
 
     Bearer와 MAC
 
-**`getRestCallback(code : string) => Promise<NaverSocial.TgetRestCallback>`**
+**`getRestCallback(code : string) : Promise<NaverSocial.TgetRestCallback>`**
 
 - **`NaverSocial.TgetRestCallback`**
 
