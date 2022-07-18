@@ -103,5 +103,7 @@ export class InitApp {
 
     this.app.use(errorController(options?.errorOptions));
     this.app.use(globalController(options?.globalOptions));
+    this.app.get('/', (req, res) => res.redirect(this.openAPI?.endPoint ?? '/api-docs'));
+    this.app.get('/healthy', (req, res) => res.status(200).send('Health Check'));
   }
 }
