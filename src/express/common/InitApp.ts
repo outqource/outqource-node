@@ -70,10 +70,10 @@ export class InitApp {
     const jwtUserCallback = props?.jwtUserCallback;
 
     // default
+    this.app.use(cors(corsOptions));
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(Express.static('public'));
-    this.app.use(cors(corsOptions));
     this.app.use(pagination());
 
     if (!Array.isArray(middlewares) && middlewares?.before) {
