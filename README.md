@@ -1142,3 +1142,211 @@ const paginationRequestDTO = (): ValidatorItem[] => {
 **`createListResponse<T>(row : T ,status : ControllerAPIResponseStatusCode) : {status , exmaple}`**
 
 > 리스트 형식 데이터 example DTO 생성 함수
+
+```typescript
+export const createListResponse = <T>(rows: T, status?: ControllerAPIResponsStatusCode) => ({
+  status: status || 200,
+  example: { pagination: paginationDTO, rows: range(0, 3).map(() => rows) },
+});
+```
+
+**`tokenDTO (status : ControllerAPIResponsStatusCode) : {status , eample}`**
+
+> auth(login, register)관련 api response example에 사용
+
+```typescript
+export const tokenDTO = (status: ControllerAPIResponsStatusCode) => {
+  return {
+    status,
+    example: {
+      accessToken: 'string',
+      refreshToken: 'string',
+    },
+  };
+};
+```
+
+**`emptyResponse (status : ControllerAPIResponsStatusCode) : {status , eample} `**
+
+> Response Status 204 api response example에 사용
+
+```typescript
+export const emptyResponse = (status: ControllerAPIResponsStatusCode) => {
+  return {
+    status,
+    example: {},
+  };
+};
+```
+
+**`responseWithId (status : ControllerAPIResponsStatusCode) : {status , eample} `**
+
+> Response Status 201 api response example에 사용
+
+```typescript
+export const responseWithId = (status: ControllerAPIResponsStatusCode) => {
+  return {
+    status,
+    example: { id: 'string' },
+  };
+};
+```
+
+<br>
+
+---
+
+<br>
+
+### Enum
+
+**`getEnumValues(target) : string[]`**
+
+> enum 관련 example 작성 시 사용
+
+```typescript
+export const getEnumValues = <T extends object>(target: T) => {
+  const value = Object.values(target).reduce(
+    (prev, curr) => {
+      prev[0] += curr + ',';
+      return prev;
+    },
+    [''],
+  );
+  return [value[0].slice(0, value[0].length - 1)];
+};
+
+//usage
+response: [{ key: 'enum_example', type: 'enum', example: getEnumValues(ENUM) }];
+```
+
+<br>
+
+---
+
+<br>
+
+### Excel
+
+> 액셀 차트 생성 시 사용 (보완 필요)
+
+**`getDefaultExcelSheet(data : Record<string,any>, convertHeader:(header)=>string) : Array<TStatisticsExcel>`**
+
+**`convertExcelFile(rows: TStatisticExcel[]) : Promise<ExcelJS.Buffer>`**
+
+```typescript
+const convertHeader = (header: string): string => {
+  const places = Object.keys(Place);
+
+  if (places.includes(header)) return convertPlaceEnum(header);
+  else if (header === 'total') return '전체';
+  else return header;
+};
+
+const result = await this.statisticsService.getFavoriteCountByChargeStation();
+
+const file = await convertExcelFile(getDefaultExcelSheet(result, convertHeader));
+//or
+const file = await getExcelfile(result, convertHeader);
+```
+
+- **`TStatisticExcel`**
+
+- `header : string`
+
+- `data : Array<string>`
+
+- **`extra ? : {}`**
+
+  - `title : string`
+
+  - `headers : Array<string>`
+
+  - `extraData : Array<string>`
+
+<br>
+
+---
+
+<br>
+
+### ParseValue
+
+> value 파싱 관련
+
+**`checkJsonString(value) : boolean`**
+
+```typescript
+const checkJsonString = (value: string): boolean => {
+  try {
+    const result = JSON.parse(value);
+    if (result && typeof result === 'object') {
+      return true;
+    }
+    throw new Error('not json');
+  } catch (error) {
+    return false;
+  }
+};
+```
+
+**`parseAutoValue(value) : boolean`**
+
+```typescript
+export const parseAutoValue = (value: string) => {
+  const isNumberValue = Number(value);
+  const isBooleanValue = value === 'TRUE' || value === 'FALSE' || value === 'true' || value === 'false';
+  const isJsonValue = checkJsonString(value);
+
+  if (isNumberValue) {
+    return isNumberValue;
+  } else if (isBooleanValue) {
+    return value === 'TRUE' || value === 'true';
+  } else if (isJsonValue) {
+    return JSON.parse(value);
+  } else {
+    return value;
+  }
+};
+```
+
+**`parseValue(value) : boolean`**
+
+```typescript
+export const parseValue = (value: string, type: ParseDataType | string | 'auto' = 'auto') => {
+  switch (type) {
+    case 'string':
+      return value;
+    case 'boolean':
+      return value === 'TRUE' || value === 'true';
+    case 'number':
+      return Number(value);
+    case 'json':
+      return JSON.parse(value);
+    case 'auto':
+      return parseAutoValue(value);
+    default:
+      return parseAutoValue(value);
+  }
+};
+```
+
+<br>
+
+---
+
+<br>
+
+### Random
+
+> 랜덤값 관련
+
+**`randomNumber(min: number, max : number): number`**
+
+```typescript
+export const randomNumber = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+```
+
+ß

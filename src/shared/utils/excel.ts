@@ -40,13 +40,13 @@ export const getDefaultExcelSheet = (
   });
 };
 
-export const getExcelFile = async (rows: TStatisticExcel[]): Promise<ExcelJS.Buffer> => {
+export const convertExcelFile = async (rows: TStatisticExcel[]): Promise<ExcelJS.Buffer> => {
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet();
 
   rows.forEach((row, index) => {
     if (row.extra) {
-      const length = row.extra?.headers.length ?? 0;
+      const length = row.extra.headers.length;
       row.extra.headers.forEach((header, headerIndex) => {
         worksheet.getColumn(index * length + headerIndex - length).values = [
           row.extra?.title,
@@ -62,4 +62,11 @@ export const getExcelFile = async (rows: TStatisticExcel[]): Promise<ExcelJS.Buf
   });
 
   return await workbook.xlsx.writeBuffer();
+};
+
+export const getExcelFile = async (
+  data: Record<string, any>,
+  convertHeader: (header: string) => string,
+): Promise<ExcelJS.Buffer> => {
+  return await convertExcelFile(getDefaultExcelSheet(data, convertHeader));
 };
