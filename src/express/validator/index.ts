@@ -32,32 +32,35 @@ export default class Validator {
   }
 
   public static create(controllers: Record<string, any>) {
+    console.log(`validator create`, controllers);
+
     const instance = new Validator(controllers);
-    return instance._create();
+    return instance.#create();
   }
 
-  public static parseObjectValues(object: any) {
+  static #parse(object: any, validatorItems: ValidatorItem[]) {
     const newObject = { ...object };
-    Object.entries(newObject).forEach(([key, value]: [string, any]) => {
-      if (Number(value)) {
-        newObject[key] = Number(value);
-      } else if (value === 'true' || value === 'false' || value === 'TRUE' || value === 'FALSE') {
-        newObject[key] = value === 'true' || value === 'TRUE';
-      } else if (value === 'null' || value === 'NULL') {
-        newObject[key] = null;
-      } else if (value === 'undefined' || value === 'UNDEFINED') {
-        newObject[key] = undefined;
+    validatorItems.forEach(validatorItem => {
+      const { key, type } = validatorItem;
+      const value = newObject[key];
+      if (value) {
+        if (type === 'number') {
+          newObject[key] = Number(newObject[key]);
+        } else if (type === 'boolean' && (value === 'true' || value === 'false')) {
+          newObject[key] = value === 'true';
+        }
       }
     });
 
     return newObject;
   }
 
-  public _create() {
+  #create() {
     Object.entries(this.controllers).forEach(([key, value]: [string, ControllerAPI | any]) => {
       if (key.includes('API')) {
         const name = key.replace('API', '');
         const apiValidators: CreateMiddlewareProps<any, any, any> = {};
+        const controllerAPI = value as ControllerAPI;
 
         Object.entries(value).forEach(([key, value]: [string, any]) => {
           if (key === 'param' || key === 'query' || key === 'body') {
@@ -65,7 +68,7 @@ export default class Validator {
           }
         });
 
-        const middlewares = this.createMiddleware(apiValidators);
+        const middlewares = this.createMiddleware(apiValidators, controllerAPI);
         this.middlewares[name] = [middlewares];
       }
     });
@@ -143,7 +146,7 @@ export default class Validator {
     return {};
   }
 
-  public createMiddleware<P, Q, B>(props?: CreateMiddlewareProps<P, Q, B>) {
+  public createMiddleware<P, Q, B>(props: CreateMiddlewareProps<P, Q, B>, controllerAPI: ControllerAPI) {
     if (!props) props = {};
 
     const ajv: Ajv = (() => {
@@ -172,7 +175,7 @@ export default class Validator {
       let errorMessage = '';
 
       if (req.params && validators.param) {
-        const validation = validators.param(Validator.parseObjectValues(req.params));
+        const validation = validators.param(Validator.#parse(req.params, controllerAPI.param ?? []));
         errorMessage = this.getErrorMessage(validators.param.errors) ?? '';
 
         if (!validation) {
@@ -184,8 +187,7 @@ export default class Validator {
       }
 
       if (req.query && validators.query) {
-        const newQuery = Validator.parseObjectValues(req.query);
-        const validation = validators.query(Validator.parseObjectValues(req.query));
+        const validation = validators.query(Validator.#parse(req.query, controllerAPI.query ?? []));
         errorMessage = this.getErrorMessage(validators.query.errors) ?? '';
 
         if (!validation) {
@@ -197,7 +199,7 @@ export default class Validator {
       }
 
       if (req.body && validators.body) {
-        const validation = validators.body(Validator.parseObjectValues(req.body));
+        const validation = validators.body(Validator.#parse(req.body, controllerAPI.body ?? []));
         errorMessage = this.getErrorMessage(validators.body.errors) ?? '';
 
         if (!validation) {
