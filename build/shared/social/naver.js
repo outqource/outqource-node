@@ -13,14 +13,14 @@ class Naver {
   constructor(props) {
     this.clientId = props.clientId;
     this.clientSecret = props.clientSecret;
-    this.redirectUri = props.redirectUri;
+    this.redirectUrl = props.redirectUrl;
   }
-  getRest(res, redirectUri, code) {
-    if (!this.redirectUri && !redirectUri) throw { status: 500, message: 'Naver Redirect Url is not defined' };
+  getRest(res, code, redirectUrl) {
+    if (!this.redirectUrl && !redirectUrl) throw { status: 500, message: 'Naver Redirect Url is not defined' };
     res.redirect(
       constant_1.NAVER_URL.AUTH(
         code,
-        redirectUri !== null && redirectUri !== void 0 ? redirectUri : this.redirectUri,
+        redirectUrl !== null && redirectUrl !== void 0 ? redirectUrl : this.redirectUrl,
         this.clientId,
       ),
     );

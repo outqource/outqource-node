@@ -11,7 +11,7 @@ export declare class Google {
   private clientSecret;
   private redirectUri;
   constructor(props: IGoogle);
-  getRest(res: Response, redirectUri: string | undefined): void;
+  getRest(res: Response, redirectUrl: string | undefined): void;
   getToken(code: string): Promise<string | undefined>;
   static getAppUser(token: string): Promise<GoogleSocial.User | undefined>;
   static getWebUser(token: string): Promise<

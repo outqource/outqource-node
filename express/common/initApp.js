@@ -48,10 +48,10 @@ class InitApp {
     const corsOptions = props === null || props === void 0 ? void 0 : props.corsOptions;
     const jwtUserCallback = props === null || props === void 0 ? void 0 : props.jwtUserCallback;
     // default
+    this.app.use((0, middlewares_1.cors)(corsOptions));
     this.app.use((0, middlewares_1.json)());
     this.app.use((0, middlewares_1.urlencoded)({ extended: true }));
     this.app.use(express_1.default.static('public'));
-    this.app.use((0, middlewares_1.cors)(corsOptions));
     this.app.use((0, middlewares_1.pagination)());
     if (!Array.isArray(middlewares) && (middlewares === null || middlewares === void 0 ? void 0 : middlewares.before)) {
       this.applyMiddlewares(middlewares.before);
@@ -74,6 +74,15 @@ class InitApp {
     (0, _1.createRouter)(this.app, this.controllers, validator);
     this.app.use((0, _1.errorController)(options === null || options === void 0 ? void 0 : options.errorOptions));
     this.app.use((0, _1.globalController)(options === null || options === void 0 ? void 0 : options.globalOptions));
+    this.app.get('/', (req, res) => {
+      var _a, _b;
+      return res.redirect(
+        (_b = (_a = this.openAPI) === null || _a === void 0 ? void 0 : _a.endPoint) !== null && _b !== void 0
+          ? _b
+          : '/api-docs',
+      );
+    });
+    this.app.get('/healthy', (req, res) => res.status(200).send('Health Check'));
   }
 }
 exports.InitApp = InitApp;

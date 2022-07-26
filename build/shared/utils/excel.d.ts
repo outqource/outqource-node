@@ -13,5 +13,9 @@ export declare const getDefaultExcelSheet: (
   data: Record<string, any>,
   convertHeader: (header: string) => string,
 ) => Array<TStatisticExcel>;
-export declare const getExcelFile: (rows: TStatisticExcel[]) => Promise<ExcelJS.Buffer>;
+export declare const convertExcelFile: (rows: TStatisticExcel[]) => Promise<ExcelJS.Buffer>;
+export declare const getExcelFile: (
+  data: Record<string, any>,
+  convertHeader: (header: string) => string,
+) => Promise<ExcelJS.Buffer>;
 export {};

@@ -8,12 +8,12 @@ interface IQrCode {
   target: string;
   fileName: string | undefined;
 }
-interface QrCdoesResponse {
-  success: Array<QRCodeData | null>;
-  failure: Array<IQrCode | null>;
+interface QrCodesResponse {
+  success: Array<QRCodeData>;
+  failure: Array<IQrCode>;
 }
 declare class QrCode {
   createQRCodeData(props: IQrCode): Promise<QRCodeData | undefined>;
-  createQrCodesData(props: Array<IQrCode>): Promise<QrCdoesResponse>;
+  createQrCodesData(props: Array<IQrCode>): Promise<QrCodesResponse>;
 }
 export { QrCode };

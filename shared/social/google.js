@@ -15,14 +15,14 @@ class Google {
     this.clientSecret = props.clientSecret;
     this.redirectUri = props.redirectUri;
   }
-  getRest(res, redirectUri) {
-    if (!this.redirectUri && !redirectUri) {
+  getRest(res, redirectUrl) {
+    if (!this.redirectUri && !redirectUrl) {
       throw { status: 500, message: 'Google Redirect Url is not defined' };
     }
     res.redirect(
       constant_1.GOOGLE_URL.AUTH(
         this.clientId,
-        redirectUri !== null && redirectUri !== void 0 ? redirectUri : this.redirectUri,
+        redirectUrl !== null && redirectUrl !== void 0 ? redirectUrl : this.redirectUri,
       ),
     );
   }

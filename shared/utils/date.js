@@ -1,10 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.getDatesStartToLast =
-  exports.getRecentYearStartEnd =
-  exports.getTodayStartEnd =
-  exports.weekNumberByMonth =
-    void 0;
+exports.getDatesStartToLast = exports.getTodayStartEnd = exports.getWeekNumberByMonth = void 0;
 const weekNumberByThurFnc = paramDate => {
   const year = paramDate.getFullYear();
   const month = paramDate.getMonth();
@@ -23,7 +19,7 @@ const weekNumberByThurFnc = paramDate => {
   else if (firstWeekCheck) weekNo = weekNo - 1;
   return weekNo;
 };
-const weekNumberByMonth = dateFormat => {
+const getWeekNumberByMonth = dateFormat => {
   const inputDate = new Date(dateFormat);
   let year = inputDate.getFullYear();
   let month = inputDate.getMonth() + 1;
@@ -41,7 +37,7 @@ const weekNumberByMonth = dateFormat => {
   }
   return { year, month, weekNo };
 };
-exports.weekNumberByMonth = weekNumberByMonth;
+exports.getWeekNumberByMonth = getWeekNumberByMonth;
 const getTodayStartEnd = () => {
   const todayStart = new Date();
   todayStart.setHours(0);
@@ -57,16 +53,6 @@ const getTodayStartEnd = () => {
   };
 };
 exports.getTodayStartEnd = getTodayStartEnd;
-const getRecentYearStartEnd = target => {
-  const startAt = new Date();
-  startAt.setFullYear(startAt.getFullYear() - target, startAt.getMonth(), startAt.getDate());
-  const endAt = new Date();
-  return {
-    startAt,
-    endAt,
-  };
-};
-exports.getRecentYearStartEnd = getRecentYearStartEnd;
 const getDatesStartToLast = (startDate, lastDate) => {
   const regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
   if (!(regex.test(startDate) && regex.test(lastDate))) return null;

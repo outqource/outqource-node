@@ -5,7 +5,7 @@ var __importDefault =
     return mod && mod.__esModule ? mod : { default: mod };
   };
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.getExcelFile = exports.getDefaultExcelSheet = void 0;
+exports.getExcelFile = exports.convertExcelFile = exports.getDefaultExcelSheet = void 0;
 const exceljs_1 = __importDefault(require('exceljs'));
 const getDefaultExcelSheet = (data, convertHeader) => {
   return Object.entries(data).map(([key, value]) => {
@@ -33,16 +33,12 @@ const getDefaultExcelSheet = (data, convertHeader) => {
   });
 };
 exports.getDefaultExcelSheet = getDefaultExcelSheet;
-const getExcelFile = async rows => {
+const convertExcelFile = async rows => {
   const workbook = new exceljs_1.default.Workbook();
   const worksheet = workbook.addWorksheet();
   rows.forEach((row, index) => {
-    var _a, _b;
     if (row.extra) {
-      const length =
-        (_b = (_a = row.extra) === null || _a === void 0 ? void 0 : _a.headers.length) !== null && _b !== void 0
-          ? _b
-          : 0;
+      const length = row.extra.headers.length;
       row.extra.headers.forEach((header, headerIndex) => {
         var _a, _b;
         worksheet.getColumn(index * length + headerIndex - length).values = [
@@ -57,5 +53,9 @@ const getExcelFile = async rows => {
     }
   });
   return await workbook.xlsx.writeBuffer();
+};
+exports.convertExcelFile = convertExcelFile;
+const getExcelFile = async (data, convertHeader) => {
+  return await (0, exports.convertExcelFile)((0, exports.getDefaultExcelSheet)(data, convertHeader));
 };
 exports.getExcelFile = getExcelFile;

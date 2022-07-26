@@ -1,54 +1,34 @@
 'use strict';
+var __classPrivateFieldGet =
+  (this && this.__classPrivateFieldGet) ||
+  function (receiver, state, kind, f) {
+    if (kind === 'a' && !f) throw new TypeError('Private accessor was defined without a getter');
+    if (typeof state === 'function' ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError('Cannot read private member from an object whose class did not declare it');
+    return kind === 'm' ? f : kind === 'a' ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
 var __importDefault =
   (this && this.__importDefault) ||
   function (mod) {
     return mod && mod.__esModule ? mod : { default: mod };
   };
+var _Validator_instances, _a, _Validator_parse, _Validator_create;
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.Ajv = void 0;
 const ajv_1 = __importDefault(require('ajv'));
 exports.Ajv = ajv_1.default;
 class Validator {
   constructor(controllers) {
+    _Validator_instances.add(this);
     this.controllers = {};
     this.validators = {};
     this.middlewares = {};
     this.controllers = controllers;
   }
   static create(controllers) {
+    console.log(`validator create`, controllers);
     const instance = new Validator(controllers);
-    return instance._create();
-  }
-  static parseObjectValues(object) {
-    const newObject = { ...object };
-    Object.entries(newObject).forEach(([key, value]) => {
-      if (Number(value)) {
-        newObject[key] = Number(value);
-      } else if (value === 'true' || value === 'false' || value === 'TRUE' || value === 'FALSE') {
-        newObject[key] = value === 'true' || value === 'TRUE';
-      } else if (value === 'null' || value === 'NULL') {
-        newObject[key] = null;
-      } else if (value === 'undefined' || value === 'UNDEFINED') {
-        newObject[key] = undefined;
-      }
-    });
-    return newObject;
-  }
-  _create() {
-    Object.entries(this.controllers).forEach(([key, value]) => {
-      if (key.includes('API')) {
-        const name = key.replace('API', '');
-        const apiValidators = {};
-        Object.entries(value).forEach(([key, value]) => {
-          if (key === 'param' || key === 'query' || key === 'body') {
-            apiValidators[key] = this.createValidators(value);
-          }
-        });
-        const middlewares = this.createMiddleware(apiValidators);
-        this.middlewares[name] = [middlewares];
-      }
-    });
-    return this.middlewares;
+    return __classPrivateFieldGet(instance, _Validator_instances, 'm', _Validator_create).call(instance);
   }
   createValidators(validatorItems) {
     const validator = {
@@ -106,7 +86,7 @@ class Validator {
     }
     return {};
   }
-  createMiddleware(props) {
+  createMiddleware(props, controllerAPI) {
     if (!props) props = {};
     const ajv = (() => {
       const options = {};
@@ -124,11 +104,17 @@ class Validator {
       validators.body = ajv.compile(props.body);
     }
     return (req, res, next) => {
-      var _a, _b, _c;
+      var _b, _c, _d, _e, _f, _g;
       let errorMessage = '';
       if (req.params && validators.param) {
-        const validation = validators.param(Validator.parseObjectValues(req.params));
-        errorMessage = (_a = this.getErrorMessage(validators.param.errors)) !== null && _a !== void 0 ? _a : '';
+        const validation = validators.param(
+          __classPrivateFieldGet(Validator, _a, 'm', _Validator_parse).call(
+            Validator,
+            req.params,
+            (_b = controllerAPI.param) !== null && _b !== void 0 ? _b : [],
+          ),
+        );
+        errorMessage = (_c = this.getErrorMessage(validators.param.errors)) !== null && _c !== void 0 ? _c : '';
         if (!validation) {
           return next({
             status: 400,
@@ -137,9 +123,14 @@ class Validator {
         }
       }
       if (req.query && validators.query) {
-        const newQuery = Validator.parseObjectValues(req.query);
-        const validation = validators.query(Validator.parseObjectValues(req.query));
-        errorMessage = (_b = this.getErrorMessage(validators.query.errors)) !== null && _b !== void 0 ? _b : '';
+        const validation = validators.query(
+          __classPrivateFieldGet(Validator, _a, 'm', _Validator_parse).call(
+            Validator,
+            req.query,
+            (_d = controllerAPI.query) !== null && _d !== void 0 ? _d : [],
+          ),
+        );
+        errorMessage = (_e = this.getErrorMessage(validators.query.errors)) !== null && _e !== void 0 ? _e : '';
         if (!validation) {
           return next({
             status: 400,
@@ -148,8 +139,14 @@ class Validator {
         }
       }
       if (req.body && validators.body) {
-        const validation = validators.body(Validator.parseObjectValues(req.body));
-        errorMessage = (_c = this.getErrorMessage(validators.body.errors)) !== null && _c !== void 0 ? _c : '';
+        const validation = validators.body(
+          __classPrivateFieldGet(Validator, _a, 'm', _Validator_parse).call(
+            Validator,
+            req.body,
+            (_f = controllerAPI.body) !== null && _f !== void 0 ? _f : [],
+          ),
+        );
+        errorMessage = (_g = this.getErrorMessage(validators.body.errors)) !== null && _g !== void 0 ? _g : '';
         if (!validation) {
           return next({
             status: 400,
@@ -161,15 +158,49 @@ class Validator {
     };
   }
   getErrorMessage(errors) {
-    var _a;
+    var _b;
     if (!errors) return undefined;
-    return (_a =
+    return (_b =
       errors === null || errors === void 0
         ? void 0
         : errors.map(error => `${error.instancePath.replace('/', '')} - ${error.message}`).join(', ')) !== null &&
-      _a !== void 0
-      ? _a
+      _b !== void 0
+      ? _b
       : '';
   }
 }
 exports.default = Validator;
+(_a = Validator),
+  (_Validator_instances = new WeakSet()),
+  (_Validator_parse = function _Validator_parse(object, validatorItems) {
+    const newObject = { ...object };
+    validatorItems.forEach(validatorItem => {
+      const { key, type } = validatorItem;
+      const value = newObject[key];
+      if (value) {
+        if (type === 'number') {
+          newObject[key] = Number(newObject[key]);
+        } else if (type === 'boolean' && (value === 'true' || value === 'false')) {
+          newObject[key] = value === 'true';
+        }
+      }
+    });
+    return newObject;
+  }),
+  (_Validator_create = function _Validator_create() {
+    Object.entries(this.controllers).forEach(([key, value]) => {
+      if (key.includes('API')) {
+        const name = key.replace('API', '');
+        const apiValidators = {};
+        const controllerAPI = value;
+        Object.entries(value).forEach(([key, value]) => {
+          if (key === 'param' || key === 'query' || key === 'body') {
+            apiValidators[key] = this.createValidators(value);
+          }
+        });
+        const middlewares = this.createMiddleware(apiValidators, controllerAPI);
+        this.middlewares[name] = [middlewares];
+      }
+    });
+    return this.middlewares;
+  });
