@@ -33,7 +33,12 @@ export declare type PrismaOption<T> = {
     ? TrueKeyObject<NoUndefinedField<T>, 'where'> extends Record<infer S, any>
       ? TrueKeyObject<NoUndefinedField<T>, 'where'>[S] extends T[K]
         ? {
-            [U in keyof TrueKeyObject<NoUndefinedField<T>, 'where'>[S]]: `${EveryKeyword<Keys<U>>}` | null;
+            [U in keyof TrueKeyObject<NoUndefinedField<T>, 'where'>[S]]: TrueKeyObject<
+              NoUndefinedField<T>,
+              'where'
+            >[S][U] extends Array<any> | object
+              ? TrueKeyObject<NoUndefinedField<T>, 'where'>[S][U]
+              : `${EveryKeyword<Keys<U>>}` | null;
           }
         : TrueKeyObject<NoUndefinedField<T>, 'select' | 'include'> extends Record<infer S, any>
         ? TrueKeyObject<NoUndefinedField<T>, 'select' | 'include'>[S] extends T[K]
