@@ -33,6 +33,6 @@ declare class Iamport {
     imp_key,
     imp_secret,
     imp_uid,
-  }: IamportTypes.getCeritificationDataWithAccessToken): Promise<any>;
+  }: IamportTypes.getCeritificationDataWithAccessToken): Promise<any | null>;
 }
 export { Iamport };

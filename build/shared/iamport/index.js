@@ -188,7 +188,7 @@ class Iamport {
       }
       return { ...data, access_token };
     } catch (error) {
-      return error;
+      return null;
     }
   }
 }

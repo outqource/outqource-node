@@ -47,13 +47,13 @@ class Kakao {
       return undefined;
     }
   }
-  async getToken(code, redirectUri) {
+  async getToken(code, redirectUrl) {
     var _a;
     const data = query_string_1.default.stringify({
       grant_type: 'authorization_code',
       client_id: this.restKey,
       client_secret: this.secretKey,
-      redirectUri: redirectUri || this.redirectUrl,
+      redirectUri: redirectUrl || this.redirectUrl,
       code,
     });
     try {
