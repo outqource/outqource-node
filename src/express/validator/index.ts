@@ -32,8 +32,6 @@ export default class Validator {
   }
 
   public static create(controllers: Record<string, any>) {
-    console.log(`validator create`, controllers);
-
     const instance = new Validator(controllers);
     return instance.#create();
   }
