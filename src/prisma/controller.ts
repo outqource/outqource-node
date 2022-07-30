@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Request, Response, NextFunction } from 'express';
-import type { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import type { ControllerAPI } from '../openapi';
 import { parseAutoValue, parseValue } from '../shared/utils';
 import Flat from 'flat';
@@ -42,7 +42,7 @@ export type PrismaOption<T> = {
             [U in keyof TrueKeyObject<NoUndefinedField<T>, 'where'>[S]]: TrueKeyObject<
               NoUndefinedField<T>,
               'where'
-            >[S][U] extends Array<any> | object
+            >[S] extends Array<any> | object
               ? TrueKeyObject<NoUndefinedField<T>, 'where'>[S][U]
               : `${EveryKeyword<Keys<U>>}` | null;
           }
